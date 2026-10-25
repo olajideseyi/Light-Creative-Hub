@@ -77,7 +77,7 @@ export default async function PortfolioProjectPage({ params }: { params: Promise
           <p className="portfolio-masthead-intro">{project.summary || `A closer look at this ${project.category.toLowerCase()} project from Light Creative Hub.`}</p>
           <div className="portfolio-masthead-links"><Link className="studio-button studio-button-blue" href="/request-a-quote">Start a similar project <span>↗</span></Link><Link className="studio-inline-link" href="/portfolio">← Back to all work</Link></div>
         </div>
-        <div className="portfolio-masthead-side"><span className="portfolio-index">LCH—WORKS / DETAIL</span><div className="portfolio-type-specimen">{project.category.split(" ").slice(0, 3).join("<br/>")}<span>.</span></div><div className="portfolio-masthead-side-bottom"><span>FORM / FUNCTION / FEELING</span><span>PROJECT STORY</span></div></div>
+        <div className="portfolio-masthead-side"><span className="portfolio-index">LCH—WORKS / DETAIL</span><div className="portfolio-type-specimen">{project.category.split(" ").slice(0, 3).join(" ")}<span>.</span></div><div className="portfolio-masthead-side-bottom"><span>FORM / FUNCTION / FEELING</span><span>PROJECT STORY</span></div></div>
       </div>
       <div className="portfolio-masthead-bottom"><span>{project.category.toUpperCase()}</span><span>PROJECT / {project.slug.toUpperCase()}</span></div>
     </section>
