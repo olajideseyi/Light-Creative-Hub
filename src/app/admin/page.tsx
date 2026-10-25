@@ -1,203 +1,175 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type Project = {
-  id: string; title: string; slug: string; category: string; summary: string;
-  cover_image_url: string | null; published: boolean; featured: boolean;
+  id: string; title: string; slug: string; category: string; summary: string | null;
+  description?: string | null; cover_image_url: string | null; media_urls: string[] | null;
+  published: boolean; featured: boolean; display_order?: number;
 };
+const BUCKET = "portfolio-media";
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+const ACCEPTED = ["image/jpeg","image/png","image/webp","image/avif","video/mp4","video/webm","video/quicktime"];
+const CATEGORIES = ["Branding & Design","Re-branding","Graphic Design","Print","Photography","Videography","Data Analysis","PR & Communications","Content Production","Other"];
+const slugify = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
+const isVideoFile = (file: File) => file.type.startsWith("video/");
+
+function MediaPreview({ url, title, compact = false }: {url: string; title: string; compact?: boolean}) {
+  return <div className={compact ? "cms-media-thumb cms-media-thumb-compact" : "cms-media-preview"}>
+    {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={title}/> : <img src={url} alt={title} loading="lazy"/>}
+    <span>{isVideo(url) ? "VIDEO" : "IMAGE"}</span>
+  </div>;
+}
 
 export default function AdminPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [signedIn, setSignedIn] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState("");
-  const [error, setError] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [category, setCategory] = useState("Branding & Design");
-  const [summary, setSummary] = useState("");
-  const [published, setPublished] = useState(false);
-  const [featured, setFeatured] = useState(false);
+  const [email,setEmail]=useState(""); const [password,setPassword]=useState("");
+  const [signedIn,setSignedIn]=useState(false); const [projects,setProjects]=useState<Project[]>([]);
+  const [busy,setBusy]=useState(false); const [notice,setNotice]=useState(""); const [error,setError]=useState("");
+  const [coverFile,setCoverFile]=useState<File|null>(null); const [galleryFiles,setGalleryFiles]=useState<File[]>([]);
+  const [title,setTitle]=useState(""); const [slug,setSlug]=useState(""); const [category,setCategory]=useState(CATEGORIES[0]);
+  const [summary,setSummary]=useState(""); const [description,setDescription]=useState("");
+  const [published,setPublished]=useState(false); const [featured,setFeatured]=useState(false);
+  const [editingId,setEditingId]=useState<string|null>(null); const [existingMedia,setExistingMedia]=useState<string[]>([]);
+  const [activeTab,setActiveTab]=useState<"all"|"published"|"drafts">("all");
+  const [previewProject,setPreviewProject]=useState<Project|null>(null);
 
   async function verifyAdminAccess() {
-    const supabase = getSupabaseBrowserClient();
-    const { data: userResult, error: userError } = await supabase.auth.getUser();
-    if (userError || !userResult.user) throw new Error("Your session has expired. Please sign in again.");
-    const { data, error: accessError } = await supabase.from("admin_users")
-      .select("user_id,role").eq("user_id", userResult.user.id).maybeSingle();
-    if (accessError || !data) throw new Error("This account is not approved for the Light Creative Hub admin workspace. Ask the site owner to approve your user ID.");
+    const supabase=getSupabaseBrowserClient();
+    const {data:userResult,error:userError}=await supabase.auth.getUser();
+    if(userError||!userResult.user) throw new Error("Your session has expired. Please sign in again.");
+    const {data,error:accessError}=await supabase.from("admin_users").select("user_id,role").eq("user_id",userResult.user.id).maybeSingle();
+    if(accessError||!data) throw new Error("This account is not approved for the admin workspace. Ask the site owner to approve your Supabase user ID.");
     return userResult.user;
   }
-
   async function loadProjects() {
-    const supabase = getSupabaseBrowserClient();
-    const { data, error: queryError } = await supabase.from("portfolio_projects")
-      .select("id,title,slug,category,summary,cover_image_url,published,featured")
-      .order("display_order", { ascending: true }).order("created_at", { ascending: false });
-    if (queryError) throw queryError;
-    setProjects((data ?? []) as Project[]);
+    const {data,error:queryError}=await getSupabaseBrowserClient().from("portfolio_projects")
+      .select("id,title,slug,category,summary,description,cover_image_url,media_urls,published,featured,display_order")
+      .order("display_order",{ascending:true}).order("created_at",{ascending:false});
+    if(queryError) throw queryError;
+    setProjects((data??[]) as Project[]);
   }
-
-  useEffect(() => {
-    let active = true;
+  useEffect(()=>{
+    let active=true;
     try {
-      const supabase = getSupabaseBrowserClient();
-      supabase.auth.getSession().then(async ({ data, error: sessionError }) => {
-        if (!active) return;
-        if (sessionError) { setError(sessionError.message); return; }
-        if (data.session) {
-          try {
-            await verifyAdminAccess();
-            await loadProjects();
-            if (active) setSignedIn(true);
-          } catch (e) {
-            if (active) { setSignedIn(false); setError(e instanceof Error ? e.message : "This account cannot access the admin workspace."); }
-          }
-        }
-      }).catch((e: unknown) => { if (active) setError(e instanceof Error ? e.message : "Could not check your session."); });
-    } catch (e) { setError(e instanceof Error ? e.message : "Supabase is not configured."); }
-    return () => { active = false; };
-  }, []);
+      const supabase=getSupabaseBrowserClient();
+      supabase.auth.getSession().then(async ({data,error:sessionError})=>{
+        if(!active)return;
+        if(sessionError){setError(sessionError.message);return;}
+        if(data.session)try{await verifyAdminAccess();await loadProjects();if(active)setSignedIn(true);}
+        catch(e){if(active){setSignedIn(false);setError(e instanceof Error?e.message:"This account cannot access the admin workspace.");}}
+      }).catch((e:unknown)=>{if(active)setError(e instanceof Error?e.message:"Could not check your session.");});
+    } catch(e){setError(e instanceof Error?e.message:"Supabase is not configured.");}
+    return()=>{active=false;};
+  },[]);
 
-  async function signIn(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError(""); setNotice("");
-    try {
-      const supabase = getSupabaseBrowserClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-      if (authError) throw authError;
-      try {
-        await verifyAdminAccess();
-        await loadProjects();
-      } catch (accessError) {
-        await supabase.auth.signOut();
-        throw accessError;
-      }
-      setSignedIn(true);
-      setPassword("");
-      setNotice("You're signed in. Portfolio changes are available to approved administrators.");
-    } catch (e) { setError(e instanceof Error ? e.message : "Sign-in failed. Check your details and try again."); }
-    finally { setBusy(false); }
+  function resetForm() {
+    setEditingId(null);setTitle("");setSlug("");setCategory(CATEGORIES[0]);setSummary("");setDescription("");
+    setPublished(false);setFeatured(false);setCoverFile(null);setGalleryFiles([]);setExistingMedia([]);
+    const cover=document.getElementById("cms-cover") as HTMLInputElement|null; if(cover)cover.value="";
+    const gallery=document.getElementById("cms-gallery") as HTMLInputElement|null; if(gallery)gallery.value="";
   }
-
-  function handleFile(event: ChangeEvent<HTMLInputElement>) { setFile(event.target.files?.[0] ?? null); }
-
-  async function addProject(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError(""); setNotice("");
-    let uploadedPath: string | null = null;
-    try {
-      const supabase = getSupabaseBrowserClient();
-      let coverUrl: string | null = null;
-      if (file) {
-        const allowed = ["image/jpeg","image/png","image/webp","image/avif","video/mp4","video/webm","video/quicktime"];
-        if (!allowed.includes(file.type)) throw new Error("Choose a JPG, PNG, WebP, AVIF, MP4, WebM or MOV file.");
-        if (file.size > 50 * 1024 * 1024) throw new Error("The file must be 50 MB or smaller.");
-        const safeName = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, "-").slice(-100);
-        uploadedPath = `${Date.now()}-${safeName}`;
-        const { error: uploadError } = await supabase.storage.from("portfolio-media").upload(uploadedPath, file, { upsert: false, contentType: file.type });
-        if (uploadError) throw uploadError;
-        coverUrl = supabase.storage.from("portfolio-media").getPublicUrl(uploadedPath).data.publicUrl;
-      }
-      const { error: insertError } = await supabase.from("portfolio_projects").insert({
-        title: title.trim(), slug: slug.trim().toLowerCase(), category, summary: summary.trim(),
-        description: summary.trim(), cover_image_url: coverUrl, media_urls: coverUrl ? [coverUrl] : [],
-        published, featured, display_order: projects.length
-      });
-      if (insertError) {
-        if (uploadedPath) await supabase.storage.from("portfolio-media").remove([uploadedPath]);
-        throw insertError;
-      }
-      setTitle(""); setSlug(""); setSummary(""); setFile(null); setPublished(false); setFeatured(false);
-      const input = document.getElementById("portfolio-media") as HTMLInputElement | null;
-      if (input) input.value = "";
-      await loadProjects(); setNotice("Project saved successfully.");
-    } catch (e) { setError(e instanceof Error ? e.message : "Could not save the project."); }
-    finally { setBusy(false); }
+  function startEdit(project:Project) {
+    setEditingId(project.id);setTitle(project.title);setSlug(project.slug);setCategory(project.category||CATEGORIES[0]);
+    setSummary(project.summary||"");setDescription(project.description||project.summary||"");
+    setPublished(project.published);setFeatured(project.featured);
+    setExistingMedia(Array.from(new Set([...(project.cover_image_url?[project.cover_image_url]:[]),...(project.media_urls||[])])));
+    setCoverFile(null);setGalleryFiles([]);setPreviewProject(null);
+    const form=document.getElementById("cms-editor");form?.scrollIntoView({behavior:"smooth",block:"start"});
   }
-
-  async function togglePublished(project: Project) {
-    setBusy(true); setError(""); setNotice("");
-    try {
-      const { error: updateError } = await getSupabaseBrowserClient().from("portfolio_projects")
-        .update({ published: !project.published, updated_at: new Date().toISOString() }).eq("id", project.id);
-      if (updateError) throw updateError;
-      await loadProjects(); setNotice(`“${project.title}” is now ${project.published ? "a draft" : "published"}.`);
-    } catch (e) { setError(e instanceof Error ? e.message : "Could not update project visibility."); }
-    finally { setBusy(false); }
+  async function signIn(event:FormEvent<HTMLFormElement>) {
+    event.preventDefault();setBusy(true);setError("");setNotice("");
+    try{
+      const supabase=getSupabaseBrowserClient();const {error:authError}=await supabase.auth.signInWithPassword({email:email.trim(),password});
+      if(authError)throw authError;
+      try{await verifyAdminAccess();await loadProjects();}catch(e){await supabase.auth.signOut();throw e;}
+      setSignedIn(true);setPassword("");setNotice("Signed in. Your approved projects are ready to manage.");
+    }catch(e){setError(e instanceof Error?e.message:"Sign-in failed. Check your details and try again.");}finally{setBusy(false);}
   }
-
-  async function deleteProject(project: Project) {
-    if (!window.confirm(`Permanently delete “${project.title}”? This cannot be undone.`)) return;
-    setBusy(true); setError(""); setNotice("");
-    try {
-      const supabase = getSupabaseBrowserClient();
-      const { error: deleteError } = await supabase.from("portfolio_projects").delete().eq("id", project.id);
-      if (deleteError) throw deleteError;
-      await loadProjects(); setNotice("Project deleted. If its media is no longer needed, remove it from Storage too.");
-    } catch (e) { setError(e instanceof Error ? e.message : "Could not delete project."); }
-    finally { setBusy(false); }
+  function validateFiles(files:File[]) {
+    for(const file of files){if(!ACCEPTED.includes(file.type))throw new Error("Use JPG, PNG, WebP, AVIF, MP4, WebM or MOV files.");if(file.size>MAX_FILE_SIZE)throw new Error("Each media file must be 50 MB or smaller.");}
   }
-
-  async function signOut() {
-    try { await getSupabaseBrowserClient().auth.signOut(); setSignedIn(false); setProjects([]); setNotice("You have signed out."); setError(""); }
-    catch (e) { setError(e instanceof Error ? e.message : "Could not sign out."); }
+  async function uploadMedia(file:File) {
+    const supabase=getSupabaseBrowserClient();
+    const safeName=file.name.toLowerCase().replace(/[^a-z0-9.-]+/g,"-").slice(-100);
+    const objectPath=`${Date.now()}-${Math.random().toString(36).slice(2,8)}-${safeName}`;
+    const {error:uploadError}=await supabase.storage.from(BUCKET).upload(objectPath,file,{upsert:false,contentType:file.type});
+    if(uploadError)throw uploadError;
+    return supabase.storage.from(BUCKET).getPublicUrl(objectPath).data.publicUrl;
   }
+  async function saveProject(event:FormEvent<HTMLFormElement>) {
+    event.preventDefault();setBusy(true);setError("");setNotice("");
+    const uploadedUrls:string[]=[];
+    try{
+      validateFiles([...(coverFile?[coverFile]:[]),...galleryFiles]);
+      const supabase=getSupabaseBrowserClient();
+      let coverUrl=existingMedia[0]||null;
+      if(coverFile){coverUrl=await uploadMedia(coverFile);uploadedUrls.push(coverUrl);}
+      const galleryUrls:string[]=[];
+      for(const file of galleryFiles){const url=await uploadMedia(file);galleryUrls.push(url);uploadedUrls.push(url);}
+      const mediaUrls=Array.from(new Set([...existingMedia.filter(url=>url!==coverUrl),...galleryUrls]));
+      const payload={title:title.trim(),slug:slugify(slug),category,summary:summary.trim(),description:(description.trim()||summary.trim()),cover_image_url:coverUrl,media_urls:mediaUrls,published,featured,updated_at:new Date().toISOString(),display_order:editingId?(projects.find(p=>p.id===editingId)?.display_order??projects.length):projects.length};
+      const result=editingId
+        ? await supabase.from("portfolio_projects").update(payload).eq("id",editingId)
+        : await supabase.from("portfolio_projects").insert(payload);
+      if(result.error)throw result.error;
+      await loadProjects();resetForm();setNotice(editingId?"Project changes saved.":"Project created successfully.");
+    }catch(e){
+      if(uploadedUrls.length){const paths=uploadedUrls.map(url=>{try{return new URL(url).pathname.split(`/storage/v1/object/public/${BUCKET}/`)[1];}catch{return null;}}).filter((v):v is string=>Boolean(v));if(paths.length)await getSupabaseBrowserClient().storage.from(BUCKET).remove(paths).catch(()=>undefined);}
+      setError(e instanceof Error?e.message:"Could not save the project. Check your Storage and database policies.");
+    }finally{setBusy(false);}
+  }
+  async function togglePublished(project:Project) {
+    setBusy(true);setError("");setNotice("");
+    try{const {error:e}=await getSupabaseBrowserClient().from("portfolio_projects").update({published:!project.published,updated_at:new Date().toISOString()}).eq("id",project.id);if(e)throw e;await loadProjects();setNotice(`“${project.title}” is now ${project.published?"a draft":"published"}.`);}
+    catch(e){setError(e instanceof Error?e.message:"Could not update project visibility.");}finally{setBusy(false);}
+  }
+  async function deleteProject(project:Project) {
+    if(!window.confirm(`Permanently delete “${project.title}”? This cannot be undone.`))return;
+    setBusy(true);setError("");setNotice("");
+    try{const {error:e}=await getSupabaseBrowserClient().from("portfolio_projects").delete().eq("id",project.id);if(e)throw e;await loadProjects();setPreviewProject(null);if(editingId===project.id)resetForm();setNotice("Project deleted from the portfolio.");}
+    catch(e){setError(e instanceof Error?e.message:"Could not delete project.");}finally{setBusy(false);}
+  }
+  async function signOut(){try{await getSupabaseBrowserClient().auth.signOut();setSignedIn(false);setProjects([]);resetForm();setNotice("You have signed out.");setError("");}catch(e){setError(e instanceof Error?e.message:"Could not sign out.");}}
+  const publishedCount=projects.filter(p=>p.published).length;
+  const filteredProjects=useMemo(()=>projects.filter(p=>activeTab==="all"||(activeTab==="published"?p.published:!p.published)),[projects,activeTab]);
 
-  const publishedCount = projects.filter(project => project.published).length;
-  const draftCount = projects.length - publishedCount;
-
-  return <section className="admin-page">
-    <div className="admin-shell">
-      <header className="admin-masthead">
-        <div className="admin-brand"><span className="admin-brand-mark">L</span><div><strong>Light Creative Hub</strong><small>STUDIO CONTROL ROOM / ADMIN</small></div></div>
-        <div className="admin-masthead-right"><span>PORTFOLIO MANAGEMENT</span>{signedIn && <><span className="admin-status-pill">Secure session</span><button className="button button-outline-dark" onClick={signOut} disabled={busy}>Sign out</button></>}</div>
-      </header>
-
-      {!signedIn ? <div className="admin-login-layout">
-        <div className="admin-welcome"><div><p className="eyebrow">STUDIO ACCESS / 01</p><h1>Welcome<br/><em>back.</em></h1><p>Sign in to curate the studio portfolio, publish new work and keep the gallery current.</p></div></div>
-        <form className="admin-login" onSubmit={signIn}>
-          <div className="admin-panel-head"><div><h2>Administrator sign in</h2><p>Use the Supabase Auth account approved for portfolio management.</p></div></div>
-          {error && <p role="alert" className="form-error">{error}</p>}
-          {notice && <p role="status" className="form-message">{notice}</p>}
-          <label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username" /></label>
-          <label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password" /></label>
-          <button className="button button-blue" disabled={busy}>{busy ? "Checking access…" : "Sign in to workspace ↗"}</button>
-          <p className="admin-help">Access is controlled by Supabase authentication and the studio admin allowlist. A successful login alone does not grant permission to publish.</p>
+  return <section className="admin-page cms-admin-page"><div className="admin-shell">
+    <header className="admin-masthead"><div className="admin-brand"><span className="admin-brand-mark">L</span><div><strong>Light Creative Hub</strong><small>STUDIO CONTROL ROOM / CMS</small></div></div><div className="admin-masthead-right"><span>CONTENT MANAGEMENT</span>{signedIn&&<><span className="admin-status-pill">Secure session</span><button className="button button-outline-dark" onClick={signOut} disabled={busy}>Sign out</button></>}</div></header>
+    {!signedIn?<div className="admin-login-layout"><div className="admin-welcome"><div><p className="eyebrow">STUDIO ACCESS / 01</p><h1>Make the work<br/><em>visible.</em></h1><p>Manage portfolio projects, media, descriptions and what appears on the public website.</p></div></div><form className="admin-login" onSubmit={signIn}><div className="admin-panel-head"><div><h2>Administrator sign in</h2><p>Use the Supabase Auth account approved for this studio.</p></div></div>{error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}<label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/></label><button className="button button-blue" disabled={busy}>{busy?"Checking access…":"Enter the studio CMS ↗"}</button><p className="admin-help">Only accounts listed in the Supabase admin allowlist can edit or publish content.</p></form></div>:<>
+      <div className="cms-welcome-row"><div className="admin-welcome"><div><p className="eyebrow">STUDIO CONTROL ROOM / OVERVIEW</p><h1>Content that tells<br/><em>your story.</em></h1><p>Upload real work, preview it before publishing and keep your public portfolio current.</p></div></div><a className="button button-outline-dark cms-view-site" href="/portfolio" target="_blank" rel="noreferrer">View public portfolio ↗</a></div>
+      {error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}
+      <div className="admin-dashboard-stats"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div>
+      <div className="cms-layout">
+        <section className="admin-panel cms-editor-panel" id="cms-editor"><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"CREATE NEW PROJECT"}</span><h2>{editingId?"Refine the details.":"Add to the archive."}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
+          <form className="admin-project-form" onSubmit={saveProject}><div className="form-grid">
+            <label>Project title *<input value={title} onChange={e=>{setTitle(e.target.value);if(!editingId||!slug)setSlug(slugify(e.target.value));}} required minLength={2} maxLength={180} placeholder="e.g. Identity for a new brand"/></label>
+            <label>URL slug *<input value={slug} onChange={e=>setSlug(slugify(e.target.value))} required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="identity-for-a-new-brand"/></label>
+            <label>Service category *<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(c=><option key={c}>{c}</option>)}</select></label>
+            <label>Cover image or video<input id="cms-cover" type="file" accept={ACCEPTED.join(",")} onChange={(e:ChangeEvent<HTMLInputElement>)=>setCoverFile(e.target.files?.[0]??null)}/><small>Choose a new cover to replace the current one. Maximum 50 MB.</small></label>
+            <label className="field-full">Short project summary *<textarea value={summary} onChange={e=>setSummary(e.target.value)} required minLength={10} maxLength={1000} rows={3} placeholder="A concise description shown in portfolio cards."/></label>
+            <label className="field-full">Full project description<textarea value={description} onChange={e=>setDescription(e.target.value)} maxLength={5000} rows={4} placeholder="Add the brief, creative approach, deliverables and story behind the work."/></label>
+            <label className="field-full">Add gallery images or videos<input id="cms-gallery" type="file" multiple accept={ACCEPTED.join(",")} onChange={e=>setGalleryFiles(Array.from(e.target.files??[]))}/><small>Select multiple files at once. Supported: JPG, PNG, WebP, AVIF, MP4, WebM and MOV.</small></label>
+          </div>
+          {(existingMedia.length>0||coverFile||galleryFiles.length>0)&&<div className="cms-preview-block"><div className="cms-preview-heading"><div><h3>Media preview</h3><p>Check the images and videos before you save.</p></div><span>{(existingMedia.length+(coverFile?1:0)+galleryFiles.length)} MEDIA ITEMS</span></div><div className="cms-media-grid">
+            {coverFile&&<div className="cms-media-item"><div className="cms-media-thumb">{isVideoFile(coverFile)?<video src={URL.createObjectURL(coverFile)} controls playsInline/>:<img src={URL.createObjectURL(coverFile)} alt="New cover preview"/>}<span>NEW COVER</span></div><small>{coverFile.name}</small></div>}
+            {!coverFile&&existingMedia.map((url,i)=><div className="cms-media-item" key={url}><MediaPreview url={url} title={title||"Current project media"} compact/><small>{i===0?"Current cover / media":`Gallery item ${i+1}`}</small><button type="button" className="cms-remove-media" onClick={()=>setExistingMedia(old=>old.filter(item=>item!==url))}>Remove from project</button></div>)}
+            {galleryFiles.map((file,i)=><div className="cms-media-item" key={`${file.name}-${i}`}><div className="cms-media-thumb">{isVideoFile(file)?<video src={URL.createObjectURL(file)} controls playsInline/>:<img src={URL.createObjectURL(file)} alt={file.name}/>}<span>NEW GALLERY</span></div><small>{file.name}</small></div>)}
+          </div></div>}
+          <div className="admin-checks"><label><input type="checkbox" checked={published} onChange={e=>setPublished(e.target.checked)}/> Publish on public portfolio</label><label><input type="checkbox" checked={featured} onChange={e=>setFeatured(e.target.checked)}/> Feature this project</label></div>
+          <div className="cms-form-actions"><button className="button button-blue" disabled={busy}>{busy?(editingId?"Saving changes…":"Creating project…"):(editingId?"Save project changes ↗":"Create portfolio project ↗")}</button><button type="button" className="button button-outline-dark" onClick={resetForm} disabled={busy}>Clear form</button></div>
         </form>
-      </div> : <>
-        <div className="admin-welcome"><div><p className="eyebrow">STUDIO CONTROL ROOM / OVERVIEW</p><h1>Your portfolio,<br/><em>your point of view.</em></h1><p>Upload approved work, keep drafts organised and decide what visitors can see.</p></div><span className="admin-status-pill">Admin workspace</span></div>
-        {error && <p role="alert" className="form-error">{error}</p>}
-        {notice && <p role="status" className="form-message">{notice}</p>}
-        <div className="admin-dashboard-stats">
-          <div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div>
-          <div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible in the public gallery</small></div>
-          <div className="admin-stat"><span>Drafts</span><strong>{draftCount}</strong><small>Work in progress</small></div>
-        </div>
-        <div className="admin-workspace-grid">
-          <section className="admin-panel">
-            <div className="admin-panel-head"><div><h2>Add portfolio project</h2><p>Use approved artwork and clear project descriptions.</p></div><span className="admin-status-pill">New entry</span></div>
-            <form className="admin-project-form" onSubmit={addProject}>
-              <div className="form-grid">
-                <label>Project title *<input value={title} onChange={e=>{setTitle(e.target.value);setSlug(e.target.value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""));}} required minLength={2} maxLength={180} placeholder="e.g. Identity for a new brand" /></label>
-                <label>URL slug *<input value={slug} onChange={e=>setSlug(e.target.value.toLowerCase())} required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="identity-for-a-new-brand" /></label>
-                <label>Service category *<select value={category} onChange={e=>setCategory(e.target.value)}><option>Branding & Design</option><option>Re-branding</option><option>Graphic Design</option><option>Print</option><option>Photography</option><option>Videography</option><option>Data Analysis</option><option>PR & Communications</option><option>Content Production</option><option>Other</option></select></label>
-                <label>Cover artwork or video<input id="portfolio-media" type="file" accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime" onChange={handleFile}/><small>JPG, PNG, WebP, AVIF, MP4, WebM or MOV · up to 50 MB</small></label>
-                <label className="field-full">Project summary *<textarea value={summary} onChange={e=>setSummary(e.target.value)} required minLength={10} maxLength={1000} rows={4} placeholder="What was created, for whom, and what makes the work worth showing?" /></label>
-              </div>
-              <div className="admin-checks"><label><input type="checkbox" checked={published} onChange={e=>setPublished(e.target.checked)}/> Publish this project</label><label><input type="checkbox" checked={featured} onChange={e=>setFeatured(e.target.checked)}/> Mark as featured</label></div>
-              <button className="button button-blue" disabled={busy}>{busy ? "Saving project…" : "Save portfolio project ↗"}</button>
-            </form>
-          </section>
-          <section className="admin-panel">
-            <div className="admin-panel-head"><div><h2>Portfolio library</h2><p>{projects.length ? "Manage visibility or remove a project." : "Your library is ready for its first approved project."}</p></div><span>{projects.length} ITEMS</span></div>
-            {projects.length===0 ? <div className="admin-empty"><strong>No projects yet.</strong><br/>Add your first project using the form. Keep unpublished work as a draft until it is ready for public viewing.</div> : <div className="admin-project-list">{projects.map(project=><article className="admin-project-row" key={project.id}><div><strong>{project.title}</strong><p>{project.category} · /{project.slug}</p><span className={project.published?"status-live":"status-draft"}>{project.published?"Published":"Draft"}{project.featured?" · Featured":""}</span></div><div className="admin-row-actions"><button className="button button-outline-dark" onClick={()=>togglePublished(project)} disabled={busy}>{project.published?"Unpublish":"Publish"}</button><button className="button button-danger" onClick={()=>deleteProject(project)} disabled={busy}>Delete</button></div></article>)}</div>}
-          </section>
-        </div>
-      </>}
-    </div>
+      </section>
+      <section className="admin-panel cms-library-panel"><div className="admin-panel-head"><div><span className="cms-eyebrow">YOUR CONTENT</span><h2>Portfolio library</h2><p>Open any project to preview, edit or manage its publication.</p></div><span className="cms-count-pill">{projects.length} ITEMS</span></div>
+        <div className="cms-library-tabs"><button className={activeTab==="all"?"active":""} onClick={()=>setActiveTab("all")}>All <b>{projects.length}</b></button><button className={activeTab==="published"?"active":""} onClick={()=>setActiveTab("published")}>Published <b>{publishedCount}</b></button><button className={activeTab==="drafts"?"active":""} onClick={()=>setActiveTab("drafts")}>Drafts <b>{projects.length-publishedCount}</b></button></div>
+        {filteredProjects.length===0?<div className="admin-empty"><strong>{projects.length?"Nothing in this filter yet.":"Your portfolio library is ready."}</strong><br/>{projects.length?"Choose another tab to see your projects.":"Create your first entry using the editor. You can keep it as a draft until it is ready."}</div>:<div className="cms-project-grid">{filteredProjects.map(project=>{const cover=project.cover_image_url||(project.media_urls||[])[0];return <article className="cms-project-card" key={project.id}>
+          <button type="button" className="cms-card-preview" onClick={()=>setPreviewProject(project)} aria-label={`Preview ${project.title}`}>{cover?<MediaPreview url={cover} title={project.title} compact/>:<div className="cms-no-media"><span>LCH / PROJECT</span><strong>{project.category}</strong></div>}<span className="cms-open-overlay">Open preview ↗</span></button>
+          <div className="cms-card-copy"><div className="cms-card-badges"><span className={project.published?"status-live":"status-draft"}>{project.published?"Published":"Draft"}</span>{project.featured&&<span className="cms-featured-badge">Featured</span>}</div><h3>{project.title}</h3><p>{project.category}</p><div className="cms-card-actions"><button type="button" className="button button-outline-dark" onClick={()=>startEdit(project)}>Edit details</button><button type="button" className="button button-outline-dark" onClick={()=>togglePublished(project)} disabled={busy}>{project.published?"Unpublish":"Publish"}</button><button type="button" className="cms-delete-button" onClick={()=>deleteProject(project)} disabled={busy}>Delete</button></div></div>
+        </article>;})}</div>}
+      </section></div>
+    </>}
+  </div>
+  {previewProject&&<div className="cms-modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setPreviewProject(null);}}><section className="cms-preview-modal" role="dialog" aria-modal="true" aria-label={`Preview ${previewProject.title}`}><header><div><span className="cms-eyebrow">PROJECT PREVIEW / {previewProject.published?"PUBLISHED":"DRAFT"}</span><h2>{previewProject.title}</h2></div><button type="button" className="cms-modal-close" onClick={()=>setPreviewProject(null)} aria-label="Close preview">×</button></header><p className="cms-modal-category">{previewProject.category} · /{previewProject.slug}</p><p>{previewProject.summary}</p><div className="cms-modal-media-grid">{Array.from(new Set([...(previewProject.cover_image_url?[previewProject.cover_image_url]:[]),...(previewProject.media_urls||[])])).map((url,i)=><MediaPreview key={url} url={url} title={`${previewProject.title} media ${i+1}`}/>)}</div>{previewProject.description&&previewProject.description!==previewProject.summary&&<div className="cms-modal-description"><h3>Full description</h3><p>{previewProject.description}</p></div>}<footer><button type="button" className="button button-blue" onClick={()=>startEdit(previewProject)}>Edit project ↗</button><button type="button" className="button button-outline-dark" onClick={()=>togglePublished(previewProject)} disabled={busy}>{previewProject.published?"Unpublish project":"Publish project"}</button><button type="button" className="button button-outline-dark" onClick={()=>setPreviewProject(null)}>Close preview</button></footer></section></div>}
   </section>;
 }
