@@ -63,7 +63,7 @@ export default function HomePage() {
     </section>
 
     <section className="studio-founder-section">
-      <div className="founder-editorial"><span>MEET THE CREATIVE</span><strong>LIGHT<span>.</span></strong><div className="founder-editorial-rule"/><small>ADENIYI BOLUWATIFE<br/>FOUNDER · LIGHT CREATIVE HUB</small></div>
+      <div className="founder-editorial founder-editorial-photo"><img src="https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg" alt="Founder portrait and service introduction for Light Creative Hub" loading="lazy"/><span>MEET THE CREATIVE / 001</span></div>
       <div className="founder-editorial-copy"><p className="studio-kicker">THE THINKING BEHIND THE WORK</p><h2>Give good ideas<br/>room to <em>become.</em></h2><blockquote>“Remember that creativity requires time and space. Allow yourself to recharge, seek inspiration from diverse sources, and let ideas marinate.”</blockquote><a className="studio-inline-link" href="/about">Meet the founder and studio <span>↗</span></a></div>
     </section>
 
