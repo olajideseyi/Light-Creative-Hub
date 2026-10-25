@@ -1,12 +1,26 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 const serviceOptions = ["Branding & graphic design", "Printing & document services", "Photography", "Videography", "Content production", "Other / not sure"];
 
 export function QuoteForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [selectedService, setSelectedService] = useState("");
+
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("service");
+    if (!requested) return;
+    const normalized = requested.toLowerCase();
+    const match = normalized.includes("brand") || normalized.includes("design") ? "Branding & graphic design"
+      : normalized.includes("print") ? "Printing & document services"
+      : normalized.includes("photo") ? "Photography"
+      : normalized.includes("video") || normalized.includes("film") ? "Videography"
+      : normalized.includes("content") || normalized.includes("communication") ? "Content production"
+      : "";
+    if (match) setSelectedService(match);
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,6 +43,7 @@ export function QuoteForm() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Something went wrong.");
       form.reset();
+      setSelectedService("");
       setStatus("success");
       setMessage("Thank you — your enquiry has been received. We will get back to you.");
     } catch (error) {
@@ -43,7 +58,7 @@ export function QuoteForm() {
       <label>Email address *<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
       <label>Phone number<input name="phone" type="tel" maxLength={40} autoComplete="tel" /></label>
       <label>Company / organisation<input name="company" maxLength={160} autoComplete="organization" /></label>
-      <label className="full-field">What do you need? *<select name="service" required defaultValue=""><option value="" disabled>Select a service</option>{serviceOptions.map(option => <option key={option}>{option}</option>)}</select></label>
+      <label className="full-field">What do you need? *<select name="service" required value={selectedService} onChange={event => setSelectedService(event.target.value)}><option value="" disabled>Select a service</option>{serviceOptions.map(option => <option key={option}>{option}</option>)}</select></label>
       <label className="full-field">Tell us about the project *<textarea name="details" required minLength={10} maxLength={5000} rows={6} placeholder="Your idea, quantity, preferred timeline, or other details..." /></label>
     </div>
     <label className="consent"><input type="checkbox" name="consent" required /> I agree that Light Creative Hub may use these details to respond to my enquiry.</label>
