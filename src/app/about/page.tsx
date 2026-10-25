@@ -4,11 +4,11 @@ export const metadata: Metadata = { title: "About the Studio" };
 
 export default function AboutPage() {
   return <>
-    <PageIntro eyebrow="THE STUDIO / WHO WE ARE" title="Ideas with" accent="intention." description="Light Creative Hub is a creative practice built around brand identity, print, visual storytelling and clear communication — bringing ideas into focus and giving them a form people can recognise."/>
+    <PageIntro eyebrow="THE STUDIO / WHO WE ARE" title="Ideas with" accent="intention." description="Light Creative Hub is an independent creative studio bringing brand identity, graphic design, print and visual storytelling together to help businesses communicate with clarity and distinction."/>
     <section className="page-content">
       <div className="about-grid">
         <Reveal><p className="eyebrow">OUR POINT OF VIEW</p><h2>Creative is not decoration.<br/><span>It is how a message finds its power.</span></h2></Reveal>
-        <Reveal delay={.1}><p>We work with founders, growing businesses, organisations and individuals who care about how their work shows up in the world. We bring thoughtful creative direction and practical production together, so the idea and its execution feel connected.</p><p>From a first identity sketch to a finished printed piece, from a product frame to a campaign that moves, we believe the small decisions make the big difference.</p><p>Our services span branding and re-branding, graphic design, printing, mobile photography and videography, data analysis, public relations and communication support.</p></Reveal>
+        <Reveal delay={.1}><p>We partner with founders, growing businesses, organisations and individuals to build a stronger, more consistent presence. Strategic thinking and hands-on production work side by side, so every decision supports the message.</p><p>From the first identity concept to the final printed piece, every detail matters. We consider the way an idea looks, feels and works across each point where people encounter it.</p><p>Our services include branding and rebranding, graphic design, print production, photography and videography, data presentation, public relations and communication support.</p></Reveal>
       </div>
       <Reveal className="about-founder-panel">
         <div className="about-founder-portrait"><img src="https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg" alt="Adeniyi Boluwatife, founder of Light Creative Hub" loading="lazy" /><span>FOUNDER / CREATIVE</span></div>
@@ -22,7 +22,7 @@ export default function AboutPage() {
           ["03","A connected creative process","One studio partner helps keep the idea consistent from the first conversation to final delivery."]
         ].map(([n,t,d])=><Reveal key={n}><article className="service-detail"><span>{n}</span><h3>{t}</h3><p>{d}</p></article></Reveal>)}
       </div>
-      <div style={{marginTop:60}}><a className="button button-dark" href="/request-a-quote">Let’s make something ↗</a></div>
+      <div style={{marginTop:60}}><a className="button button-dark" href="/request-a-quote">Discuss your project ↗</a></div>
     </section>
   </>;
 }
