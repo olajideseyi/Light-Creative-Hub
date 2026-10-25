@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SmoothScroll } from "@/components/creative-effects";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
@@ -11,6 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
+        <SmoothScroll />
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
           <a className="brand-logo" href="/" aria-label="Light Creative Hub home"><img src="/brand/light-creative-hub-mark.svg" alt="Light Creative Hub — Brand, Print, Design" /></a>
