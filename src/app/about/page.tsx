@@ -1,7 +1,7 @@
 import { PageIntro, Reveal } from "@/components/creative-effects";
 import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-export const metadata: Metadata = { title: "About the Studio" };
+export const metadata: Metadata = { title:"About the Studio",description:"Meet Light Creative Hub, an independent creative studio connecting brand strategy, design, print and visual storytelling.",openGraph:{title:"About Light Creative Hub",description:"A creative studio for purposeful identity, design and visual communication.",type:"website"} };
 
 type AboutContent={eyebrow?:string;title?:string;description?:string;founderQuote?:string};
 async function getAboutContent():Promise<AboutContent>{

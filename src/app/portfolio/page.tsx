@@ -5,7 +5,9 @@ import { WhatsAppLink } from "@/components/whatsapp-float";
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: "Selected branding, graphic design, print and visual storytelling by Light Creative Hub."
+  description: "Selected branding, graphic design, print and visual storytelling by Light Creative Hub.",
+  openGraph: { title:"Portfolio | Light Creative Hub",description:"Explore selected brand identities, campaigns, design, print and visual storytelling.",type:"website" },
+  twitter: { card:"summary_large_image",title:"Portfolio | Light Creative Hub",description:"Selected brand identities, campaigns, design and visual storytelling." }
 };
 export const revalidate = 60;
 

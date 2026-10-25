@@ -52,8 +52,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: project.title,
       description: (project.summary || project.description || "Selected work by Light Creative Hub.").slice(0, 160),
       type: "article",
+      siteName: "Light Creative Hub",
       ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { images: [project.cover_image_url] } : {})
-    }
+    },
+    twitter: {
+      card: project.cover_image_url && !isVideo(project.cover_image_url) ? "summary_large_image" : "summary",
+      title: project.title,
+      description: (project.summary || project.description || "Selected work by Light Creative Hub.").slice(0,160),
+      ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { images:[project.cover_image_url] } : {})
+    },
+    robots: { index:true, follow:true }
   };
 }
 
