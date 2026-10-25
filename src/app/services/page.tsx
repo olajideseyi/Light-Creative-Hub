@@ -9,9 +9,9 @@ const services = [
 ];
 export default function ServicesPage() {
  return <>
-  <PageIntro eyebrow="WHAT WE DO / SERVICES" title="From the first" accent="idea to impact." description="A connected set of creative services — designed to work together, or stand strong on their own."/>
-  <section className="page-content"><div className="about-grid"><Reveal><p className="eyebrow">ONE PARTNER. MORE POSSIBILITIES.</p><h2>Creative thinking meets hands-on execution.</h2></Reveal><Reveal><p>Need one polished flyer, a full visual identity, a print run, or a campaign with photography and video? We shape the scope around your brief and your goals.</p><a className="underlined-link" href="/request-a-quote">Tell us what you need <span>↗</span></a></Reveal></div>
+  <PageIntro eyebrow="WHAT WE DO / SERVICES" title="From the first" accent="idea to impact." description="A considered range of creative services, available individually or combined into a cohesive project from concept through delivery."/>
+  <section className="page-content"><div className="about-grid"><Reveal><p className="eyebrow">ONE PARTNER. MORE POSSIBILITIES.</p><h2>Creative thinking meets hands-on execution.</h2></Reveal><Reveal><p>Whether you need a single campaign asset, a complete visual identity, print production or a coordinated photo-and-video campaign, we tailor the scope to your objectives, audience and timeline.</p><a className="underlined-link" href="/request-a-quote">Tell us what you need <span>↗</span></a></Reveal></div>
   <div className="service-detail-list">{services.map(s=><Reveal key={s.n}><article className="service-detail service-detail-expanded"><span>{s.n}</span><div><h3>{s.title}</h3><p className="service-tags">{s.tags}</p></div><div><p className="service-detail-intro">{s.intro}</p><p>{s.details}</p><a className="underlined-link" href={`/request-a-quote?service=${encodeURIComponent(s.title)}`}>Discuss this service <span>↗</span></a></div></article></Reveal>)}</div>
-  <Reveal className="service-cta"><p className="eyebrow">HAVE A DIFFERENT BRIEF?</p><h2>Tell us what you’re<br/>trying to make.</h2><a className="button button-dark" href="/request-a-quote">Start a conversation ↗</a></Reveal></section>
+  <Reveal className="service-cta"><p className="eyebrow">HAVE A DIFFERENT BRIEF?</p><h2>Tell us what you<br/>want to achieve.</h2><a className="button button-dark" href="/request-a-quote">Start a conversation ↗</a></Reveal></section>
  </>;
 }
