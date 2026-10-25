@@ -28,6 +28,11 @@ async function getHomeProjects(): Promise<HomeProject[]> {
     return [];
   }
 }
+const showcaseProjects:HomeProject[]=[
+{id:"reference-identity",title:"Identity & brand direction",slug:"identity-reference",category:"Brand Identity",summary:"A visual reference for thoughtful brand presentation.",cover_image_url:"https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true},
+{id:"reference-print",title:"Print, colour & composition",slug:"print-reference",category:"Print & Design",summary:"A temporary editorial image reference, ready to be replaced with approved studio work.",cover_image_url:"https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true},
+{id:"reference-photo",title:"Photo & film production",slug:"photo-reference",category:"Photo & Film",summary:"A temporary visual reference for photography and film services.",cover_image_url:"https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true}
+];
 function mediaIsVideo(url: string) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url); }
 
 type HomeContent = { heroEyebrow?:string; heroTitle?:string; heroDescription?:string; primaryCta?:string; secondaryCta?:string; approachTitle?:string; approachDescription?:string };
@@ -36,7 +41,7 @@ async function getHomeContent():Promise<HomeContent> {
   try { const supabase=createSupabaseServerClient(); const {data,error}=await supabase.from("site_content").select("content_value").eq("content_key","homepage").maybeSingle(); if(error||!data?.content_value)return fallback; return {...fallback,...data.content_value} as HomeContent; } catch { return fallback; }
 }
 export default async function HomePage() {
-  const [projectCards,homeContent] = await Promise.all([getHomeProjects(),getHomeContent()]);
+  const [projectCards,homeContent] = await Promise.all([getHomeProjects(),getHomeContent()]);\n  const displayedProjects = projectCards.length ? projectCards : showcaseProjects;
   const heroLines=(homeContent.heroTitle||"Make your brand matter.").split(" ");
   return <>
     <section className="studio-hero">
@@ -81,8 +86,8 @@ export default async function HomePage() {
 
     <section className="studio-work-section">
       <div className="studio-section-top"><div><p className="studio-kicker">THE PORTFOLIO</p><h2>Creative work,<br/><em>with a point of view.</em></h2></div><div className="studio-work-intro"><p>Explore selected identities, campaign visuals and print work—each chosen for its craft, clarity and ability to make a brand more memorable.</p><a className="studio-button studio-button-white" href="/portfolio">View the portfolio ↗</a></div></div>
-      <div className="studio-work-grid">{projectCards.map((project,i)=>{const media=project.cover_image_url||(project.media_urls||[])[0]||"";return <Reveal key={project.id} delay={i*.06}><a href="/portfolio" className={`studio-work-card ${["work-brand","work-poster","work-print"][i%3]}`}><div className="studio-work-meta"><span>{String(i+1).padStart(2,"0")} / {project.category.toUpperCase()}</span><span>↗</span></div><div className="studio-work-art studio-work-art-live">{media?(mediaIsVideo(media)?<video src={media} muted playsInline preload="metadata" aria-label={project.title}/>:<img src={media} alt={project.title} loading="lazy"/>):<strong>{project.category}</strong>}</div><div className="studio-work-caption"><span>SELECTED WORK · {project.category.toUpperCase()}</span><h3>{project.title}</h3></div></a></Reveal>})}</div>{projectCards.length===0&&<div className="studio-work-empty"><span>THE PORTFOLIO IS READY FOR YOUR WORK</span><p>Approved featured projects will appear here as soon as they are published in the studio CMS.</p><a href="/portfolio">Explore the portfolio ↗</a></div>}
-      <p className="studio-work-disclaimer">This selection updates from the studio CMS. Publish a project and mark it as featured to bring it into the spotlight.</p>
+      <div className="studio-work-grid">{displayedProjects.map((project,i)=>{const media=project.cover_image_url||(project.media_urls||[])[0]||"";return <Reveal key={project.id} delay={i*.06}><a href="/portfolio" className={`studio-work-card ${["work-brand","work-poster","work-print"][i%3]}`}><div className="studio-work-meta"><span>{String(i+1).padStart(2,"0")} / {project.category.toUpperCase()}</span><span>↗</span></div><div className="studio-work-art studio-work-art-live">{media?(mediaIsVideo(media)?<video src={media} muted playsInline preload="metadata" aria-label={project.title}/>:<img src={media} alt={project.title} loading="lazy"/>):<strong>{project.category}</strong>}</div><div className="studio-work-caption"><span>{project.id.startsWith("reference-")?"IMAGE REFERENCE · REPLACE IN CMS":"SELECTED WORK · "+project.category.toUpperCase()}</span><h3>{project.title}</h3></div></a></Reveal>})}</div>
+      <p className="studio-work-disclaimer">{projectCards.length===0?"Temporary open-licence image references are shown until your own projects are published. Replace them anytime in the studio CMS.":"This selection updates from the studio CMS. Publish a project and mark it as featured to bring it into the spotlight."}</p>
     </section>
 
     <section className="studio-founder-section">
