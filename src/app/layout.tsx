@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/creative-effects";
+import { LiquidLogo } from "@/components/liquid-logo";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
@@ -15,7 +16,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SmoothScroll />
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
-          <a className="brand-logo" href="/" aria-label="Light Creative Hub home"><img src="/brand/light-creative-hub-mark.svg" alt="Light Creative Hub — Brand, Print, Design" /></a>
+          <a className="brand-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <nav aria-label="Main navigation">
             <a href="/about">About</a><a href="/services">Services</a><a href="/portfolio">Our work</a><a href="/contact">Contact</a>
           </nav>
@@ -23,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </header>
         <main id="main">{children}</main>
         <footer className="footer">
-          <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><img src="/brand/light-creative-hub-mark.svg" alt="" /></a>
+          <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo inverse /></a>
           <p>Creative ideas. Professional execution.</p>
           <div className="footer-contacts"><a href="tel:+2347067376478">07067376478</a><a href="tel:+2349045218491">09045218491</a><a href="mailto:lightcreativehub0@gmail.com">lightcreativehub0@gmail.com</a></div>
           <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a></div>
