@@ -37,7 +37,7 @@ function mediaIsVideo(url: string) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test
 
 type HomeContent = { heroEyebrow?:string; heroTitle?:string; heroDescription?:string; primaryCta?:string; secondaryCta?:string; approachTitle?:string; approachDescription?:string };
 async function getHomeContent():Promise<HomeContent> {
-  const fallback:HomeContent={heroEyebrow:"INDEPENDENT CREATIVE STUDIO",heroTitle:"Make your brand matter.",heroDescription:"Light Creative Hub helps businesses and individuals turn ideas into clear identities, compelling design, quality print and visual stories people remember.",primaryCta:"Tell us about your project",secondaryCta:"Explore selected work",approachTitle:"Good design looks good. Great design does a job.",approachDescription:"Every colour, frame, word and printed detail should have a reason to be there. We bring creative thinking and practical execution together so the result is not only beautiful — it works for the people you need to reach."};
+  const fallback:HomeContent={heroEyebrow:"INDEPENDENT CREATIVE STUDIO",heroTitle:"A sharper look. A stronger brand.",heroDescription:"Light Creative Hub helps businesses and individuals turn ideas into clear identities, compelling design, quality print and visual stories people remember.",primaryCta:"Tell us about your project",secondaryCta:"Explore selected work",approachTitle:"Good design looks good. Great design does a job.",approachDescription:"Every colour, frame, word and printed detail should have a reason to be there. We bring creative thinking and practical execution together so the result is not only beautiful — it works for the people you need to reach."};
   try { const supabase=createSupabaseServerClient(); const {data,error}=await supabase.from("site_content").select("content_value").eq("content_key","homepage").maybeSingle(); if(error||!data?.content_value)return fallback; return {...fallback,...data.content_value} as HomeContent; } catch { return fallback; }
 }
 export default async function HomePage() {
@@ -55,19 +55,17 @@ export default async function HomePage() {
             <a className="studio-button studio-button-blue" href="/request-a-quote">{homeContent.primaryCta} <span>↗</span></a>
             <a className="studio-button studio-button-outline" href="/portfolio">{homeContent.secondaryCta} <span>↓</span></a>
           </div>
-          <div className="studio-hero-proof"><span><b>01</b> STRATEGY & IDENTITY</span><span><b>02</b> DESIGN & PRINT</span><span><b>03</b> PHOTO & FILM</span></div>
+          <div className="studio-hero-proof"><span><b>01</b><strong>Strategy & identity</strong><small>Positioning, logo and brand systems</small></span><span><b>02</b><strong>Design & print</strong><small>Campaigns, artwork and production</small></span><span><b>03</b><strong>Photo & film</strong><small>People, products and stories</small></span></div>
         </div>
-        <Reveal className="hero-artboard">
-          <div className="artboard-ruler"><span>LIGHT CREATIVE HUB</span><span>BRAND / PRINT / DESIGN</span></div>
-          <div className="artboard-main">
-            <LiquidWorld />
-            <div className="artboard-icon" aria-label="Light Creative emblem"><svg viewBox="0 0 240 160" aria-hidden="true"><path d="M16 88C31 35 76 9 119 9L104 145C66 140 34 120 16 88Z" fill="currentColor"/><path d="M129 10L224 28C214 81 179 122 105 145Z" fill="currentColor"/><path d="M120 10L104 145" stroke="#fff" strokeWidth="6" fill="none"/><path d="m42 91 4 8 9 1-6.5 6 1.5 9-8-4.5-8 4.5 1.5-9-6.5-6 9-1zM190 39l4 8 9 1-6.5 6 1.5 9-8-4.5-8 4.5 1.5-9-6.5-6 9-1z" fill="#fff"/></svg></div>
-            <p className="artboard-name">Light Creative</p>
-            <p className="artboard-tag">BRAND <i>|</i> <b>PRINT</b> <i>|</i> DESIGN</p>
+        <Reveal className="hero-artboard hero-photo-collage">
+          <div className="hero-collage-top"><span>LIGHT CREATIVE HUB</span><span>VISUAL STORIES / 001</span></div>
+          <div className="hero-collage-main">
+            <figure className="hero-collage-primary"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1400&q=85" alt="Colourful editorial graphic design and branding reference" loading="eager"/><figcaption><span>01 / BRAND DIRECTION</span><strong>Clarity in every detail.</strong></figcaption></figure>
+            <figure className="hero-collage-secondary"><img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85" alt="Notebook and print design reference" loading="lazy"/><figcaption>02 / DESIGN & PRINT</figcaption></figure>
+            <figure className="hero-collage-tertiary"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=85" alt="Photographer creating a visual story" loading="lazy"/><figcaption>03 / PHOTO & FILM</figcaption></figure>
+            <div className="hero-collage-note"><span>THOUGHTFUL CREATIVE PARTNERSHIP</span><strong>IDEA <i>→</i> IMPACT</strong></div>
           </div>
-          <div className="artboard-bottom"><span>THOUGHTFUL BY DESIGN</span><span>LC—001 / CREATIVE PRACTICE</span></div>
-          <div className="artboard-sticker sticker-orange">IDEA → IMPACT</div>
-          <div className="artboard-sticker sticker-white">BUILT AROUND YOUR BRAND.</div>
+          <div className="hero-collage-bottom"><span>BRAND / PRINT / DESIGN / VISUAL STORYTELLING</span><span>MADE WITH PURPOSE ↗</span></div>
         </Reveal>
       </div>
       <div className="studio-hero-bottom"><span>GOOD WORK STARTS WITH A GOOD CONVERSATION.</span><a href="#services">DISCOVER WHAT WE DO <span>↓</span></a></div>
