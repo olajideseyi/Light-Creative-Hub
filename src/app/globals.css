@@ -47,3 +47,32 @@
 .footer small{grid-column:1/-1;padding-top:20px;border-top:1px solid rgba(23,23,23,.18);font-size:10px;color:var(--muted)}
 .footer-contacts,.footer-nav{grid-column:1/-1}
 @media(max-width:560px){.footer{grid-template-columns:1fr;padding:36px 5vw}.footer small{grid-column:auto}.footer-contacts,.footer-nav{grid-column:auto}}
+
+
+/* Admin workspace */
+.admin-page{min-height:70vh}
+.admin-title{font-size:clamp(56px,10vw,118px);line-height:.88;letter-spacing:-.085em;margin:0}
+.admin-title em{font-style:normal;color:var(--blue)}
+.admin-lead{max-width:600px;margin:24px 0 32px;color:var(--muted);line-height:1.8}
+.admin-login,.admin-project-form{display:flex;flex-direction:column;gap:18px;max-width:760px;padding:28px;border:1px solid #d6d5cf;background:#fff}
+.admin-login label,.admin-project-form label{display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700}
+.admin-login input,.admin-project-form input:not([type=checkbox]):not([type=file]),.admin-project-form select,.admin-project-form textarea{width:100%;padding:13px;border:1px solid #c9c9c2;background:#fff;color:var(--ink);font:inherit;font-size:14px}
+.admin-project-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.admin-project-form .field-full{grid-column:1/-1}
+.admin-project-form input[type=file]{font-size:12px;max-width:100%}
+.admin-project-form small,.admin-help{font-size:11px;line-height:1.7;color:var(--muted);font-weight:400}
+.admin-help code{overflow-wrap:anywhere}
+.admin-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:48px 0 20px}
+.admin-toolbar h2{font-size:28px}
+.admin-project-form h3,.admin-project-list h3{margin:0 0 6px;font-size:22px;letter-spacing:-.04em}
+.admin-checks{display:flex;flex-wrap:wrap;gap:20px}
+.admin-checks label{display:flex;flex-direction:row;align-items:center;font-weight:500}
+.admin-checks input{accent-color:var(--blue)}
+.admin-project-list{max-width:900px;margin-top:42px}
+.admin-project-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:1px solid #d6d5cf}
+.admin-project-row p{font-size:12px;color:var(--muted);margin:8px 0}
+.status-live,.status-draft{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;padding:5px 8px;background:#e0f4e6;color:#24623a}
+.status-draft{background:#efeee9;color:#666}
+.admin-row-actions{display:flex;flex-wrap:wrap;gap:8px}
+.button-danger{background:#fff;border-color:#b62929;color:#a12626}
+@media(max-width:650px){.admin-login,.admin-project-form{padding:18px}.admin-project-form .form-grid{grid-template-columns:1fr}.admin-project-form .field-full{grid-column:auto}.admin-project-row{align-items:flex-start;flex-direction:column}.admin-row-actions{width:100%}}
