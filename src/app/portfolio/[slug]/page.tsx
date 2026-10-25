@@ -38,7 +38,7 @@ async function getProject(slug: string): Promise<PortfolioProject | null> {
 }
 
 function isVideo(url: string) {
-  return /\\.(mp4|webm|mov|m4v)(\\?.*)?$/i.test(url);
+  return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
