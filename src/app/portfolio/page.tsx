@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Metadata } from "next";\nimport { WhatsAppLink } from "@/components/whatsapp-float";
+import type { Metadata } from "next";
+import { WhatsAppLink } from "@/components/whatsapp-float";
 
 export const metadata: Metadata = {
   title: "Portfolio",
