@@ -741,3 +741,11 @@ body{font-family:Montserrat,Arial,sans-serif}
 @media(max-width:900px){.studio-hero>.liquid-world{right:-13%;top:12%;width:70vw;height:70vw;opacity:.58}.studio-service-grid{gap:10px}.studio-work-card .studio-work-art{min-height:230px}.studio-work-art-live img,.studio-work-art-live video{min-height:230px}}
 @media(max-width:560px){.studio-hero>.liquid-world{right:-30%;top:16%;width:100vw;height:100vw;opacity:.4}.studio-hero:before{background-size:38px 38px}.hero-artboard{border-radius:15px;padding:12px}.studio-work-card .studio-work-art{min-height:245px}.studio-work-art-live img,.studio-work-art-live video{min-height:245px}.studio-service-grid{gap:12px}}
 @media(prefers-reduced-motion:reduce){.studio-hero:before,.artboard-main:before{animation:none!important}.studio-button,.hero-artboard,.studio-service-grid>div,.studio-work-card,.studio-work-art-live img,.studio-work-art-live video,.founder-editorial-photo img{transition:none!important}}
+
+/* Keep the real-time 3D liquid artwork contained inside the hero's brand panel */
+.studio-hero>.liquid-world{display:none}
+.artboard-main>.liquid-world{position:absolute;inset:0;right:auto;top:auto;width:100%;height:100%;z-index:0;opacity:.9;mix-blend-mode:screen;filter:none;pointer-events:none}
+.artboard-main>.liquid-world canvas{display:block;width:100%!important;height:100%!important}
+.artboard-main:before{z-index:1;pointer-events:none}
+.artboard-icon,.artboard-name,.artboard-tag{z-index:2}
+@media(max-width:900px){.studio-hero>.liquid-world{display:none}.artboard-main>.liquid-world{width:100%;height:100%;opacity:.85}}
