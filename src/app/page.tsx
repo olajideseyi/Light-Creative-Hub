@@ -1,7 +1,8 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { LiquidWorld } from "@/components/liquid-world";
-import { WhatsAppLink } from "@/components/whatsapp-float";\nimport { getSiteContact } from "@/lib/site-contact";
+import { WhatsAppLink } from "@/components/whatsapp-float";
+import { getSiteContact } from "@/lib/site-contact";
 
 const services = [
   { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
@@ -95,6 +96,6 @@ export default async function HomePage() {
       <div className="founder-editorial-copy"><p className="studio-kicker">THE THINKING BEHIND THE WORK</p><h2>Give good ideas<br/>room to <em>become.</em></h2><blockquote>“Remember that creativity requires time and space. Allow yourself to recharge, seek inspiration from diverse sources, and let ideas marinate.”</blockquote><a className="studio-inline-link" href="/about">Meet the founder and studio <span>↗</span></a></div>
     </section>
 
-    <section className="studio-contact-section"><div className="contact-section-copy"><p className="studio-kicker">HAVE SOMETHING IN MIND?</p><h2>Let’s make<br/><em>it memorable.</em></h2><p>Tell us what you want to build, launch, print or communicate. We’ll take it from there — one thoughtful step at a time.</p><div className="studio-contact-actions"><a className="studio-button studio-button-blue" href="/request-a-quote">Start a project <span>↗</span></a><WhatsAppLink className="studio-button studio-button-whatsapp"><span aria-hidden="true">↗</span> Chat on WhatsApp</WhatsAppLink></div></div><div className="contact-info-panel"><span>LET’S TALK</span><a href={"tel:+"+contact.whatsappPhone}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replace(/\\s/g,"")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a><small>BRAND · PRINT · DESIGN · VISUAL STORYTELLING</small></div></section>
+    <section className="studio-contact-section"><div className="contact-section-copy"><p className="studio-kicker">HAVE SOMETHING IN MIND?</p><h2>Let’s make<br/><em>it memorable.</em></h2><p>Tell us what you want to build, launch, print or communicate. We’ll take it from there — one thoughtful step at a time.</p><div className="studio-contact-actions"><a className="studio-button studio-button-blue" href="/request-a-quote">Start a project <span>↗</span></a><WhatsAppLink className="studio-button studio-button-whatsapp"><span aria-hidden="true">↗</span> Chat on WhatsApp</WhatsAppLink></div></div><div className="contact-info-panel"><span>LET’S TALK</span><a href={"tel:"+contact.primaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a><small>BRAND · PRINT · DESIGN · VISUAL STORYTELLING</small></div></section>
   </>;
 }
