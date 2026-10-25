@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { WhatsAppLink } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
 export const metadata: Metadata = { title: "Contact the Studio" };
-export default function ContactPage() {
+export default async function ContactPage() {
+ const siteContact = await getSiteContact();
  return <>
   <PageIntro eyebrow="CONTACT / START HERE" title="Let’s make" accent="something matter." description="Share your project, timeline and goals. We’ll review the brief and recommend a clear next step."/>
   <section className="contact-page">
