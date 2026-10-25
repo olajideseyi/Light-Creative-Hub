@@ -2,7 +2,7 @@ import { PageIntro, Reveal } from "@/components/creative-effects";
 import type { Metadata } from "next";
 import { WhatsAppLink } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
-export const metadata: Metadata = { title: "Contact the Studio" };
+export const metadata: Metadata = { title:"Contact the Studio",description:"Contact Light Creative Hub in Lagos, Nigeria, to discuss branding, design, print, photography or video projects.",openGraph:{title:"Contact Light Creative Hub",description:"Start a conversation about your next creative project.",type:"website"} };
 export default async function ContactPage() {
  const siteContact = await getSiteContact();
  return <>

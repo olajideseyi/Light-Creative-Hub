@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro, Reveal } from "@/components/creative-effects";
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = { title:"Privacy",description:"Learn how Light Creative Hub handles information submitted through its project enquiry forms.",robots:{index:true,follow:true},openGraph:{title:"Privacy | Light Creative Hub",description:"How project enquiry information is handled.",type:"website"} };
 export default function PrivacyPage() {
  return <>
   <PageIntro eyebrow="PRIVACY / YOUR INFORMATION" title="Respect by" accent="design." description="We only ask for the information needed to understand your enquiry and communicate with you about your project."/>

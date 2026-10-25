@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageIntro } from "@/components/creative-effects";
 import { QuoteForm } from "@/components/quote-form";
 
-export const metadata: Metadata = { title: "Start a Project" };
+export const metadata: Metadata = { title:"Start a Project",description:"Send Light Creative Hub a project brief for branding, graphic design, print, photography, videography and content production.",openGraph:{title:"Start a Project | Light Creative Hub",description:"Share your creative brief and get a clear next step.",type:"website"} };
 
 export default function RequestQuotePage() {
   return <>

@@ -7,6 +7,7 @@ import { getSiteContact } from "@/lib/site-contact";
 import { MobileNav } from "@/components/mobile-nav";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://light-creative-hub.vercel.app"),
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
   description: "Creative design, branding, printing, photography, videography, and content production for businesses and individuals.",
   applicationName: "Light Creative Hub",

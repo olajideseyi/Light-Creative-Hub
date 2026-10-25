@@ -36,7 +36,7 @@ export default function AdminPage() {
   const [previewProject,setPreviewProject]=useState<Project|null>(null);
   type SiteDoc = Record<string,string|boolean>;
   const [siteDocs,setSiteDocs]=useState<Record<string,SiteDoc>>({});
-  const [cmsSection,setCmsSection]=useState<"homepage"|"about"|"contact"|"effects">("homepage");
+  const [cmsSection,setCmsSection]=useState<"homepage"|"about"|"services"|"contact"|"effects">("homepage");
   const [cmsLoading,setCmsLoading]=useState(false);
 
   async function verifyAdminAccess() {
@@ -52,6 +52,7 @@ export default function AdminPage() {
     if(queryError) throw queryError;
     const next:Record<string,SiteDoc>={};
     for(const row of data??[]) next[row.content_key]=row.content_value as SiteDoc;
+    next.services = {title:"Good ideas. Made visible.",description:"From a distinctive brand identity to the final printed piece or moving image, we bring thoughtful creative work and practical production together.",introTitle:"One creative partner. Connected capabilities.",introDescription:"Choose the service you need, or bring us a bigger brief. We’ll help you work out the right combination, without making the process more complicated than it needs to be.",...(next.services??{})};
     setSiteDocs(next);
   }
   async function saveSiteContent(event:FormEvent<HTMLFormElement>) {
@@ -169,10 +170,15 @@ export default function AdminPage() {
       <section className="admin-panel site-content-cms" id="site-content-editor">
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
         <div className="cms-library-tabs site-content-tabs">
-          {(["homepage","about","contact","effects"] as const).map(key=><button type="button" key={key} className={cmsSection===key?"active":""} onClick={()=>setCmsSection(key)}>{({homepage:"Homepage",about:"About",contact:"Contact",effects:"Motion & effects"} as const)[key]}</button>)}
+          {(["homepage","about","services","contact","effects"] as const).map(key=><button type="button" key={key} className={cmsSection===key?"active":""} onClick={()=>setCmsSection(key)}>{({homepage:"Homepage",about:"About",services:"Services",contact:"Contact",effects:"Motion & effects"} as const)[key]}</button>)}
         </div>
         <form className="admin-project-form" onSubmit={saveSiteContent}>
-          {cmsSection==="contact" ? <div className="form-grid">
+          {cmsSection==="services" ? <div className="form-grid">
+            <label className="field-full">Services page headline<textarea rows={2} value={String(siteDocs.services?.title??"Good ideas. Made visible.")} onChange={e=>changeDoc("title",e.target.value)} maxLength={180} required/></label>
+            <label className="field-full">Services page introduction<textarea rows={4} value={String(siteDocs.services?.description??"")} onChange={e=>changeDoc("description",e.target.value)} maxLength={1500} required/></label>
+            <label className="field-full">Capabilities section heading<textarea rows={2} value={String(siteDocs.services?.introTitle??"One creative partner. Connected capabilities.")} onChange={e=>changeDoc("introTitle",e.target.value)} maxLength={180} required/></label>
+            <label className="field-full">Capabilities section description<textarea rows={3} value={String(siteDocs.services?.introDescription??"")} onChange={e=>changeDoc("introDescription",e.target.value)} maxLength={1500} required/></label>
+          </div> : cmsSection==="contact" ? <div className="form-grid">
             <label>WhatsApp number (international format, digits only)<input value={String(siteDocs.contact?.whatsappPhone??"2347067376478")} onChange={e=>changeDoc("whatsappPhone",e.target.value.replace(/\D/g,""))} placeholder="2347067376478" required/></label>
             <label>Primary phone number<input value={String(siteDocs.contact?.primaryPhone??"0706 737 6478")} onChange={e=>changeDoc("primaryPhone",e.target.value)} required/></label>
             <label>Secondary phone number<input value={String(siteDocs.contact?.secondaryPhone??"0904 521 8491")} onChange={e=>changeDoc("secondaryPhone",e.target.value)}/></label>
@@ -189,7 +195,7 @@ export default function AdminPage() {
             {Object.entries(siteDocs[cmsSection]??{}).filter(([,v])=>typeof v==="string").map(([key,value])=><label key={key} className="field-full">{key.replace(/([A-Z])/g," $1").replace(/^./,s=>s.toUpperCase())}<textarea rows={key.toLowerCase().includes("description")?4:2} value={String(value)} onChange={e=>changeDoc(key,e.target.value)} maxLength={5000}/></label>)}
             {Object.keys(siteDocs[cmsSection]??{}).length===0&&<p>Content fields are being initialized. Refresh this page after the CMS migration is available.</p>}
           </div>}
-          <div className="cms-form-actions"><button className="button button-blue" disabled={cmsLoading}>{cmsLoading?"Saving…":"Save "+({homepage:"homepage content",about:"About content",contact:"contact content",effects:"creative settings"} as const)[cmsSection]+" ↗"}</button><span className="admin-help">Saved settings are used by the public contact controls and site pages.</span></div>
+          <div className="cms-form-actions"><button className="button button-blue" disabled={cmsLoading}>{cmsLoading?"Saving…":"Save "+({homepage:"homepage content",about:"About content",services:"services content",contact:"contact content",effects:"creative settings"} as const)[cmsSection]+" ↗"}</button><span className="admin-help">Saved settings are used by the public contact controls and site pages.</span></div>
         </form>
       </section>
       <div className="admin-dashboard-stats"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div>
