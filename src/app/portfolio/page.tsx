@@ -48,6 +48,10 @@ function isVideo(url: string) {
   return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
 }
 
+function isAudio(url: string) {
+  return /\.(mp3|wav|ogg|m4a|aac|oga)(\?.*)?$/i.test(url);
+}
+
 function ProjectMedia({ project, priority = false }: { project: PortfolioProject; priority?: boolean }) {
   const media = project.cover_image_url || project.media_urls?.[0] || "";
   if (!media) {
@@ -56,6 +60,7 @@ function ProjectMedia({ project, priority = false }: { project: PortfolioProject
   if (isVideo(media)) {
     return <video className="portfolio-cover-media" src={media} controls playsInline preload="metadata" aria-label={project.title} />;
   }
+  if (isAudio(media)) { return <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={media} controls preload="metadata" aria-label={project.title} /></div>; }
   return <img className="portfolio-cover-media" src={media} alt={project.title} loading={priority ? "eager" : "lazy"} />;
 }
 
@@ -93,7 +98,7 @@ export default async function PortfolioPage() {
       </div>
       {(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length > 0 && <div className="portfolio-project-gallery">
         <div className="portfolio-gallery-heading"><span>PROJECT GALLERY</span><span>{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length.toString().padStart(2, "0")} MEDIA ITEMS</span></div>
-        <div className="portfolio-gallery-grid portfolio-layout-gallery">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : <img src={url} alt={featured.title + " gallery item " + (index + 1)} loading="lazy" />}</div>)}</div>
+        <div className="portfolio-gallery-grid portfolio-layout-gallery">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : isAudio(url) ? <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={url} controls preload="metadata" aria-label={featured.title + " audio " + (index + 1)} /></div> : <img src={url} alt={featured.title + " gallery item " + (index + 1)} loading="lazy" />}</div>)}</div>
       </div>}
     </section>}
 

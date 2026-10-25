@@ -10,16 +10,21 @@ type Project = {
 };
 const BUCKET = "portfolio-media";
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
-const ACCEPTED = ["image/jpeg","image/png","image/webp","image/avif","video/mp4","video/webm","video/quicktime"];
+const ACCEPTED = ["image/jpeg","image/png","image/webp","image/avif","video/mp4","video/webm","video/quicktime","audio/mpeg","audio/mp3","audio/wav","audio/x-wav","audio/ogg","audio/mp4","audio/aac","audio/webm"];
+const ACCEPTED_EXTENSIONS = ".jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v,.mp3,.wav,.ogg,.oga,.m4a,.aac";
+const COVER_ACCEPTED = ACCEPTED.filter(type => !type.startsWith("audio/"));
+const COVER_ACCEPTED_EXTENSIONS = ".jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v";
 const CATEGORIES = ["Branding & Design","Re-branding","Graphic Design","Print","Photography","Videography","Data Analysis","PR & Communications","Content Production","Other"];
 const slugify = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
+const isAudio = (url: string) => /\.(mp3|wav|ogg|m4a|aac|oga)(\?.*)?$/i.test(url);
 const isVideoFile = (file: File) => file.type.startsWith("video/");
+const isAudioFile = (file: File) => file.type.startsWith("audio/");
 
 function MediaPreview({ url, title, compact = false }: {url: string; title: string; compact?: boolean}) {
   return <div className={compact ? "cms-media-thumb cms-media-thumb-compact" : "cms-media-preview"}>
-    {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={title}/> : <img src={url} alt={title} loading="lazy"/>}
-    <span>{isVideo(url) ? "VIDEO" : "IMAGE"}</span>
+    {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={title}/> : isAudio(url) ? <div className="cms-audio-preview"><span className="cms-audio-icon">♫</span><audio src={url} controls preload="metadata" aria-label={title}/></div> : <img src={url} alt={title} loading="lazy"/>}
+    <span>{isVideo(url) ? "VIDEO" : isAudio(url) ? "AUDIO" : "IMAGE"}</span>
   </div>;
 }
 
@@ -117,7 +122,7 @@ export default function AdminPage() {
     }catch(e){setError(e instanceof Error?e.message:"Sign-in failed. Check your details and try again.");}finally{setBusy(false);}
   }
   function validateFiles(files:File[]) {
-    for(const file of files){if(!ACCEPTED.includes(file.type))throw new Error("Use JPG, PNG, WebP, AVIF, MP4, WebM or MOV files.");if(file.size>MAX_FILE_SIZE)throw new Error("Each media file must be 50 MB or smaller.");}
+    for(const file of files){if(!ACCEPTED.includes(file.type))throw new Error("Use JPG, PNG, WebP, AVIF, MP4, WebM, MOV, MP3, WAV, OGG, M4A or AAC files.");if(file.size>MAX_FILE_SIZE)throw new Error("Each media file must be 50 MB or smaller.");}
   }
   async function uploadMedia(file:File) {
     const supabase=getSupabaseBrowserClient();
@@ -209,15 +214,15 @@ export default function AdminPage() {
             <label>Project title *<input value={title} onChange={e=>{setTitle(e.target.value);if(!editingId||!slug)setSlug(slugify(e.target.value));}} required minLength={2} maxLength={180} placeholder="e.g. Identity for a new brand"/></label>
             <label>URL slug *<input value={slug} onChange={e=>setSlug(slugify(e.target.value))} required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="identity-for-a-new-brand"/></label>
             <label>Service category *<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(c=><option key={c}>{c}</option>)}</select></label>
-            <label>Cover image or video<input id="cms-cover" type="file" accept={ACCEPTED.join(",")} onChange={(e:ChangeEvent<HTMLInputElement>)=>setCoverFile(e.target.files?.[0]??null)}/><small>Choose a new cover to replace the current one. Maximum 50 MB.</small></label>
+            <label>Cover image or video<input id="cms-cover" type="file" accept={`${COVER_ACCEPTED.join(",")},${COVER_ACCEPTED_EXTENSIONS}`} onChange={(e:ChangeEvent<HTMLInputElement>)=>setCoverFile(e.target.files?.[0]??null)}/><small>Choose an image or video for the project cover. Audio is supported in the gallery. Maximum 50 MB.</small></label>
             <label className="field-full">Short project summary *<textarea value={summary} onChange={e=>setSummary(e.target.value)} required minLength={10} maxLength={1000} rows={3} placeholder="A concise description shown in portfolio cards."/></label>
             <label className="field-full">Full project description<textarea value={description} onChange={e=>setDescription(e.target.value)} maxLength={5000} rows={4} placeholder="Add the brief, creative approach, deliverables and story behind the work."/></label>
-            <label className="field-full">Add gallery images or videos<input id="cms-gallery" type="file" multiple accept={ACCEPTED.join(",")} onChange={e=>setGalleryFiles(Array.from(e.target.files??[]))}/><small>Select multiple files at once. Supported: JPG, PNG, WebP, AVIF, MP4, WebM and MOV.</small></label>
+            <label className="field-full">Add gallery images, videos or audio<input id="cms-gallery" type="file" multiple accept={`${ACCEPTED.join(",")},${ACCEPTED_EXTENSIONS}`} onChange={e=>setGalleryFiles(Array.from(e.target.files??[]))}/><small>Select multiple files at once. Supported: JPG, PNG, WebP, AVIF, MP4, WebM, MOV, MP3, WAV, OGG, M4A and AAC. Each file must be 50 MB or smaller.</small></label>
           </div>
           {(existingMedia.length>0||coverFile||galleryFiles.length>0)&&<div className="cms-preview-block"><div className="cms-preview-heading"><div><h3>Media preview</h3><p>Check the images and videos before you save.</p></div><span>{(existingMedia.length+(coverFile?1:0)+galleryFiles.length)} MEDIA ITEMS</span></div><div className="cms-media-grid">
             {coverFile&&<div className="cms-media-item"><div className="cms-media-thumb">{isVideoFile(coverFile)?<video src={URL.createObjectURL(coverFile)} controls playsInline/>:<img src={URL.createObjectURL(coverFile)} alt="New cover preview"/>}<span>NEW COVER</span></div><small>{coverFile.name}</small></div>}
             {!coverFile&&existingMedia.map((url,i)=><div className="cms-media-item" key={url}><MediaPreview url={url} title={title||"Current project media"} compact/><small>{i===0?"Current cover / media":`Gallery item ${i+1}`}</small><button type="button" className="cms-remove-media" onClick={()=>setExistingMedia(old=>old.filter(item=>item!==url))}>Remove from project</button></div>)}
-            {galleryFiles.map((file,i)=><div className="cms-media-item" key={`${file.name}-${i}`}><div className="cms-media-thumb">{isVideoFile(file)?<video src={URL.createObjectURL(file)} controls playsInline/>:<img src={URL.createObjectURL(file)} alt={file.name}/>}<span>NEW GALLERY</span></div><small>{file.name}</small></div>)}
+            {galleryFiles.map((file,i)=><div className="cms-media-item" key={`${file.name}-${i}`}><div className="cms-media-thumb">{isVideoFile(file)?<video src={URL.createObjectURL(file)} controls playsInline/>:isAudioFile(file)?<div className="cms-audio-preview"><span className="cms-audio-icon">♫</span><audio src={URL.createObjectURL(file)} controls preload="metadata" aria-label={file.name}/></div>:<img src={URL.createObjectURL(file)} alt={file.name}/>}<span>NEW GALLERY</span></div><small>{file.name}</small></div>)}
           </div></div>}
           <div className="admin-checks"><label><input type="checkbox" checked={published} onChange={e=>setPublished(e.target.checked)}/> Publish on public portfolio</label><label><input type="checkbox" checked={featured} onChange={e=>setFeatured(e.target.checked)}/> Feature this project</label></div>
           <div className="cms-form-actions"><button className="button button-blue" disabled={busy}>{busy?(editingId?"Saving changes…":"Creating project…"):(editingId?"Save project changes ↗":"Create portfolio project ↗")}</button><button type="button" className="button button-outline-dark" onClick={resetForm} disabled={busy}>Clear form</button></div>

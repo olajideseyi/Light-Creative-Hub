@@ -41,6 +41,10 @@ function isVideo(url: string) {
   return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
 }
 
+function isAudio(url: string) {
+  return /\.(mp3|wav|ogg|m4a|aac|oga)(\?.*)?$/i.test(url);
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProject(slug);
@@ -53,13 +57,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: (project.summary || project.description || "Selected work by Light Creative Hub.").slice(0, 160),
       type: "article",
       siteName: "Light Creative Hub",
-      ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { images: [project.cover_image_url] } : {})
+      ...(project.cover_image_url && !isVideo(project.cover_image_url) && !isAudio(project.cover_image_url) ? { images: [project.cover_image_url] } : {})
     },
     twitter: {
-      card: project.cover_image_url && !isVideo(project.cover_image_url) ? "summary_large_image" : "summary",
+      card: project.cover_image_url && !isVideo(project.cover_image_url) && !isAudio(project.cover_image_url) ? "summary_large_image" : "summary",
       title: project.title,
       description: (project.summary || project.description || "Selected work by Light Creative Hub.").slice(0,160),
-      ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { images:[project.cover_image_url] } : {})
+      ...(project.cover_image_url && !isVideo(project.cover_image_url) && !isAudio(project.cover_image_url) ? { images:[project.cover_image_url] } : {})
     },
     robots: { index:true, follow:true }
   };
@@ -82,7 +86,7 @@ export default async function PortfolioProjectPage({ params }: { params: Promise
     url: `https://light-creative-hub.vercel.app/portfolio/${project.slug}`,
     creator: { "@type": "Organization", name: "Light Creative Hub", url: "https://light-creative-hub.vercel.app" },
     genre: project.category,
-    ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { image: project.cover_image_url } : {})
+    ...(project.cover_image_url && !isVideo(project.cover_image_url) && !isAudio(project.cover_image_url) ? { image: project.cover_image_url } : {})
   };
 
   return <>
@@ -105,7 +109,7 @@ export default async function PortfolioProjectPage({ params }: { params: Promise
       <div className="portfolio-section-label"><span>01 / THE WORK</span><span>{gallery.length.toString().padStart(2, "0")} MEDIA ITEMS</span></div>
       {gallery.length ? <div className="portfolio-detail-gallery portfolio-layout-gallery">
         {gallery.map((url, index) => <Reveal key={url} className="portfolio-gallery-item">
-          {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={project.title + " media " + (index + 1)} /> : <img src={url} alt={project.title + (index ? " gallery image " + (index + 1) : " project cover")} loading={index === 0 ? "eager" : "lazy"} />}
+          {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={project.title + " media " + (index + 1)} /> : isAudio(url) ? <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={url} controls preload="metadata" aria-label={project.title + " audio " + (index + 1)} /></div> : <img src={url} alt={project.title + (index ? " gallery image " + (index + 1) : " project cover")} loading={index === 0 ? "eager" : "lazy"} />}
         </Reveal>)}
       </div> : <div className="portfolio-coming-soon"><div className="portfolio-coming-index">LCH</div><div><span>PROJECT MEDIA</span><h2>Details are being prepared.</h2><p>Contact the studio if you would like to discuss work in this category.</p></div></div>}
       <div className="portfolio-project-story">

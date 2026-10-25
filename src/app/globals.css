@@ -1143,3 +1143,14 @@ body[data-gallery-transition="slide"] .portfolio-layout-gallery > *:hover {
     transform: none !important;
   }
 }
+
+
+/* Accessible audio presentation for portfolio projects and the studio CMS. */
+.portfolio-audio-card{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px;min-height:190px;width:100%;height:100%;padding:clamp(18px,3vw,32px);background:linear-gradient(135deg,#101116,#252833);color:#f6f6f2}
+.portfolio-audio-symbol{display:grid;place-items:center;width:48px;height:48px;border:1px solid rgba(215,255,100,.65);border-radius:50%;color:var(--lime);font-size:28px}
+.portfolio-audio-card p{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.portfolio-audio-card audio,.cms-audio-preview audio{display:block;width:100%;max-width:100%;min-width:0}
+.portfolio-gallery-item audio{width:100%;display:block}
+.cms-audio-preview{display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;gap:14px;width:100%;min-height:110px;padding:14px;background:#17191f;color:#f6f6f2}
+.cms-audio-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid #d7ff64;border-radius:50%;color:#d7ff64;font-size:25px}
+.cms-media-thumb .cms-audio-preview{height:100%}
