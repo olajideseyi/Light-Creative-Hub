@@ -1,2 +1,12 @@
-export const metadata={title:"Contact"};
-export default function ContactPage(){return <section className="contact-band" style={{minHeight:"70vh"}}><div><p className="eyebrow">CONTACT</p><h2>Let’s talk about<br/>your next project.</h2><p>For design, print, photography, videography, and content enquiries, reach us directly.</p></div><div className="contact-links"><a href="https://wa.me/2347067376478">WhatsApp ↗</a><a href="tel:+2347067376478">07067376478</a><a href="tel:+2349045218491">09045218491</a><a href="mailto:lightcreativehub0@gmail.com">lightcreativehub0@gmail.com</a><a href="mailto:adeniyiboluwatife513@gmail.com">adeniyiboluwatife513@gmail.com</a></div></section>}
+import { PageIntro, Reveal } from "@/components/creative-effects";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Contact the Studio" };
+export default function ContactPage() {
+ return <>
+  <PageIntro eyebrow="CONTACT / START HERE" title="Let’s make" accent="something matter." description="Tell us about the idea, the deadline or the challenge. We’ll help you figure out a useful next step."/>
+  <section className="contact-page">
+    <Reveal><p className="eyebrow">A GOOD PROJECT STARTS WITH A CONVERSATION</p><h2>What are you<br/>thinking about?<br/><em>Let’s talk.</em></h2><p>We work with businesses, organisations and individuals — in person and online. For quotes, custom creative work and print enquiries, use the form or contact us directly.</p><a className="button button-dark" href="/request-a-quote">Send a project brief ↗</a></Reveal>
+    <Reveal delay={.1}><div className="contact-card"><p className="eyebrow">REACH THE STUDIO</p><a href="https://wa.me/2347067376478"><span>WHATSAPP / QUICK ENQUIRY</span>0706 737 6478 ↗</a><a href="tel:+2349045218491"><span>PHONE / SECOND LINE</span>0904 521 8491 ↗</a><a href="mailto:lightcreativehub0@gmail.com"><span>EMAIL / PROJECTS</span>lightcreativehub0@gmail.com ↗</a><a href="mailto:adeniyiboluwatife513@gmail.com"><span>EMAIL / ALTERNATE</span>adeniyiboluwatife513@gmail.com ↗</a><p className="contact-hours">Location: Lagos, Nigeria · Available for online and in-person projects by arrangement.</p></div></Reveal>
+  </section>
+ </>;
+}
