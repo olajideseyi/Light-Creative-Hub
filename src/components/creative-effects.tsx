@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
 
 export function SmoothScroll() {
@@ -19,7 +19,16 @@ export function SmoothScroll() {
 
 export function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const reduce = useReducedMotion();
-  return <motion.div className={className} initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(8px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.16 }} transition={{ duration: reduce ? 0 : 0.72, delay, ease: [0.22, 1, 0.36, 1] }}>{children}</motion.div>;
+  const [effect, setEffect] = useState("fade-up");
+  const [motionEnabled, setMotionEnabled] = useState(true);
+  useEffect(() => {
+    setEffect(document.body.dataset.scrollReveal || "fade-up");
+    setMotionEnabled(document.body.dataset.motionEnabled !== "false");
+  }, []);
+  const disabled = Boolean(reduce) || !motionEnabled || effect === "none";
+  const initial = effect === "fade" ? { opacity: 0 } : effect === "blur" ? { opacity: 0, filter: "blur(12px)" } : { opacity: 0, y: 28, filter: "blur(8px)" };
+  const visible = { opacity: 1, y: 0, filter: "blur(0px)" };
+  return <motion.div className={className} initial={disabled ? false : initial} whileInView={visible} viewport={{ once: true, amount: 0.16 }} transition={{ duration: disabled ? 0 : 0.72, delay, ease: [0.22, 1, 0.36, 1] }}>{children}</motion.div>;
 }
 
 export function PageIntro({ eyebrow, title, accent, description }: { eyebrow: string; title: string; accent: string; description: string }) {
