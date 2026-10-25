@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/creative-effects";
 import { LiquidLogo } from "@/components/liquid-logo";
-import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";\nimport { getSiteContact } from "@/lib/site-contact";
+import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";
+import { getSiteContact } from "@/lib/site-contact";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="footer">
           <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <p>Creative ideas. Professional execution.</p>
-          <div className="footer-contacts"><a href={"tel:+"+contact.whatsappPhone}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replace(/\\s/g,"")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a></div>
+          <div className="footer-contacts"><a href={"tel:"+contact.primaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a></div>
           <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a></div>
           <small>© {new Date().getFullYear()} Light Creative Hub. All rights reserved.</small>
         </footer>
