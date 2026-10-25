@@ -10,7 +10,7 @@ const schema = z.object({
   company: z.string().trim().max(160).optional().default(""),
   details: z.string().trim().min(10).max(5000),
   consent: z.literal(true),
-  website: z.string().max(0).optional().default("")
+  website: z.string().max(200).optional().default("")
 });
 
 export async function POST(request: Request) {
