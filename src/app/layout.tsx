@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/creative-effects";
 import { LiquidLogo } from "@/components/liquid-logo";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
   description: "Creative design, branding, printing, photography, videography, and content production for businesses and individuals.",
-  applicationName: "Light Creative Hub"
+  applicationName: "Light Creative Hub",
+  icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
+  openGraph: { title: "Light Creative Hub | Brand · Print · Design", description: "Brand identity, graphic design, print, photography and video content.", type: "website" }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -20,9 +23,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <nav aria-label="Main navigation">
             <a href="/about">About</a><a href="/services">Services</a><a href="/portfolio">Our work</a><a href="/contact">Contact</a>
           </nav>
-          <a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
+          <a className="header-whatsapp" href="https://wa.me/2347067376478?text=Hello%20Light%20Creative%20Hub%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"><span className="header-wa-dot" aria-hidden="true">↗</span> WhatsApp</a><a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
         </header>
         <main id="main">{children}</main>
+        <WhatsAppFloat />
         <footer className="footer">
           <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <p>Creative ideas. Professional execution.</p>
