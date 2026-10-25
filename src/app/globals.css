@@ -655,3 +655,14 @@ body{font-family:Montserrat,Arial,sans-serif}
 @media(max-width:1000px){.cms-layout{grid-template-columns:1fr}.cms-editor-panel .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cms-editor-panel .form-grid .field-full{grid-column:1/-1}}
 @media(max-width:650px){.cms-admin-page .cms-welcome-row{align-items:flex-start;flex-direction:column;gap:0}.cms-view-site{margin:0 0 20px}.cms-editor-panel .form-grid{grid-template-columns:1fr}.cms-editor-panel .form-grid .field-full{grid-column:auto}.cms-project-grid{grid-template-columns:1fr 1fr}.cms-card-actions .button,.cms-card-actions .cms-delete-button{flex:1}.cms-modal-backdrop{padding:10px}.cms-modal-media-grid{grid-template-columns:1fr}.cms-preview-modal{max-height:94vh}.cms-media-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:390px){.cms-project-grid{grid-template-columns:1fr}.cms-card-actions{display:grid;grid-template-columns:1fr 1fr}.cms-preview-heading{flex-direction:column}}
+
+
+/* Public portfolio galleries: every uploaded asset can be explored */
+.portfolio-project-gallery{margin-top:34px;border-top:1px solid #dfe2eb;padding-top:18px}
+.portfolio-gallery-heading{display:flex;justify-content:space-between;gap:15px;margin-bottom:13px;font:8px "DM Mono",monospace;letter-spacing:.7px;color:#0018a1}
+.portfolio-gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.portfolio-gallery-item,.portfolio-card-gallery-item{overflow:hidden;background:#e8ebf5;aspect-ratio:4/3}
+.portfolio-gallery-item img,.portfolio-gallery-item video,.portfolio-card-gallery-item img,.portfolio-card-gallery-item video{display:block;width:100%;height:100%;object-fit:cover}
+.portfolio-card-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:0 14px 14px}
+.portfolio-card-gallery-item{aspect-ratio:1.15}
+@media(max-width:650px){.portfolio-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.portfolio-gallery-item{aspect-ratio:1}}
