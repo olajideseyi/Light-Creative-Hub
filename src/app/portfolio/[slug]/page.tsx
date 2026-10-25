@@ -74,8 +74,19 @@ export default async function PortfolioProjectPage({ params }: { params: Promise
     ...(project.cover_image_url ? [project.cover_image_url] : []),
     ...(project.media_urls || [])
   ]));
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: (project.summary || project.description || `Selected ${project.category.toLowerCase()} work by Light Creative Hub.`).slice(0, 500),
+    url: `https://light-creative-hub.vercel.app/portfolio/${project.slug}`,
+    creator: { "@type": "Organization", name: "Light Creative Hub", url: "https://light-creative-hub.vercel.app" },
+    genre: project.category,
+    ...(project.cover_image_url && !isVideo(project.cover_image_url) ? { image: project.cover_image_url } : {})
+  };
 
   return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     <section className="portfolio-masthead">
       <div className="portfolio-masthead-top"><span>LIGHT CREATIVE HUB / PROJECT STORY</span><span>{project.category.toUpperCase()}</span></div>
       <div className="portfolio-masthead-main">
