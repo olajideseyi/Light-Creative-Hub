@@ -937,3 +937,77 @@ body{font-family:Montserrat,Arial,sans-serif}
 @media(max-width:900px){.hero-collage-main{min-height:390px}.hero-photo-collage{padding:13px}.studio-hero-proof{gap:8px}}
 @media(max-width:560px){.hero-collage-main{min-height:340px}.hero-collage-primary{width:83%;height:77%}.hero-collage-secondary{width:43%;height:39%;top:5%}.hero-collage-tertiary{width:49%;height:39%;right:2%}.hero-collage-primary figcaption{left:12px;bottom:12px}.hero-collage-primary figcaption strong{font-size:18px}.hero-collage-note{padding:9px}.hero-collage-note strong{font-size:16px}.hero-collage-bottom{font-size:6px}.studio-hero-proof{grid-template-columns:1fr;gap:12px}.studio-hero-proof>span{grid-template-columns:28px 1fr}.studio-hero-proof>span>b{grid-row:span 2}}
 @media(prefers-reduced-motion:reduce){.hero-collage-main img{transition:none!important}}
+
+
+/* Phase: responsive navigation and a dedicated, mobile-safe CMS workspace */
+.mobile-nav{position:relative;z-index:80}
+.mobile-menu-toggle{display:none;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:0 13px;border:1px solid #d9dce5;border-radius:999px;background:#fff;color:#11131c;font:700 11px/1 Arial,sans-serif;letter-spacing:.04em;cursor:pointer}
+.menu-icon{display:flex;width:15px;flex-direction:column;gap:4px}
+.menu-icon i{display:block;height:1.5px;width:15px;background:currentColor;transition:transform .18s ease}
+.menu-icon-open i:first-child{transform:translateY(2.75px) rotate(45deg)}
+.menu-icon-open i:last-child{transform:translateY(-2.75px) rotate(-45deg)}
+.primary-navigation{display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);font-size:12px;font-weight:700}
+.primary-navigation a{display:flex;align-items:center;gap:7px}
+.primary-navigation a>span{display:none}
+.primary-navigation a[aria-current="page"]{color:var(--blue)}
+.mobile-nav-cta{display:none!important}
+body:has(.cms-admin-page) .site-header,
+body:has(.cms-admin-page)>.whatsapp-float,
+body:has(.cms-admin-page) .footer,
+body:has(.cms-admin-page) .skip-link{display:none!important}
+body:has(.cms-admin-page) main{width:100%;max-width:none;margin:0;padding:0}
+body:has(.cms-admin-page){background:#f3f5fb}
+.cms-admin-page{width:100%;min-width:0;overflow-x:clip}
+.cms-admin-page .admin-shell{width:min(1480px,100%);margin:0 auto;padding:clamp(16px,3vw,42px)}
+.cms-admin-page .admin-masthead{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.cms-admin-page .admin-masthead-right{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.cms-admin-page .admin-login-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:clamp(22px,5vw,76px);align-items:center;min-height:min(680px,calc(100vh - 130px));padding:clamp(22px,4vw,64px) 0}
+.cms-admin-page .admin-login{width:100%;max-width:520px;margin:0 auto;background:#fff;border:1px solid #e4e7ef;border-radius:20px;box-shadow:0 18px 55px #19264b0b}
+.cms-admin-page .admin-welcome h1{font-size:clamp(42px,6vw,86px);line-height:.98;letter-spacing:-.065em;overflow-wrap:anywhere}
+.cms-admin-page .admin-panel{min-width:0}
+.cms-admin-page .admin-dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cms-admin-page input,.cms-admin-page textarea,.cms-admin-page select{max-width:100%;min-width:0}
+.cms-admin-page .admin-project-form button,.cms-admin-page .cms-form-actions .button{max-width:100%;white-space:normal}
+@media(max-width:900px){
+  .site-header{height:auto;min-height:74px;display:flex;flex-wrap:wrap;gap:12px;padding:13px 5vw}
+  .site-header .mobile-nav{margin-left:auto}
+  .site-header .primary-navigation{display:none}
+  .site-header .primary-navigation.is-open{display:flex;position:absolute;top:calc(100% + 10px);left:4vw;right:4vw;flex-direction:column;align-items:stretch;gap:0;padding:10px;background:#fff;border:1px solid #e3e6ef;border-radius:18px;box-shadow:0 22px 55px #11131c20}
+  .site-header .primary-navigation.is-open a{display:flex;justify-content:space-between;min-height:48px;padding:12px 13px;border-bottom:1px solid #eef0f5;font-size:14px}
+  .site-header .primary-navigation.is-open a>span{display:inline}
+  .site-header .primary-navigation.is-open .mobile-nav-cta{display:flex!important;margin-top:8px;background:var(--blue);color:#fff;border:0;border-radius:10px}
+  .mobile-menu-toggle{display:flex}
+  .site-header .header-whatsapp{display:none}
+  .cms-admin-page .admin-login-layout{grid-template-columns:1fr;min-height:0;padding:36px 0}
+  .cms-admin-page .admin-welcome h1{font-size:clamp(42px,9vw,68px)}
+}
+@media(max-width:650px){
+  .cms-admin-page .admin-shell{padding:14px}
+  .cms-admin-page .admin-masthead{align-items:flex-start}
+  .cms-admin-page .admin-masthead-right{width:100%;justify-content:space-between}
+  .cms-admin-page .admin-masthead-right>span:first-child{font-size:9px}
+  .cms-admin-page .admin-login-layout{gap:18px;padding:24px 0}
+  .cms-admin-page .admin-welcome p:not(.eyebrow){font-size:14px;line-height:1.65}
+  .cms-admin-page .admin-dashboard-stats{grid-template-columns:1fr}
+  .cms-admin-page .admin-stat{display:grid;grid-template-columns:1fr auto;gap:5px 12px}
+  .cms-admin-page .admin-stat small{grid-column:1/-1}
+  .cms-admin-page .cms-welcome-row{gap:12px}
+  .cms-admin-page .admin-panel-head{align-items:flex-start;gap:12px}
+  .cms-admin-page .admin-panel-head h2{font-size:clamp(22px,6vw,32px);overflow-wrap:anywhere}
+  .cms-admin-page .cms-form-actions{align-items:stretch;flex-direction:column}
+  .cms-admin-page .cms-form-actions .button{width:100%}
+  .cms-admin-page .cms-project-card{min-width:0}
+  .cms-admin-page .cms-card-actions{grid-template-columns:1fr}
+  .cms-admin-page .cms-modal-backdrop{padding:10px}
+  .cms-admin-page .cms-preview-modal{width:100%;max-height:calc(100dvh - 20px);padding:16px;overflow:auto}
+  .cms-admin-page .cms-modal-media-grid{grid-template-columns:1fr}
+  .cms-admin-page .admin-masthead .button{min-height:42px}
+  .cms-admin-page .admin-project-form label{min-width:0;overflow-wrap:anywhere}
+}
+@media(max-width:390px){
+  .site-header .brand-logo{max-width:132px;min-width:0;width:132px}
+  .site-header .nav-cta{font-size:10px;padding:10px}
+  .mobile-menu-toggle{padding:0 10px}
+  .cms-admin-page .admin-shell{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){.menu-icon i{transition:none}}

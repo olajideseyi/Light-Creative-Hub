@@ -4,6 +4,7 @@ import { SmoothScroll } from "@/components/creative-effects";
 import { LiquidLogo } from "@/components/liquid-logo";
 import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
+import { MobileNav } from "@/components/mobile-nav";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
@@ -22,9 +23,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
           <a className="brand-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
-          <nav aria-label="Main navigation">
-            <a href="/about">About</a><a href="/services">Services</a><a href="/portfolio">Our work</a><a href="/contact">Contact</a>
-          </nav>
+          <MobileNav />
           <WhatsAppLink className="header-whatsapp"><span className="header-wa-dot" aria-hidden="true">↗</span> WhatsApp</WhatsAppLink><a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
         </header>
         <main id="main">{children}</main>
