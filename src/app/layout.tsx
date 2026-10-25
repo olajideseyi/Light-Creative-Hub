@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/creative-effects";
 import { LiquidLogo } from "@/components/liquid-logo";
-import { WhatsAppFloat } from "@/components/whatsapp-float";
+import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";
 
 export const metadata: Metadata = {
   title: { default: "Light Creative Hub | Design. Print. Create.", template: "%s | Light Creative Hub" },
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <nav aria-label="Main navigation">
             <a href="/about">About</a><a href="/services">Services</a><a href="/portfolio">Our work</a><a href="/contact">Contact</a>
           </nav>
-          <a className="header-whatsapp" href="https://wa.me/2347067376478?text=Hello%20Light%20Creative%20Hub%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"><span className="header-wa-dot" aria-hidden="true">↗</span> WhatsApp</a><a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
+          <WhatsAppLink className="header-whatsapp"><span className="header-wa-dot" aria-hidden="true">↗</span> WhatsApp</WhatsAppLink><a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
         </header>
         <main id="main">{children}</main>
         <WhatsAppFloat />
