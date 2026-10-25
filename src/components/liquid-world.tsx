@@ -17,7 +17,7 @@ function ShaderGradient() {
       transparent
       uniforms={{ uTime: { value: 0 } }}
       vertexShader={`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`}
-      fragmentShader={`varying vec2 vUv; uniform float uTime; void main(){ vec2 uv=vUv; float wave=sin(uv.x*5.0+uTime*.18)*.08+cos(uv.y*4.0-uTime*.14)*.06; vec3 a=vec3(.0,.035,.36); vec3 b=vec3(.03,.10,.72); vec3 c=vec3(.28,.34,1.0); float g=smoothstep(.0,1.0,uv.y+wave); vec3 col=mix(a,b,g); col=mix(col,c,smoothstep(.45,1.0,uv.x+wave)*.48); float glow=exp(-distance(uv,vec2(.68,.55))*3.2); col+=vec3(.10,.14,.40)*glow; gl_FragColor=vec4(col, .94); }`}
+      fragmentShader={`varying vec2 vUv; uniform float uTime; void main(){ vec2 uv=vUv; float wave=sin(uv.x*5.0+uTime*.18)*.08+cos(uv.y*4.0-uTime*.14)*.06; vec3 a=vec3(.0,.035,.36); vec3 b=vec3(.03,.10,.72); vec3 c=vec3(.28,.34,1.0); float g=smoothstep(.0,1.0,uv.y+wave); vec3 col=mix(a,b,g); col=mix(col,c,smoothstep(.45,1.0,uv.x+wave)*.48); float glow=exp(-distance(uv,vec2(.68,.55))*3.2); col+=vec3(.10,.14,.40)*glow; gl_FragColor=vec4(col, .28); }`}
     />
   </mesh>;
 }
