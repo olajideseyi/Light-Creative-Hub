@@ -72,7 +72,7 @@ export default async function PortfolioPage() {
           <p className="studio-kicker"><span className="kicker-line" /> SELECTED WORK / 2026</p>
           <h1>Ideas made<br/><em>visible.</em></h1>
           <p className="portfolio-masthead-intro">A considered selection of brand identities, campaigns and visual communication. Explore the brief, creative direction and finished work behind each project.</p>
-          <div className="portfolio-masthead-links"><a className="studio-button studio-button-blue" href="/request-a-quote">Have a project? Let’s talk <span>↗</span></a><span>{projects.length.toString().padStart(2,"0")} {projects.length === 1 ? "PROJECT IN THE ARCHIVE" : "PROJECTS IN THE ARCHIVE"}</span></div>
+          <div className="portfolio-masthead-links"><a className="studio-button studio-button-blue" href={`/request-a-quote?service=${encodeURIComponent(featured?.category || "")}`}>Have a project? Let’s talk <span>↗</span></a><span>{projects.length.toString().padStart(2,"0")} {projects.length === 1 ? "PROJECT IN THE ARCHIVE" : "PROJECTS IN THE ARCHIVE"}</span></div>
         </div>
         <div className="portfolio-masthead-side"><span className="portfolio-index">LCH—WORKS / ARCHIVE 001</span><div className="portfolio-type-specimen">WORK<br/><i>that</i><br/>SPEAKS<span>.</span></div><div className="portfolio-masthead-side-bottom"><span>FORM / FUNCTION / FEELING</span><span>SCROLL TO EXPLORE ↓</span></div></div>
       </div>
@@ -84,11 +84,11 @@ export default async function PortfolioPage() {
       <div className="portfolio-featured-project">
         <Reveal className="portfolio-featured-media"><ProjectMedia project={featured} priority/><span className="portfolio-image-index">LCH / 001</span><span className="portfolio-image-corner">FEATURED WORK ↗</span></Reveal>
         <Reveal className="portfolio-featured-copy" delay={0.08}>
-          <p className="studio-kicker"><span className="kicker-line"/> IDENTITY / GRAPHIC DESIGN</p>
+          <p className="studio-kicker"><span className="kicker-line"/> {featured.category.toUpperCase()}</p>
           <h2>{featured.title}</h2>
           <p>{featured.summary || "A considered visual solution, shaped around the brief and designed to communicate with clarity."}</p>
           <div className="portfolio-detail-list"><div><span>DISCIPLINE</span><strong>{featured.category}</strong></div><div><span>FOCUS</span><strong>Identity & communication</strong></div><div><span>APPROACH</span><strong>Purposeful, precise, distinctive</strong></div></div>
-          <a className="studio-inline-link" href={`/portfolio/${featured.slug}`}>Explore this project <span>↗</span></a><a className="studio-inline-link" href="/request-a-quote">Create something with us <span>↗</span></a>
+          <a className="studio-inline-link" href={`/portfolio/${featured.slug}`}>Explore this project <span>↗</span></a><a className="studio-inline-link" href={`/request-a-quote?service=${encodeURIComponent(featured.category)}`}>Create something with us <span>↗</span></a>
         </Reveal>
       </div>
       {(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length > 0 && <div className="portfolio-project-gallery">
@@ -102,6 +102,6 @@ export default async function PortfolioPage() {
       {remaining.length ? <div className="portfolio-archive-grid">{remaining.map((project,index)=><Reveal key={project.id} delay={index*.04}><article className="portfolio-archive-card"><div className="portfolio-archive-media"><ProjectMedia project={project}/><span>{String(index+2).padStart(2,"0")} / LCH</span></div><div className="portfolio-archive-card-copy"><span>{project.category}</span><h3>{project.title}</h3><p>{project.summary}</p><a className="studio-inline-link" href={`/portfolio/${project.slug}`}>View project story <span>↗</span></a></div>{(project.media_urls || []).filter(url => url !== project.cover_image_url).length > 0 && <div className="portfolio-card-gallery">{(project.media_urls || []).filter(url => url !== project.cover_image_url).map((url, mediaIndex) => <div className="portfolio-card-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={project.title + " gallery item " + (mediaIndex + 1)} /> : <img src={url} alt={project.title + " gallery item " + (mediaIndex + 1)} loading="lazy" />}</div>)}</div>}</article></Reveal>)}</div> : <div className="portfolio-coming-soon"><div className="portfolio-coming-index">02—∞</div><div><span>THE ARCHIVE IS GROWING</span><h3>A closer look is coming.</h3><p>Published projects will appear here with their imagery and project details. We show real work, not placeholder concepts, so every piece in this archive represents the studio.</p><WhatsAppLink>Enquire about our work ↗</WhatsAppLink></div></div>}
     </section>
 
-    <section className="portfolio-cta-section"><div><p className="studio-kicker">YOUR BRAND DESERVES THOUGHTFUL WORK</p><h2>Make your next idea<br/><em>impossible to ignore.</em></h2></div><div><p>Tell us what you are building, launching or communicating. We’ll help you find the right creative direction.</p><a className="studio-button studio-button-white" href="/request-a-quote">Start a project <span>↗</span></a></div></section>
+    <section className="portfolio-cta-section"><div><p className="studio-kicker">YOUR BRAND DESERVES THOUGHTFUL WORK</p><h2>Make your next idea<br/><em>impossible to ignore.</em></h2></div><div><p>Tell us what you are building, launching or communicating. We’ll help you find the right creative direction.</p><a className="studio-button studio-button-white" href={`/request-a-quote?service=${encodeURIComponent(featured?.category || "")}`}>Start a project <span>↗</span></a></div></section>
   </>;
 }
