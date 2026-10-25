@@ -126,3 +126,9 @@ body{overflow-x:hidden} .site-header{position:relative;z-index:20;backdrop-filte
 .featured-tag{position:absolute;left:16px;top:16px;padding:9px 12px;background:rgba(215,255,100,.92);color:#101116;font:8px "DM Mono",monospace;letter-spacing:1px;backdrop-filter:blur(14px)}
 @media(max-width:760px){.live-project-media,.portfolio-project:nth-child(1) .live-project-media{height:390px}}
 @media(max-width:420px){.live-project-media,.portfolio-project:nth-child(1) .live-project-media{height:340px}}
+
+
+.liquid-logo{display:block;width:100%;height:auto;max-height:54px;color:var(--blue);overflow:visible;transition:transform .45s var(--ease),color .3s}
+.brand-logo:hover .liquid-logo{transform:translateY(-1px) scale(1.015);color:#1736cf}
+.liquid-logo-inverse{color:#fff}
+.footer-logo .liquid-logo{color:var(--blue)}
