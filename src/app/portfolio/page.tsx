@@ -59,7 +59,7 @@ function ProjectMedia({ project, priority = false }: { project: PortfolioProject
 export default async function PortfolioPage() {
   const projects = await getPublishedProjects();
   const featured = projects.find(project => project.featured) || projects[0];
-  const remaining = projects.filter(project => project.id !== featured.id);
+  const remaining = featured ? projects.filter(project => project.id !== featured.id) : [];
 
   return <>
     <section className="portfolio-masthead">
