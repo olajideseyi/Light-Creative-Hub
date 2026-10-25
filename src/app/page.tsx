@@ -34,7 +34,6 @@ export default async function HomePage() {
   const projectCards = await getHomeProjects();
   return <>
     <section className="studio-hero">
-      <LiquidWorld />
       <div className="studio-hero-top"><span>INDEPENDENT CREATIVE STUDIO</span><span>LAGOS, NIGERIA · AVAILABLE FOR PROJECTS</span></div>
       <div className="studio-hero-main">
         <div className="studio-hero-copy">
@@ -50,6 +49,7 @@ export default async function HomePage() {
         <Reveal className="hero-artboard">
           <div className="artboard-ruler"><span>LIGHT CREATIVE HUB</span><span>BRAND / PRINT / DESIGN</span></div>
           <div className="artboard-main">
+            <LiquidWorld />
             <div className="artboard-icon" aria-label="Light Creative emblem"><svg viewBox="0 0 240 160" aria-hidden="true"><path d="M16 88C31 35 76 9 119 9L104 145C66 140 34 120 16 88Z" fill="currentColor"/><path d="M129 10L224 28C214 81 179 122 105 145Z" fill="currentColor"/><path d="M120 10L104 145" stroke="#fff" strokeWidth="6" fill="none"/><path d="m42 91 4 8 9 1-6.5 6 1.5 9-8-4.5-8 4.5 1.5-9-6.5-6 9-1zM190 39l4 8 9 1-6.5 6 1.5 9-8-4.5-8 4.5 1.5-9-6.5-6 9-1z" fill="#fff"/></svg></div>
             <p className="artboard-name">Light Creative</p>
             <p className="artboard-tag">BRAND <i>|</i> <b>PRINT</b> <i>|</i> DESIGN</p>
