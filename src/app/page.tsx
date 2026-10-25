@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { LiquidWorld } from "@/components/liquid-world";\nimport { WhatsAppLink } from "@/components/whatsapp-float";
+import { LiquidWorld } from "@/components/liquid-world";
+import { WhatsAppLink } from "@/components/whatsapp-float";
 
 const services = [
   { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
@@ -41,7 +42,8 @@ async function getHomeContent():Promise<HomeContent> {
   try { const supabase=createSupabaseServerClient(); const {data,error}=await supabase.from("site_content").select("content_value").eq("content_key","homepage").maybeSingle(); if(error||!data?.content_value)return fallback; return {...fallback,...data.content_value} as HomeContent; } catch { return fallback; }
 }
 export default async function HomePage() {
-  const [projectCards,homeContent] = await Promise.all([getHomeProjects(),getHomeContent()]);\n  const displayedProjects = projectCards.length ? projectCards : showcaseProjects;
+  const [projectCards,homeContent] = await Promise.all([getHomeProjects(),getHomeContent()]);
+  const displayedProjects = projectCards.length ? projectCards : showcaseProjects;
   const heroLines=(homeContent.heroTitle||"Make your brand matter.").split(" ");
   return <>
     <section className="studio-hero">
