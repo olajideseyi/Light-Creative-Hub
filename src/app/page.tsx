@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/creative-effects";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const services = [
   { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
@@ -9,11 +10,24 @@ const services = [
   { n: "06", title: "Data analysis & presentation", text: "Information organised into clear reports and visual presentations that are easier to understand.", label: "INSIGHT / CLARITY", symbol: "DATA" },
 ];
 
-const projectCards = [
-  { n: "01", category: "BRAND IDENTITY", title: "Recognisable by design.", className: "work-brand", mark: "L / C", note: "IDENTITY SYSTEM · CONCEPT" },
-  { n: "02", category: "GRAPHIC DESIGN", title: "Made to be noticed.", className: "work-poster", mark: "MAKE\nIT COUNT.", note: "CAMPAIGN LAYOUT · CONCEPT" },
-  { n: "03", category: "PRINT & COLLATERAL", title: "From screen to hand.", className: "work-print", mark: "IDEAS\nINTO OBJECTS", note: "PRINT DIRECTION · CONCEPT" },
-];
+type HomeProject = { id: string; title: string; slug: string; category: string; summary: string | null; cover_image_url: string | null; media_urls: string[] | null; featured: boolean; };
+async function getHomeProjects(): Promise<HomeProject[]> {
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase.from("portfolio_projects")
+      .select("id,title,slug,category,summary,cover_image_url,media_urls,featured,display_order,created_at")
+      .eq("published", true)
+      .eq("featured", true)
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(3);
+    if (error) return [];
+    return (data ?? []) as HomeProject[];
+  } catch {
+    return [];
+  }
+}
+function mediaIsVideo(url: string) { return /\\.(mp4|webm|mov|m4v)(\\?.*)?$/i.test(url); }
 
 export default function HomePage() {
   return <>
@@ -58,8 +72,8 @@ export default function HomePage() {
 
     <section className="studio-work-section">
       <div className="studio-section-top"><div><p className="studio-kicker">THE PORTFOLIO</p><h2>Creative work,<br/><em>with a point of view.</em></h2></div><div className="studio-work-intro"><p>Explore visual directions across identity, campaign design and print. As approved client work is added, this collection becomes the studio’s living portfolio.</p><a className="studio-button studio-button-white" href="/portfolio">View the portfolio ↗</a></div></div>
-      <div className="studio-work-grid">{projectCards.map((project,i)=><Reveal key={project.n} delay={i*.06}><a href="/portfolio" className={`studio-work-card ${project.className}`}><div className="studio-work-meta"><span>{project.n} / {project.category}</span><span>↗</span></div><div className="studio-work-art"><strong>{project.mark.split(String.fromCharCode(10)).map((line,j)=><span key={j}>{line}</span>)}</strong>{i===0&&<div className="work-mini-emblem">LC</div>}{i===2&&<div className="print-swatch-row"><i/><i/><i/></div>}</div><div className="studio-work-caption"><span>{project.note}</span><h3>{project.title}</h3></div></a></Reveal>)}</div>
-      <p className="studio-work-disclaimer">Concept studies are labelled honestly; they are not presented as commissioned client work. The portfolio will showcase the studio’s own approved projects and uploaded media.</p>
+      <div className="studio-work-grid">{projectCards.map((project,i)=>{const media=project.cover_image_url||(project.media_urls||[])[0]||"";return <Reveal key={project.id} delay={i*.06}><a href="/portfolio" className={`studio-work-card ${["work-brand","work-poster","work-print"][i%3]}`}><div className="studio-work-meta"><span>{String(i+1).padStart(2,"0")} / {project.category.toUpperCase()}</span><span>↗</span></div><div className="studio-work-art studio-work-art-live">{media?(mediaIsVideo(media)?<video src={media} muted playsInline preload="metadata" aria-label={project.title}/>:<img src={media} alt={project.title} loading="lazy"/>):<strong>{project.category}</strong>}</div><div className="studio-work-caption"><span>SELECTED WORK · {project.category.toUpperCase()}</span><h3>{project.title}</h3></div></a></Reveal>)}</div>{projectCards.length===0&&<div className="studio-work-empty"><span>THE PORTFOLIO IS READY FOR YOUR WORK</span><p>Approved featured projects will appear here as soon as they are published in the studio CMS.</p><a href="/portfolio">Explore the portfolio ↗</a></div>}
+      <p className="studio-work-disclaimer">Only projects published and marked as featured in the studio CMS appear in this selection.</p>
     </section>
 
     <section className="studio-founder-section">
