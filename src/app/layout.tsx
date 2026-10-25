@@ -5,6 +5,18 @@ import { LiquidLogo } from "@/components/liquid-logo";
 import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
 import { MobileNav } from "@/components/mobile-nav";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+async function getSiteEffects(): Promise<Record<string, unknown>> {
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase.from("site_content").select("content_value").eq("content_key", "effects").maybeSingle();
+    if (error || !data?.content_value || typeof data.content_value !== "object") return {};
+    return data.content_value as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://light-creative-hub.vercel.app"),
@@ -16,10 +28,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const contact = await getSiteContact();
+  const [contact, effects] = await Promise.all([getSiteContact(), getSiteEffects()]);
   return (
     <html lang="en">
-      <body>
+      <body data-image-effect={typeof effects.imageEffect === "string" ? effects.imageEffect : "float"} data-gallery-transition={typeof effects.transition === "string" ? effects.transition : "crossfade"} data-scroll-reveal={typeof effects.reveal === "string" ? effects.reveal : "fade-up"} data-motion-enabled={effects.motionEnabled === false ? "false" : "true"}>
         <SmoothScroll />
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
