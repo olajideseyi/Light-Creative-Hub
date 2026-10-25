@@ -1,5 +1,6 @@
 import { PageIntro, Reveal } from "@/components/creative-effects";
-import type { Metadata } from "next";\nimport { WhatsAppLink } from "@/components/whatsapp-float";
+import type { Metadata } from "next";
+import { WhatsAppLink } from "@/components/whatsapp-float";
 export const metadata: Metadata = { title: "Contact the Studio" };
 export default function ContactPage() {
  return <>
