@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { LiquidWorld } from "@/components/liquid-world";
+import { LiquidWorld } from "@/components/liquid-world";\nimport { WhatsAppLink } from "@/components/whatsapp-float";
 
 const services = [
   { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
@@ -95,6 +95,6 @@ export default async function HomePage() {
       <div className="founder-editorial-copy"><p className="studio-kicker">THE THINKING BEHIND THE WORK</p><h2>Give good ideas<br/>room to <em>become.</em></h2><blockquote>“Remember that creativity requires time and space. Allow yourself to recharge, seek inspiration from diverse sources, and let ideas marinate.”</blockquote><a className="studio-inline-link" href="/about">Meet the founder and studio <span>↗</span></a></div>
     </section>
 
-    <section className="studio-contact-section"><div className="contact-section-copy"><p className="studio-kicker">HAVE SOMETHING IN MIND?</p><h2>Let’s make<br/><em>it memorable.</em></h2><p>Tell us what you want to build, launch, print or communicate. We’ll take it from there — one thoughtful step at a time.</p><div className="studio-contact-actions"><a className="studio-button studio-button-blue" href="/request-a-quote">Start a project <span>↗</span></a><a className="studio-button studio-button-whatsapp" href="https://wa.me/2347067376478?text=Hello%20Light%20Creative%20Hub%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"><span aria-hidden="true">↗</span> Chat on WhatsApp</a></div></div><div className="contact-info-panel"><span>LET’S TALK</span><a href="tel:+2347067376478">0706 737 6478</a><a href="tel:+2349045218491">0904 521 8491</a><a href="mailto:lightcreativehub0@gmail.com">lightcreativehub0@gmail.com</a><small>BRAND · PRINT · DESIGN · VISUAL STORYTELLING</small></div></section>
+    <section className="studio-contact-section"><div className="contact-section-copy"><p className="studio-kicker">HAVE SOMETHING IN MIND?</p><h2>Let’s make<br/><em>it memorable.</em></h2><p>Tell us what you want to build, launch, print or communicate. We’ll take it from there — one thoughtful step at a time.</p><div className="studio-contact-actions"><a className="studio-button studio-button-blue" href="/request-a-quote">Start a project <span>↗</span></a><WhatsAppLink className="studio-button studio-button-whatsapp"><span aria-hidden="true">↗</span> Chat on WhatsApp</WhatsAppLink></div></div><div className="contact-info-panel"><span>LET’S TALK</span><a href="tel:+2347067376478">0706 737 6478</a><a href="tel:+2349045218491">0904 521 8491</a><a href="mailto:lightcreativehub0@gmail.com">lightcreativehub0@gmail.com</a><small>BRAND · PRINT · DESIGN · VISUAL STORYTELLING</small></div></section>
   </>;
 }
