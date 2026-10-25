@@ -24,6 +24,16 @@ export default function AdminPage() {
   const [published, setPublished] = useState(false);
   const [featured, setFeatured] = useState(false);
 
+  async function verifyAdminAccess() {
+    const supabase = getSupabaseBrowserClient();
+    const { data: userResult, error: userError } = await supabase.auth.getUser();
+    if (userError || !userResult.user) throw new Error("Your session has expired. Please sign in again.");
+    const { data, error: accessError } = await supabase.from("admin_users")
+      .select("user_id,role").eq("user_id", userResult.user.id).maybeSingle();
+    if (accessError || !data) throw new Error("This account is not approved for the Light Creative Hub admin workspace. Ask the site owner to approve your user ID.");
+    return userResult.user;
+  }
+
   async function loadProjects() {
     const supabase = getSupabaseBrowserClient();
     const { data, error: queryError } = await supabase.from("portfolio_projects")
@@ -41,8 +51,13 @@ export default function AdminPage() {
         if (!active) return;
         if (sessionError) { setError(sessionError.message); return; }
         if (data.session) {
-          setSignedIn(true);
-          try { await loadProjects(); } catch (e) { if (active) setError(e instanceof Error ? e.message : "Could not load projects."); }
+          try {
+            await verifyAdminAccess();
+            await loadProjects();
+            if (active) setSignedIn(true);
+          } catch (e) {
+            if (active) { setSignedIn(false); setError(e instanceof Error ? e.message : "This account cannot access the admin workspace."); }
+          }
         }
       }).catch((e: unknown) => { if (active) setError(e instanceof Error ? e.message : "Could not check your session."); });
     } catch (e) { setError(e instanceof Error ? e.message : "Supabase is not configured."); }
@@ -55,7 +70,13 @@ export default function AdminPage() {
       const supabase = getSupabaseBrowserClient();
       const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (authError) throw authError;
-      await loadProjects();
+      try {
+        await verifyAdminAccess();
+        await loadProjects();
+      } catch (accessError) {
+        await supabase.auth.signOut();
+        throw accessError;
+      }
       setSignedIn(true);
       setPassword("");
       setNotice("You're signed in. Portfolio changes are available to approved administrators.");
