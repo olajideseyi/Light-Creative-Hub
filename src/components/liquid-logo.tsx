@@ -2,8 +2,8 @@
 
 export function LiquidLogo({ inverse = false }: { inverse?: boolean }) {
   return (
-    <svg className={`liquid-logo${inverse ? " liquid-logo-inverse" : ""}`} viewBox="0 0 440 112" role="img" aria-labelledby="lch-logo-title" xmlns="http://www.w3.org/2000/svg">
-      <title id="lch-logo-title">Light Creative — Brand, Print, Design</title>
+    <svg className={`liquid-logo${inverse ? " liquid-logo-inverse" : ""}`} viewBox="0 0 440 112" role="img" aria-label="Light Creative — Brand, Print, Design" xmlns="http://www.w3.org/2000/svg">
+      <title>Light Creative — Brand, Print, Design</title>
       <g className="lch-mark" transform="translate(6 4)">
         <path d="M7 50C19 18 51 1 86 0L76 91C46 88 19 77 0 71Z" fill="currentColor"/>
         <path d="M94 1L184 17C175 55 146 82 86 92Z" fill="currentColor"/>
