@@ -1,4 +1,4 @@
-import { PageIntro, Reveal } from "@/components/creative-effects";
+import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 
@@ -14,41 +14,30 @@ type PortfolioProject = {
   slug: string;
   category: string;
   summary: string | null;
+  description?: string | null;
   cover_image_url: string | null;
   media_urls?: string[] | null;
   featured: boolean;
   display_order?: number;
 };
 
-const featuredBrandImage = "https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg";
-
-const studioWorkFallback: PortfolioProject[] = [{
-  id: "lch-brand-identity",
-  title: "Light Creative Hub — Founder Profile",
-  slug: "light-creative-hub-founder-profile",
-  category: "Graphic Design · Brand Communications",
-  summary: "A founder-led profile design introducing the creative studio, its service range and visual identity. The composition pairs the studio’s royal-blue brand language with a personal portrait and clear service messaging.",
-  cover_image_url: featuredBrandImage,
-  media_urls: [featuredBrandImage],
-  featured: true,
-  display_order: 0
-}];
-
 async function getPublishedProjects(): Promise<PortfolioProject[]> {
   try {
     const supabase = createSupabaseServerClient();
     const { data, error } = await supabase.from("portfolio_projects")
-      .select("id,title,slug,category,summary,cover_image_url,media_urls,featured,display_order,created_at")
+      .select("id,title,slug,category,summary,description,cover_image_url,media_urls,featured,display_order,created_at")
       .eq("published", true)
       .order("featured", { ascending: false })
       .order("display_order", { ascending: true })
       .order("created_at", { ascending: false });
-    if (error || !data?.length) return studioWorkFallback;
-    return data as PortfolioProject[];
-  } catch {
-    // Keep the published brand work visible if the deployment has not yet received
-    // its Supabase environment variables. Admin-managed projects take over when available.
-    return studioWorkFallback;
+    if (error) {
+      console.error("Portfolio query failed:", error.message);
+      return [];
+    }
+    return (data ?? []) as PortfolioProject[];
+  } catch (error) {
+    console.error("Portfolio could not connect to Supabase:", error);
+    return [];
   }
 }
 
