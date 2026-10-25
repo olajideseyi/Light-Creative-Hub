@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   openGraph: { title: "Light Creative Hub | Brand · Print · Design", description: "Brand identity, graphic design, print, photography and video content.", type: "website" }
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const contact = await getSiteContact();
   return (
     <html lang="en">
       <body>
