@@ -28,7 +28,7 @@ async function getHomeProjects(): Promise<HomeProject[]> {
     return [];
   }
 }
-function mediaIsVideo(url: string) { return /\\.(mp4|webm|mov|m4v)(\\?.*)?$/i.test(url); }
+function mediaIsVideo(url: string) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url); }
 
 export default async function HomePage() {
   const projectCards = await getHomeProjects();
