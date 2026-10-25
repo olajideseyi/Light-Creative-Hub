@@ -132,6 +132,28 @@ export default function AdminPage() {
     if(uploadError)throw uploadError;
     return supabase.storage.from(BUCKET).getPublicUrl(objectPath).data.publicUrl;
   }
+  async function uploadSiteImage(key:string,file:File) {
+    setError("");setNotice("");
+    if(!["image/jpeg","image/png","image/webp","image/avif"].includes(file.type)) {
+      setError("Choose a JPG, PNG, WebP or AVIF image for this website field.");
+      return;
+    }
+    if(file.size>MAX_FILE_SIZE) {
+      setError("Each image must be 50 MB or smaller.");
+      return;
+    }
+    setCmsLoading(true);
+    try {
+      const url=await uploadMedia(file);
+      changeDoc(key,url);
+      setNotice("Image uploaded. Save the current CMS section to publish the new image URL.");
+    } catch(e) {
+      setError(e instanceof Error?e.message:"Could not upload this image.");
+    } finally {
+      setCmsLoading(false);
+    }
+  }
+
   async function saveProject(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();setBusy(true);setError("");setNotice("");
     const uploadedUrls:string[]=[];
@@ -201,7 +223,7 @@ export default function AdminPage() {
             <label>WhatsApp contact style<select value={String(siteDocs.effects?.whatsappStyle??"expandable")} onChange={e=>changeDoc("whatsappStyle",e.target.value)}><option value="expandable">Expandable contact panel</option><option value="standard">Standard WhatsApp button</option><option value="minimal">Minimal floating icon</option></select></label>
             <label className="field-full cms-toggle-row"><input type="checkbox" checked={siteDocs.effects?.motionEnabled!==false} onChange={e=>changeDoc("motionEnabled",e.target.checked)}/> Enable decorative motion (respects reduced-motion preferences)</label>
           </div> : <div className="form-grid">
-            {Object.entries(siteDocs[cmsSection]??{}).filter(([,v])=>typeof v==="string").map(([key,value])=><label key={key} className="field-full">{key.replace(/([A-Z])/g," $1").replace(/^./,s=>s.toUpperCase())}<textarea rows={key.toLowerCase().includes("description")?4:2} value={String(value)} onChange={e=>changeDoc(key,e.target.value)} maxLength={5000}/></label>)}
+            {Object.entries(siteDocs[cmsSection]??{}).filter(([,v])=>typeof v==="string").map(([key,value])=><label key={key} className="field-full">{key.replace(/([A-Z])/g," $1").replace(/^./,s=>s.toUpperCase())}<textarea rows={key.toLowerCase().includes("description")?4:2} value={String(value)} onChange={e=>changeDoc(key,e.target.value)} maxLength={5000}/>{key.toLowerCase().includes("imageurl")&&<><span className="cms-image-upload-label">Or upload a replacement image</span><input type="file" accept="image/jpeg,image/png,image/webp,image/avif,.jpg,.jpeg,.png,.webp,.avif" onChange={e=>{const file=e.target.files?.[0];if(file)void uploadSiteImage(key,file);e.currentTarget.value="";}}/><small>Uploads to the portfolio-media bucket. Save this CMS section after uploading to apply it to the public page.</small></>}</label>)}
             {Object.keys(siteDocs[cmsSection]??{}).length===0&&<p>Content fields are being initialized. Refresh this page after the CMS migration is available.</p>}
           </div>}
           <div className="cms-form-actions"><button className="button button-blue" disabled={cmsLoading}>{cmsLoading?"Saving…":"Save "+({homepage:"homepage content",about:"About content",services:"services content",contact:"contact content",effects:"creative settings"} as const)[cmsSection]+" ↗"}</button><span className="admin-help">Saved settings are used by the public contact controls and site pages.</span></div>
