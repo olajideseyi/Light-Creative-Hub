@@ -30,19 +30,25 @@ async function getHomeProjects(): Promise<HomeProject[]> {
 }
 function mediaIsVideo(url: string) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url); }
 
+type HomeContent = { heroEyebrow?:string; heroTitle?:string; heroDescription?:string; primaryCta?:string; secondaryCta?:string; approachTitle?:string; approachDescription?:string };
+async function getHomeContent():Promise<HomeContent> {
+  const fallback:HomeContent={heroEyebrow:"INDEPENDENT CREATIVE STUDIO",heroTitle:"Make your brand matter.",heroDescription:"Light Creative Hub helps businesses and individuals turn ideas into clear identities, compelling design, quality print and visual stories people remember.",primaryCta:"Tell us about your project",secondaryCta:"Explore selected work",approachTitle:"Good design looks good. Great design does a job.",approachDescription:"Every colour, frame, word and printed detail should have a reason to be there. We bring creative thinking and practical execution together so the result is not only beautiful — it works for the people you need to reach."};
+  try { const supabase=createSupabaseServerClient(); const {data,error}=await supabase.from("site_content").select("content_value").eq("content_key","homepage").maybeSingle(); if(error||!data?.content_value)return fallback; return {...fallback,...data.content_value} as HomeContent; } catch { return fallback; }
+}
 export default async function HomePage() {
-  const projectCards = await getHomeProjects();
+  const [projectCards,homeContent] = await Promise.all([getHomeProjects(),getHomeContent()]);
+  const heroLines=(homeContent.heroTitle||"Make your brand matter.").split(" ");
   return <>
     <section className="studio-hero">
-      <div className="studio-hero-top"><span>INDEPENDENT CREATIVE STUDIO</span><span>LAGOS, NIGERIA · AVAILABLE FOR PROJECTS</span></div>
+      <div className="studio-hero-top"><span>{homeContent.heroEyebrow}</span><span>LAGOS, NIGERIA · AVAILABLE FOR PROJECTS</span></div>
       <div className="studio-hero-main">
         <div className="studio-hero-copy">
           <p className="studio-kicker"><span className="kicker-line" /> BRAND STRATEGY / DESIGN / PRINT / VISUAL STORYTELLING</p>
-          <h1>Make your<br/>brand <em>matter.</em></h1>
-          <p className="studio-hero-intro">Light Creative Hub helps businesses and individuals turn ideas into clear identities, compelling design, quality print and visual stories people remember.</p>
+          <h1>{heroLines.slice(0,-1).join(" ")}<br/><em>{heroLines.slice(-1).join("")}</em></h1>
+          <p className="studio-hero-intro">{homeContent.heroDescription}</p>
           <div className="studio-hero-actions">
-            <a className="studio-button studio-button-blue" href="/request-a-quote">Tell us about your project <span>↗</span></a>
-            <a className="studio-button studio-button-outline" href="/portfolio">Explore selected work <span>↓</span></a>
+            <a className="studio-button studio-button-blue" href="/request-a-quote">{homeContent.primaryCta} <span>↗</span></a>
+            <a className="studio-button studio-button-outline" href="/portfolio">{homeContent.secondaryCta} <span>↓</span></a>
           </div>
           <div className="studio-hero-proof"><span><b>01</b> STRATEGY & IDENTITY</span><span><b>02</b> DESIGN & PRINT</span><span><b>03</b> PHOTO & FILM</span></div>
         </div>
@@ -64,7 +70,7 @@ export default async function HomePage() {
 
     <section className="studio-intro-section">
       <div className="studio-intro-label"><p className="studio-kicker">A CREATIVE PARTNER, NOT JUST A SUPPLIER</p><span>01 / THE APPROACH</span></div>
-      <div className="studio-intro-content"><h2>Good design looks good.<br/><em>Great design does a job.</em></h2><div><p>Every colour, frame, word and printed detail should have a reason to be there. We bring creative thinking and practical execution together so the result is not only beautiful — it works for the people you need to reach.</p><a className="studio-inline-link" href="/about">Get to know the studio <span>↗</span></a></div></div>
+      <div className="studio-intro-content"><h2>{(homeContent.approachTitle||"Good design looks good. Great design does a job.").split(". ")[0]}.<br/><em>{(homeContent.approachTitle||"Good design looks good. Great design does a job.").split(". ").slice(1).join(". ")}</em></h2><div><p>{homeContent.approachDescription}</p><a className="studio-inline-link" href="/about">Get to know the studio <span>↗</span></a></div></div>
     </section>
 
     <section className="studio-services" id="services">
