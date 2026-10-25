@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </header>
         <main id="main">{children}</main>
         <footer className="footer">
-          <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo inverse /></a>
+          <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <p>Creative ideas. Professional execution.</p>
           <div className="footer-contacts"><a href="tel:+2347067376478">07067376478</a><a href="tel:+2349045218491">09045218491</a><a href="mailto:lightcreativehub0@gmail.com">lightcreativehub0@gmail.com</a></div>
           <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a></div>
