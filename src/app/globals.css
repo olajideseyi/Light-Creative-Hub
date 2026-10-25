@@ -308,3 +308,14 @@ body{overflow-x:hidden} .site-header{position:relative;z-index:20;backdrop-filte
 
 /* Match the supplied brand board typography. */
 body{font-family:Montserrat,Arial,sans-serif}
+
+
+.about-founder-panel{display:grid;grid-template-columns:220px 1fr;gap:35px;align-items:center;margin:65px 0;padding:clamp(22px,4vw,48px);background:#f0f3ff;border:1px solid #e1e6ff}
+.about-founder-monogram{min-height:230px;background:var(--lch-blue);color:#fff;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.about-founder-monogram:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff40;border-radius:50%;box-shadow:0 0 0 35px #ffffff0b,0 0 0 70px #ffffff0b}
+.about-founder-monogram span{font-size:150px;font-weight:800;letter-spacing:-.12em;line-height:1}
+.about-founder-monogram i{position:absolute;z-index:1;top:35px;right:32px;color:#ffbf77;font-size:25px;font-style:normal}
+.about-founder-panel h2{font-size:clamp(28px,4vw,44px);letter-spacing:-.06em;margin:0 0 8px}
+.about-founder-panel>div:last-child>p:not(.eyebrow){font-size:11px;color:#6d7180}
+.about-founder-panel blockquote{font-size:14px;line-height:1.8;font-weight:600;margin:22px 0 0;padding-left:16px;border-left:3px solid var(--lch-orange);max-width:650px}
+@media(max-width:650px){.about-founder-panel{grid-template-columns:1fr;gap:22px;margin:42px 0}.about-founder-monogram{min-height:180px}.about-founder-monogram span{font-size:110px}}
