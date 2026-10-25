@@ -1,4 +1,5 @@
-import { LiquidWorld, Reveal } from "@/components/creative-effects";
+import { Reveal } from "@/components/creative-effects";
+import { LiquidWorld } from "@/components/liquid-world";
 
 const services = [
   { n: "01", title: "Brand identity", text: "Visual systems with clarity, character and staying power.", tag: "STRATEGY / DESIGN" },
