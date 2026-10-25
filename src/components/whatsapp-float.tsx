@@ -4,7 +4,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const DEFAULT_PHONE = "2347067376478";
 const DEFAULT_MESSAGE = "Hello Light Creative Hub, I’d like to discuss a project.";
-function cleanPhone(value: string) { return value.replace(/\\D/g, ""); }
+function cleanPhone(value: string) { return value.replace(/\D/g, ""); }
 
 function useWhatsAppSettings() {
   const [phone, setPhone] = useState(DEFAULT_PHONE);
