@@ -11,7 +11,7 @@ export default function AboutPage() {
         <Reveal delay={.1}><p>We work with founders, growing businesses, organisations and individuals who care about how their work shows up in the world. We bring thoughtful creative direction and practical production together, so the idea and its execution feel connected.</p><p>From a first identity sketch to a finished printed piece, from a product frame to a campaign that moves, we believe the small decisions make the big difference.</p><p>Our services span branding and re-branding, graphic design, printing, mobile photography and videography, data analysis, public relations and communication support.</p></Reveal>
       </div>
       <Reveal className="about-founder-panel">
-        <div className="about-founder-monogram" aria-hidden="true"><span>L</span><i>✳</i></div>
+        <div className="about-founder-portrait"><img src="https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg" alt="Adeniyi Boluwatife, founder of Light Creative Hub" loading="lazy" /><span>FOUNDER / CREATIVE</span></div>
         <div><p className="eyebrow">MEET THE CREATIVE</p><h2>Adeniyi Boluwatife</h2><p>Founder · Light Creative Hub</p><blockquote>“Remember that creativity requires time and space. Allow yourself to recharge, seek inspiration from diverse sources, and let ideas marinate.”</blockquote></div>
       </Reveal>
       <Reveal className="about-pullquote">“Make it clear. Make it considered. Make it matter.”</Reveal>
