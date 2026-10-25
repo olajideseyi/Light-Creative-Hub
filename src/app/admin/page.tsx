@@ -34,6 +34,10 @@ export default function AdminPage() {
   const [editingId,setEditingId]=useState<string|null>(null); const [existingMedia,setExistingMedia]=useState<string[]>([]);
   const [activeTab,setActiveTab]=useState<"all"|"published"|"drafts">("all");
   const [previewProject,setPreviewProject]=useState<Project|null>(null);
+  type SiteDoc = Record<string,string|boolean>;
+  const [siteDocs,setSiteDocs]=useState<Record<string,SiteDoc>>({});
+  const [cmsSection,setCmsSection]=useState<"homepage"|"about"|"contact"|"effects">("homepage");
+  const [cmsLoading,setCmsLoading]=useState(false);
 
   async function verifyAdminAccess() {
     const supabase=getSupabaseBrowserClient();
@@ -42,6 +46,28 @@ export default function AdminPage() {
     const {data,error:accessError}=await supabase.from("admin_users").select("user_id,role").eq("user_id",userResult.user.id).maybeSingle();
     if(accessError||!data) throw new Error("This account is not approved for the admin workspace. Ask the site owner to approve your Supabase user ID.");
     return userResult.user;
+  }
+  async function loadSiteContent() {
+    const {data,error:queryError}=await getSupabaseBrowserClient().from("site_content").select("content_key,content_value");
+    if(queryError) throw queryError;
+    const next:Record<string,SiteDoc>={};
+    for(const row of data??[]) next[row.content_key]=row.content_value as SiteDoc;
+    setSiteDocs(next);
+  }
+  async function saveSiteContent(event:FormEvent<HTMLFormElement>) {
+    event.preventDefault();setCmsLoading(true);setError("");setNotice("");
+    try {
+      const {data:userResult,error:userError}=await getSupabaseBrowserClient().auth.getUser();
+      if(userError||!userResult.user) throw new Error("Please sign in again to save site content.");
+      const value=siteDocs[cmsSection]??{};
+      const {error:saveError}=await getSupabaseBrowserClient().from("site_content").upsert({content_key:cmsSection,content_value:value,updated_at:new Date().toISOString(),updated_by:userResult.user.id},{onConflict:"content_key"});
+      if(saveError) throw saveError;
+      setNotice("Saved "+cmsSection+" settings. Public-page integration is the next publishing step.");
+    } catch(e) {setError(e instanceof Error?e.message:"Could not save site content.");}
+    finally {setCmsLoading(false);}
+  }
+  function changeDoc(key:string,value:string|boolean) {
+    setSiteDocs(old=>({...old,[cmsSection]:{...(old[cmsSection]??{}),[key]:value}}));
   }
   async function loadProjects() {
     const {data,error:queryError}=await getSupabaseBrowserClient().from("portfolio_projects")
@@ -57,7 +83,7 @@ export default function AdminPage() {
       supabase.auth.getSession().then(async ({data,error:sessionError})=>{
         if(!active)return;
         if(sessionError){setError(sessionError.message);return;}
-        if(data.session)try{await verifyAdminAccess();await loadProjects();if(active)setSignedIn(true);}
+        if(data.session)try{await verifyAdminAccess();await loadProjects();await loadSiteContent();if(active)setSignedIn(true);}
         catch(e){if(active){setSignedIn(false);setError(e instanceof Error?e.message:"This account cannot access the admin workspace.");}}
       }).catch((e:unknown)=>{if(active)setError(e instanceof Error?e.message:"Could not check your session.");});
     } catch(e){setError(e instanceof Error?e.message:"Supabase is not configured.");}
@@ -83,7 +109,7 @@ export default function AdminPage() {
     try{
       const supabase=getSupabaseBrowserClient();const {error:authError}=await supabase.auth.signInWithPassword({email:email.trim(),password});
       if(authError)throw authError;
-      try{await verifyAdminAccess();await loadProjects();}catch(e){await supabase.auth.signOut();throw e;}
+      try{await verifyAdminAccess();await loadProjects();await loadSiteContent();}catch(e){await supabase.auth.signOut();throw e;}
       setSignedIn(true);setPassword("");setNotice("Signed in. Your approved projects are ready to manage.");
     }catch(e){setError(e instanceof Error?e.message:"Sign-in failed. Check your details and try again.");}finally{setBusy(false);}
   }
@@ -140,6 +166,26 @@ export default function AdminPage() {
     {!signedIn?<div className="admin-login-layout"><div className="admin-welcome"><div><p className="eyebrow">STUDIO ACCESS / 01</p><h1>Make the work<br/><em>visible.</em></h1><p>Manage portfolio projects, media, descriptions and what appears on the public website.</p></div></div><form className="admin-login" onSubmit={signIn}><div className="admin-panel-head"><div><h2>Administrator sign in</h2><p>Use the Supabase Auth account approved for this studio.</p></div></div>{error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}<label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/></label><button className="button button-blue" disabled={busy}>{busy?"Checking access…":"Enter the studio CMS ↗"}</button><p className="admin-help">Only accounts listed in the Supabase admin allowlist can edit or publish content.</p></form></div>:<>
       <div className="cms-welcome-row"><div className="admin-welcome"><div><p className="eyebrow">STUDIO CONTROL ROOM / OVERVIEW</p><h1>Content that tells<br/><em>your story.</em></h1><p>Upload real work, preview it before publishing and keep your public portfolio current.</p></div></div><a className="button button-outline-dark cms-view-site" href="/portfolio" target="_blank" rel="noreferrer">View public portfolio ↗</a></div>
       {error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}
+      <section className="admin-panel site-content-cms" id="site-content-editor">
+        <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
+        <div className="cms-library-tabs site-content-tabs">
+          {(["homepage","about","contact","effects"] as const).map(key=><button type="button" key={key} className={cmsSection===key?"active":""} onClick={()=>setCmsSection(key)}>{({homepage:"Homepage",about:"About",contact:"Contact",effects:"Motion & effects"} as const)[key]}</button>)}
+        </div>
+        <form className="admin-project-form" onSubmit={saveSiteContent}>
+          {cmsSection==="effects" ? <div className="form-grid">
+            <label>Image motion<select value={String(siteDocs.effects?.imageEffect??"float")} onChange={e=>changeDoc("imageEffect",e.target.value)}><option value="float">Floating / gentle drift</option><option value="parallax">Parallax depth</option><option value="zoom">Slow cinematic zoom</option><option value="static">No image motion</option></select></label>
+            <label>Gallery transition<select value={String(siteDocs.effects?.transition??"crossfade")} onChange={e=>changeDoc("transition",e.target.value)}><option value="crossfade">Soft crossfade</option><option value="slide">Slide between images</option><option value="wipe">Editorial wipe</option><option value="none">No transition</option></select></label>
+            <label>Scroll reveal<select value={String(siteDocs.effects?.reveal??"fade-up")} onChange={e=>changeDoc("reveal",e.target.value)}><option value="fade-up">Fade and lift</option><option value="fade">Fade only</option><option value="blur">Soft-focus reveal</option><option value="none">No reveal</option></select></label>
+            <label>Gallery layout<select value={String(siteDocs.effects?.galleryLayout??"editorial")} onChange={e=>changeDoc("galleryLayout",e.target.value)}><option value="editorial">Editorial masonry</option><option value="grid">Clean image grid</option><option value="carousel">Horizontal carousel</option></select></label>
+            <label>WhatsApp contact style<select value={String(siteDocs.effects?.whatsappStyle??"expandable")} onChange={e=>changeDoc("whatsappStyle",e.target.value)}><option value="expandable">Expandable contact panel</option><option value="standard">Standard WhatsApp button</option><option value="minimal">Minimal floating icon</option></select></label>
+            <label className="field-full cms-toggle-row"><input type="checkbox" checked={siteDocs.effects?.motionEnabled!==false} onChange={e=>changeDoc("motionEnabled",e.target.checked)}/> Enable decorative motion (respects reduced-motion preferences)</label>
+          </div> : <div className="form-grid">
+            {Object.entries(siteDocs[cmsSection]??{}).filter(([,v])=>typeof v==="string").map(([key,value])=><label key={key} className="field-full">{key.replace(/([A-Z])/g," $1").replace(/^./,s=>s.toUpperCase())}<textarea rows={key.toLowerCase().includes("description")?4:2} value={String(value)} onChange={e=>changeDoc(key,e.target.value)} maxLength={5000}/></label>)}
+            {Object.keys(siteDocs[cmsSection]??{}).length===0&&<p>Content fields are being initialized. Refresh this page after the CMS migration is available.</p>}
+          </div>}
+          <div className="cms-form-actions"><button className="button button-blue" disabled={cmsLoading}>{cmsLoading?"Saving…":"Save "+({homepage:"homepage content",about:"About content",contact:"contact content",effects:"creative settings"} as const)[cmsSection]+" ↗"}</button><span className="admin-help">Content is saved in Supabase. Public rendering is being connected separately.</span></div>
+        </form>
+      </section>
       <div className="admin-dashboard-stats"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div>
       <div className="cms-layout">
         <section className="admin-panel cms-editor-panel" id="cms-editor"><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"CREATE NEW PROJECT"}</span><h2>{editingId?"Refine the details.":"Add to the archive."}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
