@@ -103,7 +103,7 @@ export default async function PortfolioProjectPage({ params }: { params: Promise
 
     <section className="portfolio-featured-section">
       <div className="portfolio-section-label"><span>01 / THE WORK</span><span>{gallery.length.toString().padStart(2, "0")} MEDIA ITEMS</span></div>
-      {gallery.length ? <div className="portfolio-detail-gallery">
+      {gallery.length ? <div className="portfolio-detail-gallery portfolio-layout-gallery">
         {gallery.map((url, index) => <Reveal key={url} className="portfolio-gallery-item">
           {isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={project.title + " media " + (index + 1)} /> : <img src={url} alt={project.title + (index ? " gallery image " + (index + 1) : " project cover")} loading={index === 0 ? "eager" : "lazy"} />}
         </Reveal>)}

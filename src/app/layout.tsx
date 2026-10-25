@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const [contact, effects] = await Promise.all([getSiteContact(), getSiteEffects()]);
   return (
     <html lang="en">
-      <body data-image-effect={typeof effects.imageEffect === "string" ? effects.imageEffect : "float"} data-gallery-transition={typeof effects.transition === "string" ? effects.transition : "crossfade"} data-scroll-reveal={typeof effects.reveal === "string" ? effects.reveal : "fade-up"} data-motion-enabled={effects.motionEnabled === false ? "false" : "true"}>
+      <body data-image-effect={typeof effects.imageEffect === "string" ? effects.imageEffect : "float"} data-gallery-transition={typeof effects.transition === "string" ? effects.transition : "crossfade"} data-gallery-layout={typeof effects.galleryLayout === "string" ? effects.galleryLayout : "editorial"} data-scroll-reveal={typeof effects.reveal === "string" ? effects.reveal : "fade-up"} data-motion-enabled={effects.motionEnabled === false ? "false" : "true"}>
         <SmoothScroll />
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">

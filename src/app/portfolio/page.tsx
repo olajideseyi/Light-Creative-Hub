@@ -93,7 +93,7 @@ export default async function PortfolioPage() {
       </div>
       {(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length > 0 && <div className="portfolio-project-gallery">
         <div className="portfolio-gallery-heading"><span>PROJECT GALLERY</span><span>{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length.toString().padStart(2, "0")} MEDIA ITEMS</span></div>
-        <div className="portfolio-gallery-grid">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : <img src={url} alt={featured.title + " gallery item " + (index + 1)} loading="lazy" />}</div>)}</div>
+        <div className="portfolio-gallery-grid portfolio-layout-gallery">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : <img src={url} alt={featured.title + " gallery item " + (index + 1)} loading="lazy" />}</div>)}</div>
       </div>}
     </section>}
 
