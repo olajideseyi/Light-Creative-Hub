@@ -12,7 +12,7 @@ export function LiquidLogo({ inverse = false }: { inverse?: boolean }) {
         <path d="M160 27l3.1 6.3 7 .9-5.1 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5.1-4.9 7-.9z" fill="#fff"/>
       </g>
       <text x="206" y="56" fontFamily="Montserrat, Arial, sans-serif" fontSize="36" fontWeight="800" letterSpacing="-1.7" fill="currentColor">Light Creative</text>
-      <text x="208" y="83" fontFamily="Montserrat, Arial, sans-serif" fontSize="15" fontWeight="800" letterSpacing=".2" fill="currentColor">BRAND <tspan fill="#0018A1">|</tspan> <tspan fill="#e58b2d">PRINT</tspan> <tspan fill="#0018A1">|</tspan> DESIGN</text>
+      <text x="208" y="83" fontFamily="Montserrat, Arial, sans-serif" fontSize="15" fontWeight="800" letterSpacing=".2" fill="currentColor">BRAND <tspan fill="currentColor">|</tspan> <tspan fill="#e58b2d">PRINT</tspan> <tspan fill="currentColor">|</tspan> DESIGN</text>
     </svg>
   );
 }
