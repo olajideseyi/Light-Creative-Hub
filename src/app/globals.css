@@ -585,3 +585,73 @@ body{font-family:Montserrat,Arial,sans-serif}
 .about-founder-portrait span{position:absolute;left:14px;bottom:14px;padding:9px 11px;background:#0018a1;color:#fff;font:8px "DM Mono",monospace;letter-spacing:.7px}
 .about-founder-panel{grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr)}
 @media(max-width:650px){.founder-editorial-photo{height:420px}.about-founder-panel{grid-template-columns:1fr}.about-founder-portrait,.about-founder-portrait img{min-height:360px}}
+
+
+/* Studio CMS upgrade: project editing, real media previews and responsive library */
+.cms-admin-page .cms-welcome-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.cms-admin-page .cms-welcome-row .admin-welcome{flex:1}
+.cms-view-site{margin-bottom:25px;white-space:nowrap}
+.cms-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:22px;align-items:start;margin:24px 0 60px}
+.cms-editor-panel,.cms-library-panel{min-width:0}
+.cms-editor-panel .admin-panel-head{align-items:flex-start}
+.cms-eyebrow{display:block;margin-bottom:9px;font:9px "DM Mono",monospace;letter-spacing:1px;color:#0018a1}
+.cms-editor-panel .admin-panel-head h2,.cms-library-panel .admin-panel-head h2{font-size:clamp(23px,2.4vw,32px);letter-spacing:-.06em;margin:0 0 8px}
+.cms-editor-panel .admin-panel-head p,.cms-library-panel .admin-panel-head p{font-size:11px;line-height:1.7;color:#687083;margin:0}
+.cms-editor-panel .form-grid{grid-template-columns:1fr}
+.cms-editor-panel .form-grid label{min-width:0}
+.cms-editor-panel .form-grid .field-full{grid-column:auto}
+.cms-editor-panel input[type="file"]{width:100%;max-width:100%;font-size:11px}
+.cms-editor-panel input[type="file"]::file-selector-button{border:1px solid #d8dce8;background:#f5f6fb;padding:9px 11px;margin-right:10px;font-size:10px;font-weight:700;cursor:pointer}
+.cms-preview-block{margin:24px 0 8px;padding:16px;background:#f6f7fb;border:1px solid #e3e6ef}
+.cms-preview-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
+.cms-preview-heading h3{font-size:16px;letter-spacing:-.04em;margin:0 0 5px}
+.cms-preview-heading p{font-size:10px;color:#6d7282;margin:0}
+.cms-preview-heading>span,.cms-count-pill{font:8px "DM Mono",monospace;letter-spacing:.5px;color:#0018a1;white-space:nowrap}
+.cms-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cms-media-item{min-width:0}
+.cms-media-item>small{display:block;font-size:9px;color:#646b7c;overflow-wrap:anywhere;margin-top:7px}
+.cms-media-thumb,.cms-media-preview{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#e8ebf5;aspect-ratio:4/3;min-width:0}
+.cms-media-thumb img,.cms-media-thumb video,.cms-media-preview img,.cms-media-preview video{display:block;width:100%;height:100%;object-fit:cover}
+.cms-media-thumb>span,.cms-media-preview>span{position:absolute;left:7px;top:7px;background:rgba(10,16,39,.83);color:#fff;padding:5px 7px;font:7px "DM Mono",monospace;letter-spacing:.5px;pointer-events:none}
+.cms-remove-media{margin-top:6px;padding:0;border:0;background:none;color:#a32f36;font-size:9px;text-decoration:underline;cursor:pointer}
+.cms-form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.cms-library-tabs{display:flex;gap:5px;border-bottom:1px solid #e5e7ef;margin:18px 0 16px;padding-bottom:9px}
+.cms-library-tabs button{border:0;background:transparent;color:#73798a;padding:8px 10px;font-size:10px;cursor:pointer}
+.cms-library-tabs button b{margin-left:4px;font-size:9px}
+.cms-library-tabs button.active{background:#0018a1;color:white}
+.cms-project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.cms-project-card{min-width:0;border:1px solid #e1e4ed;background:#fff}
+.cms-card-preview{display:block;width:100%;position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;background:#edf0f9;text-align:left}
+.cms-card-preview .cms-media-thumb{aspect-ratio:1.22;border:0}
+.cms-card-preview .cms-media-thumb video{pointer-events:none}
+.cms-open-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,18,108,.72);color:#fff;font-size:11px;font-weight:700;opacity:0;transition:opacity .2s}
+.cms-card-preview:hover .cms-open-overlay,.cms-card-preview:focus-visible .cms-open-overlay{opacity:1}
+.cms-card-copy{padding:12px}
+.cms-card-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cms-card-badges .status-live,.cms-card-badges .status-draft{font-size:8px}
+.cms-featured-badge{padding:4px 6px;background:#fff1d9;color:#8b5100;font-size:8px}
+.cms-card-copy h3{font-size:15px;line-height:1.25;letter-spacing:-.04em;margin:10px 0 5px;overflow-wrap:anywhere}
+.cms-card-copy>p{font-size:9px;color:#72788a;margin:0 0 12px}
+.cms-card-actions{display:flex;gap:5px;flex-wrap:wrap}
+.cms-card-actions .button{padding:8px 9px;font-size:9px;min-height:31px}
+.cms-delete-button{border:1px solid #f0d9da;background:#fff;color:#a32f36;padding:7px 9px;font-size:9px;cursor:pointer}
+.cms-delete-button:disabled,.cms-card-actions button:disabled{opacity:.5;cursor:not-allowed}
+.cms-no-media{aspect-ratio:1.22;width:100%;padding:15px;display:flex;flex-direction:column;justify-content:space-between;background:#0018a1;color:white}
+.cms-no-media span{font:8px "DM Mono",monospace}
+.cms-no-media strong{font-size:20px;line-height:1;letter-spacing:-.06em}
+.cms-modal-backdrop{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(7,11,28,.72);backdrop-filter:blur(7px)}
+.cms-preview-modal{width:min(980px,100%);max-height:min(90vh,1000px);overflow:auto;background:#fff;padding:clamp(18px,3vw,34px);box-shadow:0 25px 90px rgba(0,0,0,.25)}
+.cms-preview-modal>header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.cms-preview-modal h2{font-size:clamp(27px,4vw,42px);line-height:1.02;letter-spacing:-.07em;margin:0}
+.cms-modal-close{border:1px solid #dce0eb;background:white;width:38px;height:38px;font-size:25px;line-height:1;cursor:pointer}
+.cms-preview-modal>p{font-size:12px;line-height:1.8;color:#606779;max-width:780px}
+.cms-preview-modal .cms-modal-category{font:9px "DM Mono",monospace;color:#0018a1;margin:14px 0}
+.cms-modal-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}
+.cms-modal-media-grid .cms-media-preview{aspect-ratio:4/3}
+.cms-modal-description{border-top:1px solid #e2e5ed;padding-top:15px}
+.cms-modal-description h3{font-size:15px;margin:0 0 7px}
+.cms-modal-description p{font-size:11px;line-height:1.9;white-space:pre-wrap;color:#5f6677}
+.cms-preview-modal>footer{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid #e2e5ed}
+@media(max-width:1000px){.cms-layout{grid-template-columns:1fr}.cms-editor-panel .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cms-editor-panel .form-grid .field-full{grid-column:1/-1}}
+@media(max-width:650px){.cms-admin-page .cms-welcome-row{align-items:flex-start;flex-direction:column;gap:0}.cms-view-site{margin:0 0 20px}.cms-editor-panel .form-grid{grid-template-columns:1fr}.cms-editor-panel .form-grid .field-full{grid-column:auto}.cms-project-grid{grid-template-columns:1fr 1fr}.cms-card-actions .button,.cms-card-actions .cms-delete-button{flex:1}.cms-modal-backdrop{padding:10px}.cms-modal-media-grid{grid-template-columns:1fr}.cms-preview-modal{max-height:94vh}.cms-media-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.cms-project-grid{grid-template-columns:1fr}.cms-card-actions{display:grid;grid-template-columns:1fr 1fr}.cms-preview-heading{flex-direction:column}}
