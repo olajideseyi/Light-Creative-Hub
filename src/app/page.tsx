@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { LiquidWorld } from "@/components/liquid-world";
 
 const services = [
   { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
@@ -29,9 +30,11 @@ async function getHomeProjects(): Promise<HomeProject[]> {
 }
 function mediaIsVideo(url: string) { return /\\.(mp4|webm|mov|m4v)(\\?.*)?$/i.test(url); }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const projectCards = await getHomeProjects();
   return <>
     <section className="studio-hero">
+      <LiquidWorld />
       <div className="studio-hero-top"><span>INDEPENDENT CREATIVE STUDIO</span><span>LAGOS, NIGERIA · AVAILABLE FOR PROJECTS</span></div>
       <div className="studio-hero-main">
         <div className="studio-hero-copy">
@@ -71,9 +74,9 @@ export default function HomePage() {
     </section>
 
     <section className="studio-work-section">
-      <div className="studio-section-top"><div><p className="studio-kicker">THE PORTFOLIO</p><h2>Creative work,<br/><em>with a point of view.</em></h2></div><div className="studio-work-intro"><p>Explore visual directions across identity, campaign design and print. As approved client work is added, this collection becomes the studio’s living portfolio.</p><a className="studio-button studio-button-white" href="/portfolio">View the portfolio ↗</a></div></div>
+      <div className="studio-section-top"><div><p className="studio-kicker">THE PORTFOLIO</p><h2>Creative work,<br/><em>with a point of view.</em></h2></div><div className="studio-work-intro"><p>Explore selected identities, campaign visuals and print work—each chosen for its craft, clarity and ability to make a brand more memorable.</p><a className="studio-button studio-button-white" href="/portfolio">View the portfolio ↗</a></div></div>
       <div className="studio-work-grid">{projectCards.map((project,i)=>{const media=project.cover_image_url||(project.media_urls||[])[0]||"";return <Reveal key={project.id} delay={i*.06}><a href="/portfolio" className={`studio-work-card ${["work-brand","work-poster","work-print"][i%3]}`}><div className="studio-work-meta"><span>{String(i+1).padStart(2,"0")} / {project.category.toUpperCase()}</span><span>↗</span></div><div className="studio-work-art studio-work-art-live">{media?(mediaIsVideo(media)?<video src={media} muted playsInline preload="metadata" aria-label={project.title}/>:<img src={media} alt={project.title} loading="lazy"/>):<strong>{project.category}</strong>}</div><div className="studio-work-caption"><span>SELECTED WORK · {project.category.toUpperCase()}</span><h3>{project.title}</h3></div></a></Reveal>})}</div>{projectCards.length===0&&<div className="studio-work-empty"><span>THE PORTFOLIO IS READY FOR YOUR WORK</span><p>Approved featured projects will appear here as soon as they are published in the studio CMS.</p><a href="/portfolio">Explore the portfolio ↗</a></div>}
-      <p className="studio-work-disclaimer">Only projects published and marked as featured in the studio CMS appear in this selection.</p>
+      <p className="studio-work-disclaimer">This selection updates from the studio CMS. Publish a project and mark it as featured to bring it into the spotlight.</p>
     </section>
 
     <section className="studio-founder-section">
