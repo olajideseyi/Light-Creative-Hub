@@ -109,6 +109,7 @@ export default function AdminGalleryPage() {
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError(""); setNotice("");
     let uploadedUrl = "";
+    let databaseSaved = false;
     try {
       const client = getSupabaseBrowserClient();
       let mediaUrl = currentUrl;
@@ -129,6 +130,7 @@ export default function AdminGalleryPage() {
       const previousUrl = currentUrl;
       const result = editing ? await client.from("gallery_items").update(payload).eq("id", editing) : await client.from("gallery_items").insert(payload);
       if (result.error) throw result.error;
+      databaseSaved = true;
       // Once the database points to the replacement, clean up the old file if it belongs to our bucket.
       let oldMediaCleanupFailed = false;
       if (file && previousUrl && previousUrl !== mediaUrl) {
@@ -148,10 +150,12 @@ export default function AdminGalleryPage() {
         ? (editing ? "Gallery item updated, but the previous media file could not be removed from Storage." : "Media added, but an old media file could not be removed from Storage.")
         : (editing ? "Gallery item updated." : "Media added to your gallery."));
     } catch (e) {
-      if (uploadedUrl) {
-        try { const path = new URL(uploadedUrl).pathname.split(`/storage/v1/object/public/${BUCKET}/`)[1]; if (path) await getSupabaseBrowserClient().storage.from(BUCKET).remove([path]); } catch { /* preserve the original save error */ }
+      if (uploadedUrl && !databaseSaved) {
+        try { const path = new URL(uploadedUrl).pathname.split(`/storage/v1/object/public/${BUCKET}/`)[1]; if (path) await getSupabaseBrowserClient().storage.from(BUCKET).remove([decodeURIComponent(path)]); } catch { /* preserve the original save error */ }
       }
-      setError(e instanceof Error ? e.message : "Could not save gallery item. Confirm that the gallery migration has been applied.");
+      setError(databaseSaved
+        ? `Your gallery item was saved, but the page could not refresh: ${e instanceof Error ? e.message : "Unknown error"}. Refresh the page to see the saved item.`
+        : (e instanceof Error ? e.message : "Could not save gallery item. Confirm that the gallery migration has been applied."));
     } finally { setBusy(false); }
   }
 
@@ -171,8 +175,12 @@ export default function AdminGalleryPage() {
       const path = storageObjectPath(item.media_url);
       let storageCleanupFailed = false;
       if (path) {
-        const { error: storageError } = await client.storage.from(BUCKET).remove([path]);
-        storageCleanupFailed = Boolean(storageError);
+        try {
+          const { error: storageError } = await client.storage.from(BUCKET).remove([path]);
+          storageCleanupFailed = Boolean(storageError);
+        } catch {
+          storageCleanupFailed = true;
+        }
       }
       await loadItems(); if (editing === item.id) reset();
       setNotice(storageCleanupFailed
