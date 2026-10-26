@@ -110,8 +110,16 @@ export default function AdminGalleryPage() {
       }
       if (!mediaUrl) throw new Error("Choose a photo or video before saving.");
       const payload = { title: title.trim(), description: description.trim(), category, media_url: mediaUrl, media_type: mediaType, alt_text: altText.trim(), published, featured, updated_at: new Date().toISOString(), display_order: editing ? (items.find(item => item.id === editing)?.display_order ?? items.length) : items.length };
+      const previousUrl = currentUrl;
       const result = editing ? await client.from("gallery_items").update(payload).eq("id", editing) : await client.from("gallery_items").insert(payload);
       if (result.error) throw result.error;
+      // Once the database points to the replacement, clean up the old file if it belongs to our bucket.
+      if (file && previousUrl && previousUrl !== mediaUrl) {
+        const previousPath = storageObjectPath(previousUrl);
+        if (previousPath) {
+          try { await client.storage.from(BUCKET).remove([previousPath]); } catch { /* database save has already succeeded */ }
+        }
+      }
       await loadItems(); reset(); setNotice(editing ? "Gallery item updated." : "Media added to your gallery.");
     } catch (e) {
       if (uploadedUrl) {
@@ -128,9 +136,20 @@ export default function AdminGalleryPage() {
   }
 
   async function remove(item: GalleryRecord) {
-    if (!window.confirm(`Delete “${item.title}” from the gallery? The uploaded file remains in Storage.`)) return;
+    if (!window.confirm(`Delete “${item.title}” and its uploaded file from the gallery?`)) return;
     setBusy(true); setError(""); setNotice("");
-    try { const { error: deleteError } = await getSupabaseBrowserClient().from("gallery_items").delete().eq("id", item.id); if (deleteError) throw deleteError; await loadItems(); if (editing === item.id) reset(); setNotice("Gallery entry removed."); }
+    try {
+      const client = getSupabaseBrowserClient();
+      const { error: deleteError } = await client.from("gallery_items").delete().eq("id", item.id);
+      if (deleteError) throw deleteError;
+      const path = storageObjectPath(item.media_url);
+      if (path) {
+        const { error: storageError } = await client.storage.from(BUCKET).remove([path]);
+        if (storageError) setNotice("Gallery entry deleted. The media file could not be removed from Storage, so it may need manual cleanup.");
+      }
+      await loadItems(); if (editing === item.id) reset();
+      if (!notice) setNotice("Gallery entry and its uploaded file removed.");
+    }
     catch (e) { setError(e instanceof Error ? e.message : "Could not delete gallery entry."); } finally { setBusy(false); }
   }
 
