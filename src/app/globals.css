@@ -1499,3 +1499,16 @@ body[data-gallery-transition="slide"] .portfolio-layout-gallery > *:hover {
 @media(max-width:1050px){.cms-admin-page .admin-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.cms-admin-page .admin-section-nav>a.admin-nav-overview{display:flex}}
 @media(max-width:700px){.cms-admin-page{padding-left:14px!important;padding-right:14px!important}.cms-admin-page .admin-masthead{margin-left:-14px;margin-right:-14px;padding:12px 14px;align-items:flex-start;gap:12px}.cms-admin-page .admin-masthead-right>span:first-child{display:none}.cms-admin-page .admin-masthead-right{gap:7px;flex-wrap:wrap;justify-content:flex-end}.cms-admin-page .admin-masthead-right .button{padding:8px 10px;font-size:10px}.cms-admin-page .cms-welcome-row{align-items:flex-start;flex-direction:column;gap:20px}.cms-admin-page .cms-welcome-row .admin-welcome h1{font-size:clamp(53px,15vw,76px)}.cms-admin-page .admin-hero-actions{align-items:flex-start;flex-direction:row;flex-wrap:wrap}.cms-admin-page .admin-section-nav{grid-template-columns:1fr;margin-top:16px;padding:10px}.cms-admin-page .admin-section-nav>a{min-height:66px}.cms-admin-page .admin-dashboard-stats{grid-template-columns:1fr;gap:8px}.cms-admin-page .admin-stat{padding:16px 18px}.cms-admin-page .admin-stat strong{font-size:30px}.cms-admin-page .admin-project-form{padding:0 16px 18px}.cms-admin-page .cms-library-tabs{padding:0 14px;overflow-x:auto}.cms-admin-page .cms-library-tabs button{white-space:nowrap}.cms-admin-page .admin-panel-head{padding:20px 16px}.cms-admin-page .cms-project-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.cms-admin-page *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Final admin navigation consistency and usable workspace controls */
+.cms-admin-page .admin-section-nav{grid-template-columns:repeat(4,minmax(0,1fr))}
+.cms-admin-page .admin-section-nav .admin-nav-overview{display:none}
+.cms-admin-page .admin-section-nav .admin-nav-heading{grid-column:1/-1}
+.gallery-admin-page .gallery-admin-header{box-shadow:0 5px 20px #17192306}
+.gallery-admin-page .gallery-admin-logo{box-shadow:0 5px 15px #1029b829}
+.gallery-admin-page .gallery-admin-header nav a:focus-visible,.gallery-admin-page .gallery-admin-header nav button:focus-visible,.cms-admin-page .admin-section-nav a:focus-visible{outline:3px solid #3152e5;outline-offset:3px}
+.gallery-admin-page .gallery-admin-intro .button{white-space:nowrap;border-radius:4px}
+.gallery-admin-page .gallery-admin-panel,.gallery-admin-page .gallery-admin-stats article{box-shadow:0 5px 20px #17192305}
+.gallery-admin-page .gallery-admin-form button:focus-visible,.gallery-admin-page .gallery-admin-item-actions button:focus-visible{outline:3px solid #3152e5;outline-offset:2px}
+@media(max-width:1050px){.cms-admin-page .admin-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.cms-admin-page .admin-section-nav .admin-nav-overview{display:flex}}
+@media(max-width:700px){.cms-admin-page .admin-section-nav{grid-template-columns:1fr}.cms-admin-page .admin-section-nav .admin-nav-overview{display:flex}.gallery-admin-page .gallery-admin-intro .button{width:100%}}
