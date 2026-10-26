@@ -1364,3 +1364,87 @@ body[data-gallery-transition="slide"] .portfolio-layout-gallery > *:hover {
 @media(prefers-reduced-motion:reduce){
  .studio-hero *, .studio-service-card, .gallery-media-button img,.gallery-media-button video{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 }
+
+
+/* Dedicated gallery management and professional admin information architecture */
+.admin-section-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:28px 0 32px}
+.admin-section-nav>a{display:flex;align-items:center;gap:12px;min-width:0;padding:17px 15px;background:#fff;border:1px solid #e0e2e8;border-radius:5px;transition:border-color .2s,transform .2s,box-shadow .2s}
+.admin-section-nav>a:hover{border-color:#9ba8e4;transform:translateY(-2px);box-shadow:0 10px 25px #1011160b}
+.admin-nav-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;background:#edf0ff;color:#0018a1;border-radius:4px;font-size:18px;font-weight:800}
+.admin-section-nav>a>span:nth-child(2){display:flex;flex-direction:column;gap:5px;min-width:0}
+.admin-section-nav strong{font-size:12px;line-height:1.3}
+.admin-section-nav small{font-size:10px;line-height:1.5;color:#737783}
+.admin-section-nav>a>b{margin-left:auto;color:#0018a1}
+.cms-admin-page .admin-panel,.cms-admin-page .admin-stat{border-radius:5px}
+.cms-admin-page .admin-panel{box-shadow:0 5px 22px #12162608}
+.cms-admin-page .admin-panel-head{padding-bottom:22px}
+.cms-admin-page .admin-project-form label,.gallery-admin-form label{gap:9px}
+.gallery-admin-page{min-height:100vh;background:#f4f5f9;color:#151721;padding:0 clamp(16px,4vw,58px) 70px}
+.gallery-admin-header{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid #dfe1e9;background:#fdfdff;margin:0 calc(clamp(16px,4vw,58px)*-1) 0;padding:14px clamp(16px,4vw,58px);position:sticky;top:0;z-index:20}
+.gallery-admin-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.gallery-admin-logo{width:42px;height:42px;display:grid;place-items:center;background:#0018a1;color:#fff;font-size:25px;font-weight:800;border-radius:5px}
+.gallery-admin-brand>span:last-child{display:flex;flex-direction:column;gap:5px}
+.gallery-admin-brand strong{font-size:12px;letter-spacing:.04em}
+.gallery-admin-brand small{font:9px "DM Mono",monospace;color:#757988;letter-spacing:.07em}
+.gallery-admin-header nav{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.gallery-admin-header nav a,.gallery-admin-header nav button{border:0;background:transparent;padding:10px 12px;font-size:11px;font-weight:700;color:#626674;border-radius:4px;cursor:pointer}
+.gallery-admin-header nav a:hover,.gallery-admin-header nav a.active{background:#edf0ff;color:#0018a1}
+.gallery-admin-header nav button:hover{background:#fff0ef;color:#a12b20}
+.gallery-admin-intro{display:flex;align-items:end;justify-content:space-between;gap:30px;padding:54px 0 32px;border-bottom:1px solid #dfe1e9}
+.gallery-admin-intro .cms-eyebrow,.gallery-admin-panel-heading .cms-eyebrow,.gallery-admin-login .cms-eyebrow{font:10px "DM Mono",monospace;letter-spacing:.12em;color:#0018a1}
+.gallery-admin-intro h1,.gallery-admin-login h1{font-size:clamp(38px,5.5vw,68px);line-height:1.02;letter-spacing:-.07em;margin:15px 0}
+.gallery-admin-intro h1 em,.gallery-admin-login h1 em{font-style:normal;color:#0018a1}
+.gallery-admin-intro p,.gallery-admin-login>div>p{max-width:650px;font-size:14px;line-height:1.8;color:#686c79;margin:0}
+.gallery-admin-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0 30px}
+.gallery-admin-stats article{background:#fff;border:1px solid #e0e2e8;border-radius:5px;padding:20px 22px;display:flex;flex-direction:column;gap:9px}
+.gallery-admin-stats article>span{font:9px "DM Mono",monospace;letter-spacing:.12em;color:#6c7080}
+.gallery-admin-stats strong{font-size:36px;line-height:1;letter-spacing:-.06em;color:#0018a1}
+.gallery-admin-stats small{font-size:11px;color:#747887}
+.gallery-admin-layout{display:grid;grid-template-columns:minmax(300px,.72fr) minmax(0,1.28fr);align-items:start;gap:20px}
+.gallery-admin-panel{background:#fff;border:1px solid #e0e2e8;border-radius:5px;padding:clamp(18px,2.3vw,28px);min-width:0}
+.gallery-admin-panel-heading{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:24px}
+.gallery-admin-panel-heading h2{font-size:clamp(23px,2.5vw,32px);line-height:1.1;letter-spacing:-.05em;margin:9px 0}
+.gallery-admin-panel-heading p{font-size:12px;line-height:1.7;color:#737783;margin:0;max-width:450px}
+.gallery-admin-form{display:flex;flex-direction:column;gap:17px}
+.gallery-admin-form>h2{font-size:24px;letter-spacing:-.04em;margin-bottom:5px}
+.gallery-admin-form>label{display:flex;flex-direction:column;gap:8px;font-size:11px;font-weight:750;color:#303340}
+.gallery-admin-form input:not([type=file]):not([type=checkbox]),.gallery-admin-form textarea,.gallery-admin-form select{width:100%;border:1px solid #d9dce5;border-radius:4px;background:#fcfcfe;padding:12px 13px;font:13px Arial,sans-serif;color:#171923;outline:none}
+.gallery-admin-form input:focus,.gallery-admin-form textarea:focus,.gallery-admin-form select:focus{border-color:#0018a1;box-shadow:0 0 0 3px #0018a114}
+.gallery-admin-form input[type=file]{width:100%;padding:13px;border:1px dashed #b9bfd3;background:#f7f8fc;border-radius:4px;font-size:11px}
+.gallery-admin-form small{font-size:10px;line-height:1.65;font-weight:400;color:#767b88}
+.gallery-admin-preview{width:100%;height:220px;overflow:hidden;background:#eef0f5;border:1px solid #e0e2e8;border-radius:4px;margin:5px 0}
+.gallery-admin-preview img,.gallery-admin-preview video{display:block;width:100%;height:100%;object-fit:contain}
+.gallery-selected-file{padding:11px;background:#f0f2ff;border-radius:4px;font-size:11px;color:#4c5266;overflow-wrap:anywhere;margin:0}
+.gallery-admin-checks{display:flex;flex-direction:column;gap:12px;padding:15px;background:#f6f7fb;border:1px solid #e4e6ee;border-radius:4px}
+.gallery-admin-checks label{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:650}
+.gallery-admin-form .button{width:100%;border:0;border-radius:4px;cursor:pointer}
+.gallery-admin-library{min-width:0}
+.gallery-admin-filter{display:flex;gap:7px;padding:0 0 18px;border-bottom:1px solid #e4e6ee}
+.gallery-admin-filter button{border:1px solid #dfe1e9;border-radius:4px;background:#fff;padding:9px 12px;font-size:10px;font-weight:750;color:#646878;cursor:pointer}
+.gallery-admin-filter button.active{background:#0018a1;color:#fff;border-color:#0018a1}
+.gallery-admin-items{display:flex;flex-direction:column}
+.gallery-admin-item{display:grid;grid-template-columns:135px minmax(0,1fr);gap:17px;padding:18px 0;border-bottom:1px solid #e7e8ef}
+.gallery-admin-item-media{height:130px;border-radius:4px;overflow:hidden;background:#eff0f5}
+.gallery-admin-item-media img,.gallery-admin-item-media video{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-admin-item-body{min-width:0}
+.gallery-admin-item-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font:9px "DM Mono",monospace;color:#777b89}
+.gallery-status-published,.gallery-status-draft{padding:5px 7px;border-radius:3px;font-size:8px;white-space:nowrap}
+.gallery-status-published{background:#e6f7ee;color:#187344}.gallery-status-draft{background:#fff2dd;color:#8b5c11}
+.gallery-admin-item h3{font-size:16px;letter-spacing:-.03em;margin:10px 0 6px;overflow-wrap:anywhere}
+.gallery-admin-item p{font-size:11px;line-height:1.6;color:#767a87;margin:0 0 12px}
+.gallery-admin-item-actions{display:flex;gap:7px;flex-wrap:wrap}
+.gallery-admin-item-actions button{border:1px solid #dfe1e9;background:#fff;border-radius:3px;padding:7px 9px;font-size:9px;font-weight:750;color:#313443;cursor:pointer}
+.gallery-admin-item-actions button:hover{border-color:#0018a1;color:#0018a1}
+.gallery-admin-item-actions button.danger{color:#b42b2b}
+.gallery-admin-item-actions button:disabled{opacity:.5;cursor:not-allowed}
+.gallery-admin-empty{padding:50px 22px;text-align:center;background:#f7f8fc;border:1px dashed #d2d6e2;margin-top:18px;border-radius:4px}
+.gallery-admin-empty>span{font:9px "DM Mono",monospace;letter-spacing:.1em;color:#0018a1}
+.gallery-admin-empty h3{font-size:25px;letter-spacing:-.05em;margin:12px 0}
+.gallery-admin-empty p{font-size:12px;line-height:1.7;color:#747887;max-width:370px;margin:0 auto}
+.gallery-admin-alert{margin:20px 0}
+.gallery-admin-loading{padding:80px 20px;text-align:center;color:#737783;font-size:13px}
+.gallery-admin-login{display:grid;grid-template-columns:1fr minmax(300px,.65fr);gap:clamp(30px,7vw,100px);align-items:center;max-width:1100px;margin:80px auto}
+.gallery-admin-login>div{padding:35px 0}
+.gallery-admin-login .gallery-admin-form{background:#fff;border:1px solid #e0e2e8;border-radius:5px;padding:28px}
+@media(max-width:1000px){.admin-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery-admin-layout{grid-template-columns:1fr}.gallery-admin-panel:first-child{order:0}.gallery-admin-library{order:1}}
+@media(max-width:650px){.admin-section-nav{grid-template-columns:1fr}.admin-section-nav>a{padding:13px}.gallery-admin-page{padding-left:14px;padding-right:14px}.gallery-admin-header{margin-left:-14px;margin-right:-14px;padding:12px 14px;align-items:flex-start;flex-direction:column;gap:10px}.gallery-admin-header nav{width:100%;gap:3px}.gallery-admin-header nav a,.gallery-admin-header nav button{padding:9px 8px;font-size:10px}.gallery-admin-intro{align-items:flex-start;flex-direction:column;padding-top:35px}.gallery-admin-stats{grid-template-columns:1fr;gap:8px}.gallery-admin-stats article{padding:15px 17px}.gallery-admin-stats strong{font-size:29px}.gallery-admin-item{grid-template-columns:88px minmax(0,1fr);gap:12px}.gallery-admin-item-media{height:100px}.gallery-admin-item-actions button{padding:7px;font-size:8px}.gallery-admin-login{grid-template-columns:1fr;margin:35px auto;gap:10px}.gallery-admin-login>div{padding:10px 0}.gallery-admin-panel{padding:17px}.gallery-admin-panel-heading{flex-direction:column}.gallery-admin-preview{height:170px}}
