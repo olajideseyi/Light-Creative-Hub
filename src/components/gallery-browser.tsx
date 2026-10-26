@@ -15,7 +15,7 @@ export type GalleryItem = {
 export function GalleryBrowser({ items }: { items: GalleryItem[] }) {
   const [filter, setFilter] = useState("All work");
   const [selected, setSelected] = useState<GalleryItem | null>(null);
-  const filters = useMemo(() => ["All work", "Photography", "Video", ...new Set(items.map((item) => item.category).filter(Boolean))], [items]);
+  const filters = useMemo(() => Array.from(new Set(["All work", "Photography", "Video", ...items.map((item) => item.category).filter(Boolean)])), [items]);
   const visible = items.filter((item) => {
     if (filter === "All work") return true;
     if (filter === "Photography") return item.kind === "image";
