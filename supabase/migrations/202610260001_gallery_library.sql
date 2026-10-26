@@ -13,12 +13,24 @@ create table if not exists public.gallery_items (
   featured boolean not null default false,
   display_order integer not null default 0
 );
-create index if not exists gallery_items_public_order_idx on public.gallery_items (published, featured desc, display_order, created_at desc);
+
+create index if not exists gallery_items_public_order_idx
+  on public.gallery_items (published, featured desc, display_order, created_at desc);
+
 alter table public.gallery_items enable row level security;
+
 drop policy if exists "Public can view published gallery items" on public.gallery_items;
-create policy "Public can view published gallery items" on public.gallery_items
-  for select to anon, authenticated using (published = true);
+create policy "Public can view published gallery items"
+  on public.gallery_items
+  for select to anon, authenticated
+  using (published = true);
+
 drop policy if exists "Admins can manage gallery items" on public.gallery_items;
-create policy "Admins can manage gallery items" on public.gallery_items
-  for all to authenticated using (public.is_light_creative_admin())
-  with check (public.is_light_creative_admin());
+create policy "Admins can manage gallery items"
+  on public.gallery_items
+  for all to authenticated
+  using ((select private.is_light_creative_admin()))
+  with check ((select private.is_light_creative_admin()));
+
+grant select on public.gallery_items to anon, authenticated;
+grant insert, update, delete on public.gallery_items to authenticated;
