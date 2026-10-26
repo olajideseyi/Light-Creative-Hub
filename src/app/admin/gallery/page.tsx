@@ -13,6 +13,19 @@ const MAX_SIZE = 50 * 1024 * 1024;
 const CATEGORIES = ["Photography", "Photoshoot", "Brand Campaign", "Product", "Portrait", "Event", "Video", "Behind the Scenes", "Other"];
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime,.jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v";
 const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
+function storageObjectPath(publicUrl: string): string | null {
+  try {
+    const url = new URL(publicUrl);
+    const marker = `/storage/v1/object/public/${BUCKET}/`;
+    const markerIndex = url.pathname.indexOf(marker);
+    if (markerIndex < 0) return null;
+    const encodedPath = url.pathname.slice(markerIndex + marker.length);
+    return encodedPath ? encodedPath.split("/").map((part) => decodeURIComponent(part)).join("/") : null;
+  } catch {
+    return null;
+  }
+}
+
 
 export default function AdminGalleryPage() {
   const [ready, setReady] = useState(false);
