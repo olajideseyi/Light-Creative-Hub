@@ -8,6 +8,7 @@ type GalleryRecord = {
   media_type: "image" | "video"; alt_text: string; published: boolean; featured: boolean;
   display_order: number; created_at: string; cloudinary_public_id: string | null; cloudinary_resource_type: "image" | "video" | "raw" | null;
 };
+const BUCKET = "portfolio-media";
 const MAX_SIZE = 50 * 1024 * 1024;
 const CATEGORIES = ["Photography", "Photoshoot", "Brand Campaign", "Product", "Portrait", "Event", "Video", "Behind the Scenes", "Other"];
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime,.jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v";
@@ -147,7 +148,7 @@ export default function AdminGalleryPage() {
         if (file.size > MAX_SIZE) throw new Error("Choose a file smaller than 50 MB.");
         if (!ACCEPTED_TYPES.has(file.type)) throw new Error("Use a JPG, PNG, WebP, AVIF, MP4, WebM or MOV file.");
         const signature = await cloudinaryRequest("/api/cloudinary/signature", {});
-        const signed = signature as { cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string };
+        const signed = signature as unknown as { cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string };
         const form = new FormData();
         form.append("file", file);
         form.append("api_key", signed.apiKey);
