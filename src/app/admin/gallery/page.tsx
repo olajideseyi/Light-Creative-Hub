@@ -143,12 +143,15 @@ export default function AdminGalleryPage() {
       const { error: deleteError } = await client.from("gallery_items").delete().eq("id", item.id);
       if (deleteError) throw deleteError;
       const path = storageObjectPath(item.media_url);
+      let storageCleanupFailed = false;
       if (path) {
         const { error: storageError } = await client.storage.from(BUCKET).remove([path]);
-        if (storageError) setNotice("Gallery entry deleted. The media file could not be removed from Storage, so it may need manual cleanup.");
+        storageCleanupFailed = Boolean(storageError);
       }
       await loadItems(); if (editing === item.id) reset();
-      if (!notice) setNotice("Gallery entry and its uploaded file removed.");
+      setNotice(storageCleanupFailed
+        ? "Gallery entry deleted. The media file could not be removed from Storage, so it may need manual cleanup."
+        : "Gallery entry and its uploaded file removed.");
     }
     catch (e) { setError(e instanceof Error ? e.message : "Could not delete gallery entry."); } finally { setBusy(false); }
   }
