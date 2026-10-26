@@ -1023,29 +1023,41 @@ body:has(.cms-admin-page){background:#f3f5fb}
   to { transform: scale(1.055); }
 }
 body[data-motion-enabled="true"][data-image-effect="float"] .hero-collage-primary img,
-body[data-motion-enabled="true"][data-image-effect="float"] .portfolio-featured-media img {
+body[data-motion-enabled="true"][data-image-effect="float"] .portfolio-featured-media img,
+body[data-motion-enabled="true"][data-image-effect="float"] .portfolio-layout-gallery img,
+body[data-motion-enabled="true"][data-image-effect="float"] .portfolio-layout-gallery video {
   animation: lch-gentle-drift 8s ease-in-out infinite;
 }
 body[data-motion-enabled="true"][data-image-effect="zoom"] .hero-collage-primary img,
-body[data-motion-enabled="true"][data-image-effect="zoom"] .portfolio-featured-media img {
+body[data-motion-enabled="true"][data-image-effect="zoom"] .portfolio-featured-media img,
+body[data-motion-enabled="true"][data-image-effect="zoom"] .portfolio-layout-gallery img,
+body[data-motion-enabled="true"][data-image-effect="zoom"] .portfolio-layout-gallery video {
   animation: lch-cinematic-zoom 18s ease-in-out infinite alternate;
 }
 body[data-image-effect="parallax"] .hero-collage-primary,
-body[data-image-effect="parallax"] .portfolio-featured-media {
+body[data-image-effect="parallax"] .portfolio-featured-media,
+body[data-image-effect="parallax"] .portfolio-layout-gallery img,
+body[data-image-effect="parallax"] .portfolio-layout-gallery video {
   transform: perspective(1000px) translateZ(0);
   transition: transform 700ms cubic-bezier(.2,.8,.2,1);
 }
 body[data-image-effect="parallax"] .hero-collage-primary:hover,
-body[data-image-effect="parallax"] .portfolio-featured-media:hover {
+body[data-image-effect="parallax"] .portfolio-featured-media:hover,
+body[data-image-effect="parallax"] .portfolio-layout-gallery img:hover,
+body[data-image-effect="parallax"] .portfolio-layout-gallery video:hover {
   transform: perspective(1000px) rotateX(1deg) rotateY(-1.5deg) translateY(-4px);
 }
 body[data-image-effect="static"] .hero-collage-primary img,
-body[data-image-effect="static"] .portfolio-featured-media img {
+body[data-image-effect="static"] .portfolio-featured-media img,
+body[data-image-effect="static"] .portfolio-layout-gallery img,
+body[data-image-effect="static"] .portfolio-layout-gallery video {
   animation: none !important;
   transform: none !important;
 }
 body[data-motion-enabled="false"] .hero-collage-primary img,
-body[data-motion-enabled="false"] .portfolio-featured-media img { animation: none !important; }
+body[data-motion-enabled="false"] .portfolio-featured-media img,
+body[data-motion-enabled="false"] .portfolio-layout-gallery img,
+body[data-motion-enabled="false"] .portfolio-layout-gallery video { animation: none !important; }
 body[data-gallery-transition="none"] .portfolio-gallery-item,
 body[data-gallery-transition="none"] .portfolio-gallery-grid > *,
 body[data-gallery-transition="none"] .portfolio-detail-gallery > * { transition: none !important; animation: none !important; }
@@ -1057,9 +1069,13 @@ body[data-gallery-transition="wipe"] .portfolio-gallery-grid > *:hover,
 body[data-gallery-transition="wipe"] .portfolio-detail-gallery > *:hover { clip-path: inset(2% 2% 2% 2%); }
 @media (prefers-reduced-motion: reduce) {
   body[data-motion-enabled="true"] .hero-collage-primary img,
-  body[data-motion-enabled="true"] .portfolio-featured-media img { animation: none !important; }
+  body[data-motion-enabled="true"] .portfolio-featured-media img,
+  body[data-motion-enabled="true"] .portfolio-layout-gallery img,
+  body[data-motion-enabled="true"] .portfolio-layout-gallery video { animation: none !important; }
   body[data-image-effect="parallax"] .hero-collage-primary,
-  body[data-image-effect="parallax"] .portfolio-featured-media { transition: none !important; transform: none !important; }
+  body[data-image-effect="parallax"] .portfolio-featured-media,
+  body[data-image-effect="parallax"] .portfolio-layout-gallery img,
+  body[data-image-effect="parallax"] .portfolio-layout-gallery video { transition: none !important; transform: none !important; }
 }
 
 
