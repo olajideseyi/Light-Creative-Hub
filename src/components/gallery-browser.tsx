@@ -47,8 +47,8 @@ export function GalleryBrowser({ items }: { items: GalleryItem[] }) {
         <div className="gallery-empty">
           <span className="gallery-empty-mark">LC / 001</span>
           <h2>The next story starts here.</h2>
-          <p>There are no published photos or videos in this collection yet. Add media to a project in the Studio CMS and publish it to build your gallery.</p>
-          <a className="studio-button studio-button-blue" href="/admin">Go to the Studio CMS ↗</a>
+          <p>There are no published photos or videos in this collection yet. Upload new work in the Gallery Manager and publish it when you are ready.</p>
+          <a className="studio-button studio-button-blue" href="/admin/gallery">Open Gallery Manager ↗</a>
         </div>
       )}
       {selected && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={selected.title} onClick={() => setSelected(null)}>
