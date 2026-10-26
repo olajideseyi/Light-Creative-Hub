@@ -12,6 +12,7 @@ const BUCKET = "portfolio-media";
 const MAX_SIZE = 50 * 1024 * 1024;
 const CATEGORIES = ["Photography", "Photoshoot", "Brand Campaign", "Product", "Portrait", "Event", "Video", "Behind the Scenes", "Other"];
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime,.jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v";
+const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "video/mp4", "video/webm", "video/quicktime"]);
 const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
 function storageObjectPath(publicUrl: string): string | null {
   try {
@@ -114,7 +115,7 @@ export default function AdminGalleryPage() {
       let mediaType: "image" | "video" = isVideo(currentUrl) ? "video" : "image";
       if (file) {
         if (file.size > MAX_SIZE) throw new Error("Choose a file smaller than 50 MB.");
-        if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) throw new Error("Choose an image or video file.");
+        if (!ACCEPTED_TYPES.has(file.type)) throw new Error("Use a JPG, PNG, WebP, AVIF, MP4, WebM or MOV file.");
         mediaType = file.type.startsWith("video/") ? "video" : "image";
         const safeName = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, "-").slice(-100);
         const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
