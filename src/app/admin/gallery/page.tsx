@@ -16,6 +16,8 @@ const isVideo = (url: string) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
 function storageObjectPath(publicUrl: string): string | null {
   try {
     const url = new URL(publicUrl);
+    const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!configuredUrl || url.origin !== new URL(configuredUrl).origin) return null;
     const marker = `/storage/v1/object/public/${BUCKET}/`;
     const markerIndex = url.pathname.indexOf(marker);
     if (markerIndex < 0) return null;
