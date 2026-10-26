@@ -129,13 +129,23 @@ export default function AdminGalleryPage() {
       const result = editing ? await client.from("gallery_items").update(payload).eq("id", editing) : await client.from("gallery_items").insert(payload);
       if (result.error) throw result.error;
       // Once the database points to the replacement, clean up the old file if it belongs to our bucket.
+      let oldMediaCleanupFailed = false;
       if (file && previousUrl && previousUrl !== mediaUrl) {
         const previousPath = storageObjectPath(previousUrl);
         if (previousPath) {
-          try { await client.storage.from(BUCKET).remove([previousPath]); } catch { /* database save has already succeeded */ }
+          try {
+            const { error: cleanupError } = await client.storage.from(BUCKET).remove([previousPath]);
+            oldMediaCleanupFailed = Boolean(cleanupError);
+          } catch {
+            oldMediaCleanupFailed = true;
+          }
         }
       }
-      await loadItems(); reset(); setNotice(editing ? "Gallery item updated." : "Media added to your gallery.");
+      await loadItems();
+      reset();
+      setNotice(oldMediaCleanupFailed
+        ? (editing ? "Gallery item updated, but the previous media file could not be removed from Storage." : "Media added, but an old media file could not be removed from Storage.")
+        : (editing ? "Gallery item updated." : "Media added to your gallery."));
     } catch (e) {
       if (uploadedUrl) {
         try { const path = new URL(uploadedUrl).pathname.split(`/storage/v1/object/public/${BUCKET}/`)[1]; if (path) await getSupabaseBrowserClient().storage.from(BUCKET).remove([path]); } catch { /* preserve the original save error */ }
