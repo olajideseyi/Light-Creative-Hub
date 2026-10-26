@@ -1448,3 +1448,54 @@ body[data-gallery-transition="slide"] .portfolio-layout-gallery > *:hover {
 .gallery-admin-login .gallery-admin-form{background:#fff;border:1px solid #e0e2e8;border-radius:5px;padding:28px}
 @media(max-width:1000px){.admin-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery-admin-layout{grid-template-columns:1fr}.gallery-admin-panel:first-child{order:0}.gallery-admin-library{order:1}}
 @media(max-width:650px){.admin-section-nav{grid-template-columns:1fr}.admin-section-nav>a{padding:13px}.gallery-admin-page{padding-left:14px;padding-right:14px}.gallery-admin-header{margin-left:-14px;margin-right:-14px;padding:12px 14px;align-items:flex-start;flex-direction:column;gap:10px}.gallery-admin-header nav{width:100%;gap:3px}.gallery-admin-header nav a,.gallery-admin-header nav button{padding:9px 8px;font-size:10px}.gallery-admin-intro{align-items:flex-start;flex-direction:column;padding-top:35px}.gallery-admin-stats{grid-template-columns:1fr;gap:8px}.gallery-admin-stats article{padding:15px 17px}.gallery-admin-stats strong{font-size:29px}.gallery-admin-item{grid-template-columns:88px minmax(0,1fr);gap:12px}.gallery-admin-item-media{height:100px}.gallery-admin-item-actions button{padding:7px;font-size:8px}.gallery-admin-login{grid-template-columns:1fr;margin:35px auto;gap:10px}.gallery-admin-login>div{padding:10px 0}.gallery-admin-panel{padding:17px}.gallery-admin-panel-heading{flex-direction:column}.gallery-admin-preview{height:170px}}
+
+
+/* Admin workspace refinement — clearer hierarchy, navigation and responsive controls */
+.cms-admin-page{background:#f3f4f8!important;color:#171923!important;padding:0 clamp(16px,4.5vw,64px) 84px!important;min-height:100vh}
+.cms-admin-page .admin-shell{max-width:1500px;margin:0 auto}
+.cms-admin-page .admin-masthead{position:sticky;top:0;z-index:50;margin:0 calc(clamp(16px,4.5vw,64px)*-1);padding:0 clamp(16px,4.5vw,64px);min-height:76px;background:#fff;border-bottom:1px solid #e1e3eb;box-shadow:0 5px 20px #17192306}
+.cms-admin-page .admin-brand-mark{border-radius:7px;background:#1029b8;box-shadow:0 5px 15px #1029b829}
+.cms-admin-page .admin-masthead-right{gap:14px}
+.cms-admin-page .admin-masthead-right>span:first-child{font:9px "DM Mono",monospace;letter-spacing:.12em;color:#777b89}
+.cms-admin-page .admin-status-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #dbeee2;background:#f0faf3;color:#247344;border-radius:99px;font-size:10px}
+.cms-admin-page .admin-status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:#28a35b}
+.cms-admin-page .cms-welcome-row{padding:clamp(36px,5vw,68px) 0 28px;align-items:flex-end;border-bottom:1px solid #dedfe6}
+.cms-admin-page .cms-welcome-row .admin-welcome h1{font-size:clamp(52px,7.8vw,98px);line-height:.9;letter-spacing:-.09em}
+.cms-admin-page .cms-welcome-row .admin-welcome p:not(.eyebrow){max-width:600px;color:#6a6e7c;font-size:14px;line-height:1.85}
+.cms-admin-page .admin-hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:14px;flex:0 0 auto}
+.admin-session-label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;color:#656a79}
+.admin-session-label i{width:7px;height:7px;border-radius:50%;background:#35a568;box-shadow:0 0 0 4px #35a56818}
+.cms-admin-page .admin-hero-actions .button{white-space:nowrap;border-radius:4px;padding:14px 17px;gap:18px}
+.cms-admin-page .admin-section-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:22px 0 26px;padding:15px;background:#e9ebf3;border:1px solid #e0e2ec;border-radius:8px}
+.cms-admin-page .admin-nav-heading{grid-column:1/-1;display:flex;align-items:baseline;gap:12px;padding:2px 4px 5px}
+.cms-admin-page .admin-nav-heading span{font:9px "DM Mono",monospace;letter-spacing:.14em;color:#182c9c;font-weight:700}
+.cms-admin-page .admin-nav-heading small{font-size:10px;color:#7b7f8d}
+.cms-admin-page .admin-section-nav>a{min-height:78px;background:#fff;border-color:#e2e4ed;border-radius:5px;padding:13px}
+.cms-admin-page .admin-section-nav>a.admin-nav-overview{display:none}
+.cms-admin-page .admin-nav-icon{border-radius:5px;background:#eef0ff;color:#1834b7}
+.cms-admin-page .admin-section-nav>a>b{font-size:15px}
+.cms-admin-page .admin-section-nav strong{font-size:11px}
+.cms-admin-page .admin-section-nav small{font-size:9px}
+.cms-admin-page .admin-dashboard-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:0 0 30px;scroll-margin-top:100px}
+.cms-admin-page .admin-stat{padding:22px 24px;background:#fff;border:1px solid #e1e3eb;border-radius:6px;box-shadow:0 4px 16px #17192304}
+.cms-admin-page .admin-stat>span{font:9px "DM Mono",monospace;text-transform:uppercase;letter-spacing:.11em;color:#727787}
+.cms-admin-page .admin-stat strong{display:block;font-size:38px;line-height:1.1;letter-spacing:-.07em;color:#122cae;margin:12px 0 6px}
+.cms-admin-page .admin-stat small{font-size:10px;color:#777b89}
+.cms-admin-page .admin-panel{background:#fff;border:1px solid #e0e2eb;border-radius:7px;box-shadow:0 8px 28px #17192305;scroll-margin-top:100px}
+.cms-admin-page .admin-panel-head h2{font-size:clamp(24px,3vw,35px);letter-spacing:-.055em}
+.cms-admin-page .admin-panel-head p{font-size:12px;line-height:1.8;color:#747887}
+.cms-admin-page .cms-eyebrow{font:9px "DM Mono",monospace;letter-spacing:.13em;color:#1b35b5}
+.cms-admin-page .admin-project-form{max-width:none;border:0;background:transparent;padding:0 26px 26px}
+.cms-admin-page .admin-project-form input:not([type=checkbox]):not([type=file]),.cms-admin-page .admin-project-form select,.cms-admin-page .admin-project-form textarea,.cms-admin-page .admin-login input{border:1px solid #daddE7;border-radius:4px;background:#fcfcfe;padding:13px 14px}
+.cms-admin-page .admin-project-form input:focus,.cms-admin-page .admin-project-form select:focus,.cms-admin-page .admin-project-form textarea:focus,.cms-admin-page .admin-login input:focus{outline:2px solid #1d36bb26;border-color:#1d36bb}
+.cms-admin-page .cms-library-tabs{border-bottom:1px solid #e2e4eb;padding:0 24px}
+.cms-admin-page .cms-library-tabs button{border-radius:4px 4px 0 0}
+.cms-admin-page .cms-project-card{border:1px solid #e0e2eb;border-radius:5px;overflow:hidden;background:#fff}
+.cms-admin-page .cms-card-copy{padding:16px}
+.cms-admin-page .cms-card-actions .button{padding:10px 11px;font-size:10px}
+.cms-admin-page .cms-form-actions .button,.cms-admin-page .admin-login .button{border-radius:4px}
+.cms-admin-page .form-error,.cms-admin-page .form-message{padding:13px 15px;border-radius:5px;background:#fff;border:1px solid #f0d6d6}
+.cms-admin-page .form-message{border-color:#d3eadb;background:#f5fcf7}
+@media(max-width:1050px){.cms-admin-page .admin-section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.cms-admin-page .admin-section-nav>a.admin-nav-overview{display:flex}}
+@media(max-width:700px){.cms-admin-page{padding-left:14px!important;padding-right:14px!important}.cms-admin-page .admin-masthead{margin-left:-14px;margin-right:-14px;padding:12px 14px;align-items:flex-start;gap:12px}.cms-admin-page .admin-masthead-right>span:first-child{display:none}.cms-admin-page .admin-masthead-right{gap:7px;flex-wrap:wrap;justify-content:flex-end}.cms-admin-page .admin-masthead-right .button{padding:8px 10px;font-size:10px}.cms-admin-page .cms-welcome-row{align-items:flex-start;flex-direction:column;gap:20px}.cms-admin-page .cms-welcome-row .admin-welcome h1{font-size:clamp(53px,15vw,76px)}.cms-admin-page .admin-hero-actions{align-items:flex-start;flex-direction:row;flex-wrap:wrap}.cms-admin-page .admin-section-nav{grid-template-columns:1fr;margin-top:16px;padding:10px}.cms-admin-page .admin-section-nav>a{min-height:66px}.cms-admin-page .admin-dashboard-stats{grid-template-columns:1fr;gap:8px}.cms-admin-page .admin-stat{padding:16px 18px}.cms-admin-page .admin-stat strong{font-size:30px}.cms-admin-page .admin-project-form{padding:0 16px 18px}.cms-admin-page .cms-library-tabs{padding:0 14px;overflow-x:auto}.cms-admin-page .cms-library-tabs button{white-space:nowrap}.cms-admin-page .admin-panel-head{padding:20px 16px}.cms-admin-page .cms-project-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.cms-admin-page *{scroll-behavior:auto!important;transition:none!important}}
