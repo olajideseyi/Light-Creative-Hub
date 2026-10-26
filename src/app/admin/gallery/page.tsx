@@ -6,9 +6,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 type GalleryRecord = {
   id: string; title: string; description: string; category: string; media_url: string;
   media_type: "image" | "video"; alt_text: string; published: boolean; featured: boolean;
-  display_order: number; created_at: string;
+  display_order: number; created_at: string; cloudinary_public_id: string | null; cloudinary_resource_type: "image" | "video" | "raw" | null;
 };
-const BUCKET = "portfolio-media";
 const MAX_SIZE = 50 * 1024 * 1024;
 const CATEGORIES = ["Photography", "Photoshoot", "Brand Campaign", "Product", "Portrait", "Event", "Video", "Behind the Scenes", "Other"];
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm,video/quicktime,.jpg,.jpeg,.png,.webp,.avif,.mp4,.webm,.mov,.m4v";
@@ -46,13 +45,15 @@ export default function AdminGalleryPage() {
   const [featured, setFeatured] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [currentUrl, setCurrentUrl] = useState("");
+  const [currentCloudinaryId, setCurrentCloudinaryId] = useState<string | null>(null);
+  const [currentCloudinaryType, setCurrentCloudinaryType] = useState<"image" | "video" | "raw" | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
 
   const loadItems = useCallback(async () => {
     const { data, error: queryError } = await getSupabaseBrowserClient().from("gallery_items")
-      .select("id,title,description,category,media_url,media_type,alt_text,published,featured,display_order,created_at")
+      .select("id,title,description,category,media_url,media_type,alt_text,published,featured,display_order,created_at,cloudinary_public_id,cloudinary_resource_type")
       .order("display_order", { ascending: true }).order("created_at", { ascending: false });
     if (queryError) throw queryError;
     setItems((data ?? []) as GalleryRecord[]);
@@ -83,14 +84,14 @@ export default function AdminGalleryPage() {
 
   function reset() {
     setEditing(null); setTitle(""); setDescription(""); setCategory(CATEGORIES[0]); setAltText("");
-    setPublished(true); setFeatured(false); setFile(null); setCurrentUrl("");
+    setPublished(true); setFeatured(false); setFile(null); setCurrentUrl(""); setCurrentCloudinaryId(null); setCurrentCloudinaryType(null);
     const input = document.getElementById("gallery-upload") as HTMLInputElement | null;
     if (input) input.value = "";
   }
 
   function startEdit(item: GalleryRecord) {
     setEditing(item.id); setTitle(item.title); setDescription(item.description || ""); setCategory(item.category || CATEGORIES[0]);
-    setAltText(item.alt_text || ""); setPublished(item.published); setFeatured(item.featured); setCurrentUrl(item.media_url); setFile(null);
+    setAltText(item.alt_text || ""); setPublished(item.published); setFeatured(item.featured); setCurrentUrl(item.media_url); setCurrentCloudinaryId(item.cloudinary_public_id); setCurrentCloudinaryType(item.cloudinary_resource_type); setFile(null);
     document.getElementById("gallery-editor")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -106,56 +107,102 @@ export default function AdminGalleryPage() {
     } finally { setBusy(false); }
   }
 
+  async function cloudinaryRequest(path: string, body: Record<string, unknown>) {
+    const client = getSupabaseBrowserClient();
+    const { data: sessionData } = await client.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) throw new Error("Your administrator session has expired. Sign in again.");
+    const response = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(body)
+    });
+    const result = await response.json().catch(() => ({})) as { error?: string; success?: boolean };
+    if (!response.ok) throw new Error(result.error || "Cloudinary request failed.");
+    return result;
+  }
+
+  async function deleteCloudinaryAsset(publicId: string | null, resourceType: "image" | "video" | "raw" | null) {
+    if (!publicId || (resourceType !== "image" && resourceType !== "video")) return true;
+    try {
+      await cloudinaryRequest("/api/cloudinary/delete", { publicId, resourceType });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError(""); setNotice("");
-    let uploadedUrl = "";
+    let uploadedCloudinaryId: string | null = null;
+    let uploadedCloudinaryType: "image" | "video" | "raw" | null = null;
     let databaseSaved = false;
     try {
       const client = getSupabaseBrowserClient();
       let mediaUrl = currentUrl;
       let mediaType: "image" | "video" = isVideo(currentUrl) ? "video" : "image";
+      let cloudinaryPublicId = currentCloudinaryId;
+      let cloudinaryResourceType = currentCloudinaryType;
       if (file) {
         if (file.size > MAX_SIZE) throw new Error("Choose a file smaller than 50 MB.");
         if (!ACCEPTED_TYPES.has(file.type)) throw new Error("Use a JPG, PNG, WebP, AVIF, MP4, WebM or MOV file.");
-        mediaType = file.type.startsWith("video/") ? "video" : "image";
-        const safeName = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, "-").slice(-100);
-        const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
-        const { error: uploadError } = await client.storage.from(BUCKET).upload(path, file, { upsert: false, contentType: file.type });
-        if (uploadError) throw uploadError;
-        mediaUrl = client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-        uploadedUrl = mediaUrl;
+        const signature = await cloudinaryRequest("/api/cloudinary/signature", {});
+        const signed = signature as { cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string };
+        const form = new FormData();
+        form.append("file", file);
+        form.append("api_key", signed.apiKey);
+        form.append("timestamp", String(signed.timestamp));
+        form.append("folder", signed.folder);
+        form.append("signature", signed.signature);
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${signed.cloudName}/auto/upload`, { method: "POST", body: form });
+        const result = await response.json().catch(() => ({})) as { secure_url?: string; public_id?: string; resource_type?: string; error?: { message?: string } };
+        if (!response.ok || !result.secure_url || !result.public_id) throw new Error(result.error?.message || "Cloudinary could not upload this file.");
+        mediaUrl = result.secure_url;
+        mediaType = result.resource_type === "video" ? "video" : "image";
+        cloudinaryPublicId = result.public_id;
+        cloudinaryResourceType = result.resource_type === "video" ? "video" : "image";
+        uploadedCloudinaryId = cloudinaryPublicId;
+        uploadedCloudinaryType = cloudinaryResourceType;
       }
       if (!mediaUrl) throw new Error("Choose a photo or video before saving.");
-      const payload = { title: title.trim(), description: description.trim(), category, media_url: mediaUrl, media_type: mediaType, alt_text: altText.trim(), published, featured, updated_at: new Date().toISOString(), display_order: editing ? (items.find(item => item.id === editing)?.display_order ?? items.length) : items.length };
+      const payload = {
+        title: title.trim(), description: description.trim(), category, media_url: mediaUrl, media_type: mediaType,
+        cloudinary_public_id: cloudinaryPublicId, cloudinary_resource_type: cloudinaryResourceType,
+        alt_text: altText.trim(), published, featured, updated_at: new Date().toISOString(),
+        display_order: editing ? (items.find(item => item.id === editing)?.display_order ?? items.length) : items.length
+      };
       const previousUrl = currentUrl;
+      const previousCloudinaryId = currentCloudinaryId;
+      const previousCloudinaryType = currentCloudinaryType;
       const result = editing ? await client.from("gallery_items").update(payload).eq("id", editing) : await client.from("gallery_items").insert(payload);
       if (result.error) throw result.error;
       databaseSaved = true;
-      // Once the database points to the replacement, clean up the old file if it belongs to our bucket.
       let oldMediaCleanupFailed = false;
       if (file && previousUrl && previousUrl !== mediaUrl) {
-        const previousPath = storageObjectPath(previousUrl);
-        if (previousPath) {
-          try {
-            const { error: cleanupError } = await client.storage.from(BUCKET).remove([previousPath]);
-            oldMediaCleanupFailed = Boolean(cleanupError);
-          } catch {
-            oldMediaCleanupFailed = true;
+        if (previousCloudinaryId && previousCloudinaryId !== cloudinaryPublicId) {
+          oldMediaCleanupFailed = !(await deleteCloudinaryAsset(previousCloudinaryId, previousCloudinaryType));
+        } else {
+          const previousPath = storageObjectPath(previousUrl);
+          if (previousPath) {
+            try {
+              const { error: cleanupError } = await client.storage.from("portfolio-media").remove([previousPath]);
+              oldMediaCleanupFailed = Boolean(cleanupError);
+            } catch { oldMediaCleanupFailed = true; }
           }
         }
       }
       await loadItems();
       reset();
       setNotice(oldMediaCleanupFailed
-        ? (editing ? "Gallery item updated, but the previous media file could not be removed from Storage." : "Media added, but an old media file could not be removed from Storage.")
+        ? "Gallery item saved, but the previous media file could not be removed. You may need to clean it up in the media provider."
         : (editing ? "Gallery item updated." : "Media added to your gallery."));
     } catch (e) {
-      if (uploadedUrl && !databaseSaved) {
-        try { const path = new URL(uploadedUrl).pathname.split(`/storage/v1/object/public/${BUCKET}/`)[1]; if (path) await getSupabaseBrowserClient().storage.from(BUCKET).remove([decodeURIComponent(path)]); } catch { /* preserve the original save error */ }
+      if (uploadedCloudinaryId && !databaseSaved) {
+        await deleteCloudinaryAsset(uploadedCloudinaryId, uploadedCloudinaryType);
       }
       setError(databaseSaved
         ? `Your gallery item was saved, but the page could not refresh: ${e instanceof Error ? e.message : "Unknown error"}. Refresh the page to see the saved item.`
-        : (e instanceof Error ? e.message : "Could not save gallery item. Confirm that the gallery migration has been applied."));
+        : (e instanceof Error ? e.message : "Could not save gallery item. Check your Cloudinary configuration and gallery migration."));
     } finally { setBusy(false); }
   }
 
@@ -172,19 +219,21 @@ export default function AdminGalleryPage() {
       const client = getSupabaseBrowserClient();
       const { error: deleteError } = await client.from("gallery_items").delete().eq("id", item.id);
       if (deleteError) throw deleteError;
-      const path = storageObjectPath(item.media_url);
       let storageCleanupFailed = false;
-      if (path) {
-        try {
-          const { error: storageError } = await client.storage.from(BUCKET).remove([path]);
-          storageCleanupFailed = Boolean(storageError);
-        } catch {
-          storageCleanupFailed = true;
+      if (item.cloudinary_public_id) {
+        storageCleanupFailed = !(await deleteCloudinaryAsset(item.cloudinary_public_id, item.cloudinary_resource_type));
+      } else {
+        const path = storageObjectPath(item.media_url);
+        if (path) {
+          try {
+            const { error: storageError } = await client.storage.from("portfolio-media").remove([path]);
+            storageCleanupFailed = Boolean(storageError);
+          } catch { storageCleanupFailed = true; }
         }
       }
       await loadItems(); if (editing === item.id) reset();
       setNotice(storageCleanupFailed
-        ? "Gallery entry deleted. The media file could not be removed from Storage, so it may need manual cleanup."
+        ? "Gallery entry deleted. Its media file could not be removed from the provider and may need manual cleanup."
         : "Gallery entry and its uploaded file removed.");
     }
     catch (e) { setError(e instanceof Error ? e.message : "Could not delete gallery entry."); } finally { setBusy(false); }
@@ -204,7 +253,7 @@ export default function AdminGalleryPage() {
       <div className="gallery-admin-stats"><article><span>ALL MEDIA</span><strong>{items.length.toString().padStart(2,"0")}</strong><small>Images and videos in the library</small></article><article><span>PUBLISHED</span><strong>{items.filter(item=>item.published).length.toString().padStart(2,"0")}</strong><small>Visible on the public gallery</small></article><article><span>DRAFTS</span><strong>{items.filter(item=>!item.published).length.toString().padStart(2,"0")}</strong><small>Only visible in this workspace</small></article></div>
       <div className="gallery-admin-layout">
         <section className="gallery-admin-panel" id="gallery-editor"><div className="gallery-admin-panel-heading"><div><span className="cms-eyebrow">{editing ? "EDIT MEDIA" : "ADD TO GALLERY"}</span><h2>{editing ? "Update this item." : "Upload new work."}</h2><p>Add one image or video per entry. You can add as many entries as you need.</p></div>{editing && <button type="button" className="button button-outline-dark" onClick={reset}>Cancel edit</button>}</div>
-          <form className="gallery-admin-form" onSubmit={save}><label>Photo or video file{currentUrl && <div className="gallery-admin-preview">{isVideo(currentUrl) ? <video src={currentUrl} controls playsInline preload="metadata"/> : <img src={currentUrl} alt={altText || title || "Gallery media preview"}/>}</div>}<input id="gallery-upload" type="file" accept={ACCEPT} onChange={(e: ChangeEvent<HTMLInputElement>)=>setFile(e.target.files?.[0] ?? null)}/><small>JPG, PNG, WebP, AVIF, MP4, WebM or MOV. Maximum 50 MB per file. A new upload replaces the current media for this entry.</small></label>
+          <form className="gallery-admin-form" onSubmit={save}><label>Photo or video file{currentUrl && <div className="gallery-admin-preview">{isVideo(currentUrl) ? <video src={currentUrl} controls playsInline preload="metadata"/> : <img src={currentUrl} alt={altText || title || "Gallery media preview"}/>}</div>}<input id="gallery-upload" type="file" accept={ACCEPT} onChange={(e: ChangeEvent<HTMLInputElement>)=>setFile(e.target.files?.[0] ?? null)}/><small>JPG, PNG, WebP, AVIF, MP4, WebM or MOV. Maximum 50 MB per file. Files upload securely to Cloudinary when you save. A new upload replaces the current media for this entry.</small></label>
             {file && <p className="gallery-selected-file"><strong>Selected:</strong> {file.name} · {(file.size / (1024*1024)).toFixed(1)} MB</p>}
             <label>Display title<input value={title} onChange={e=>setTitle(e.target.value)} minLength={2} maxLength={180} required placeholder="e.g. Studio portrait series"/></label>
             <label>Gallery category<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(value=><option key={value}>{value}</option>)}</select></label>
