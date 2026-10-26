@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const baseUrl = "https://light-creative-hub.vercel.app";
-const staticRoutes = ["", "/about", "/services", "/portfolio", "/contact", "/request-a-quote", "/privacy"];
+const staticRoutes = ["", "/about", "/services", "/portfolio", "/gallery", "/contact", "/request-a-quote", "/privacy"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: baseUrl + route,
     lastModified: now,
     changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : route === "/portfolio" ? 0.9 : 0.7
+    priority: route === "" ? 1 : route === "/portfolio" || route === "/gallery" ? 0.9 : 0.7
   }));
 
   try {

@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <p>Creative ideas. Professional execution.</p>
           <div className="footer-contacts"><a href={"tel:"+contact.primaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a></div>
-          <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a></div>
+          <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a><a href="/gallery">Gallery</a></div>
           <small>© {new Date().getFullYear()} Light Creative Hub. All rights reserved.</small>
         </footer>
       </body>
