@@ -2254,3 +2254,11 @@ html{scroll-padding-top:96px}
  .gallery-admin-page .gallery-admin-header nav.is-open{display:flex}
  .gallery-admin-page .gallery-admin-header nav a,.gallery-admin-page .gallery-admin-header nav button{padding:15px 12px;border-bottom:1px solid #edf0f5;text-align:left;background:transparent;color:#172044;font-size:12px}
 }
+
+@media(max-width:760px){
+ .cms-admin-page .admin-nav-backdrop,.gallery-admin-page .gallery-admin-nav-backdrop{position:fixed;inset:0;z-index:94;display:block;border:0;background:#08102b70;backdrop-filter:blur(3px)}
+ .cms-admin-page .admin-mobile-menu-toggle,.gallery-admin-page .gallery-mobile-menu-toggle{position:relative;z-index:96}
+ .cms-admin-page .admin-section-nav{z-index:95}
+ .gallery-admin-page .gallery-admin-header nav{z-index:95}
+}
+:root{--lime:#ffb184}
