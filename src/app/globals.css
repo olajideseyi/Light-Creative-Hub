@@ -1943,3 +1943,83 @@ body{background:#f4f1eb;color:var(--lch-ink)}
 .safe-image-placeholder{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:160px;overflow:hidden;background:radial-gradient(circle at 75% 20%,#2c4fc7 0,#172e85 35%,#0e1a45 100%);color:#fff}
 .safe-image-placeholder span{padding:12px 16px;border:1px solid #ffffff55;font:600 8px "DM Mono",monospace;letter-spacing:.18em}
 .home .heroImage.safe-image-placeholder{position:absolute;inset:0;display:flex;z-index:-2}
+
+
+/* Mobile navigation: right-anchored drawer, never a centred dropdown */
+@media(max-width:760px){
+  .site-header{
+    position:relative;z-index:120;height:76px;min-height:76px;
+    display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+    gap:14px;flex-wrap:nowrap;padding:0 20px;
+  }
+  .site-header>.brand-logo{grid-column:1;grid-row:1;max-width:164px;min-width:0}
+  .site-header>.mobile-nav{grid-column:2;grid-row:1;justify-self:end;margin:0;position:static;z-index:130}
+  .site-header>.nav-cta{display:none!important}
+  .mobile-menu-toggle{
+    display:inline-flex;position:relative;z-index:132;min-width:94px;min-height:42px;
+    justify-content:center;gap:10px;padding:0 14px;border:1px solid #d8deec;
+    border-radius:2px;background:#fff;color:#14245c;font:700 11px/1 Arial,sans-serif;
+    letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 14px #10245b0a;
+  }
+  .mobile-menu-toggle:focus-visible,.primary-navigation a:focus-visible{outline:3px solid #ef7d32;outline-offset:3px}
+  .menu-icon{width:15px}
+  .menu-icon i{height:2px}
+  .mobile-nav-backdrop{
+    display:block;position:fixed;z-index:128;inset:76px 0 0;width:100%;height:calc(100dvh - 76px);
+    padding:0;border:0;border-radius:0;background:rgba(8,16,42,.48);
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);cursor:pointer;
+    animation:lch-menu-backdrop .2s ease both;
+  }
+  .site-header .primary-navigation,
+  .site-header .primary-navigation.is-open{
+    display:flex;position:fixed;z-index:131;top:76px;right:0;left:auto;bottom:0;
+    width:min(88vw,410px);max-height:calc(100dvh - 76px);overflow-y:auto;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;
+    margin:0;padding:28px 25px 24px;background:#fff;color:#111827;
+    border:0;border-left:1px solid #e3e7f1;border-radius:0;
+    box-shadow:-22px 20px 60px rgba(8,16,42,.2);
+    transform:translateX(105%);visibility:hidden;pointer-events:none;
+    transition:transform .36s cubic-bezier(.22,1,.36,1),visibility .36s;
+  }
+  .site-header .primary-navigation.is-open{
+    transform:translateX(0);visibility:visible;pointer-events:auto;
+  }
+  .mobile-nav-heading{
+    display:flex;justify-content:space-between;gap:12px;padding:2px 0 25px;
+    margin-bottom:8px;border-bottom:1px solid #e5e8f0;
+    color:#68738d;font:600 8px/1.5 "DM Mono",monospace;letter-spacing:.12em;
+  }
+  .site-header .primary-navigation>a:not(.mobile-nav-cta){
+    display:grid;grid-template-columns:30px minmax(0,1fr) 18px;align-items:center;
+    gap:10px;min-height:65px;padding:12px 0;border:0;border-bottom:1px solid #e8ebf2;
+    color:#17213e;font:650 22px/1.1 Montserrat,Arial,sans-serif;letter-spacing:-.045em;
+    background:transparent;
+  }
+  .site-header .primary-navigation>a:not(.mobile-nav-cta)>small{
+    color:#9aa3b7;font:9px "DM Mono",monospace;letter-spacing:.06em;
+  }
+  .site-header .primary-navigation>a:not(.mobile-nav-cta)>span{
+    display:block;color:#ef7d32;font:18px Arial,sans-serif;text-align:right;
+  }
+  .site-header .primary-navigation>a[aria-current="page"]{color:#1738b8}
+  .site-header .primary-navigation .mobile-nav-cta{
+    display:flex!important;align-items:center;justify-content:space-between;gap:20px;
+    min-height:56px;margin-top:25px;padding:0 17px;border:0;border-radius:2px;
+    background:#1738b8;color:#fff;font:700 12px Arial,sans-serif;
+  }
+  .site-header .primary-navigation .mobile-nav-cta span{display:inline;color:#ffb184}
+  .mobile-nav-foot{
+    margin-top:auto;padding-top:30px;color:#8b94a9;
+    font:8px/1.7 "DM Mono",monospace;letter-spacing:.1em;
+  }
+}
+@keyframes lch-menu-backdrop{from{opacity:0}to{opacity:1}}
+@media(max-width:390px){
+  .site-header{padding:0 15px}
+  .site-header>.brand-logo{max-width:145px}
+  .mobile-menu-toggle{min-width:84px;padding:0 11px}
+  .site-header .primary-navigation,.site-header .primary-navigation.is-open{width:min(92vw,390px);padding:24px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .mobile-nav-backdrop,.site-header .primary-navigation,.site-header .primary-navigation.is-open{animation:none;transition:none}
+}
