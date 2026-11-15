@@ -70,6 +70,13 @@ export default function AdminGalleryPage() {
   }, []);
 
   useEffect(() => {
+    if (!mobileNavOpen) return;
+    const closeOnPageScroll = () => setMobileNavOpen(false);
+    window.addEventListener("scroll", closeOnPageScroll, { passive: true });
+    return () => window.removeEventListener("scroll", closeOnPageScroll);
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
     let active = true;
     const client = getSupabaseBrowserClient();
     client.auth.getSession().then(async ({ data, error: sessionError }) => {
@@ -136,8 +143,7 @@ export default function AdminGalleryPage() {
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError(""); setNotice("");
-    let uploadedCloudinaryId: string | null = null;
-    let uploadedCloudinaryType: "image" | "video" | "raw" | null = null;
+    let uploadedStoragePath: string | null = null;
     let databaseSaved = false;
     try {
       const client = getSupabaseBrowserClient();
@@ -148,23 +154,15 @@ export default function AdminGalleryPage() {
       if (file) {
         if (file.size > MAX_SIZE) throw new Error("Choose a file smaller than 50 MB.");
         if (!ACCEPTED_TYPES.has(file.type)) throw new Error("Use a JPG, PNG, WebP, AVIF, MP4, WebM or MOV file.");
-        const signature = await cloudinaryRequest("/api/cloudinary/signature", {});
-        const signed = signature as unknown as { cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string };
-        const form = new FormData();
-        form.append("file", file);
-        form.append("api_key", signed.apiKey);
-        form.append("timestamp", String(signed.timestamp));
-        form.append("folder", signed.folder);
-        form.append("signature", signed.signature);
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${signed.cloudName}/auto/upload`, { method: "POST", body: form });
-        const result = await response.json().catch(() => ({})) as { secure_url?: string; public_id?: string; resource_type?: string; error?: { message?: string } };
-        if (!response.ok || !result.secure_url || !result.public_id) throw new Error(result.error?.message || "Cloudinary could not upload this file.");
-        mediaUrl = result.secure_url;
-        mediaType = result.resource_type === "video" ? "video" : "image";
-        cloudinaryPublicId = result.public_id;
-        cloudinaryResourceType = result.resource_type === "video" ? "video" : "image";
-        uploadedCloudinaryId = cloudinaryPublicId;
-        uploadedCloudinaryType = cloudinaryResourceType;
+        const safeName = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, "-").slice(-100);
+        const objectPath = `gallery/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
+        const { error: uploadError } = await client.storage.from(BUCKET).upload(objectPath, file, { upsert: false, contentType: file.type });
+        if (uploadError) throw uploadError;
+        uploadedStoragePath = objectPath;
+        mediaUrl = client.storage.from(BUCKET).getPublicUrl(objectPath).data.publicUrl;
+        mediaType = file.type.startsWith("video/") ? "video" : "image";
+        cloudinaryPublicId = null;
+        cloudinaryResourceType = null;
       }
       if (!mediaUrl) throw new Error("Choose a photo or video before saving.");
       const payload = {
@@ -199,12 +197,12 @@ export default function AdminGalleryPage() {
         ? "Gallery item saved, but the previous media file could not be removed. You may need to clean it up in the media provider."
         : (editing ? "Gallery item updated." : "Media added to your gallery."));
     } catch (e) {
-      if (uploadedCloudinaryId && !databaseSaved) {
-        await deleteCloudinaryAsset(uploadedCloudinaryId, uploadedCloudinaryType);
+      if (uploadedStoragePath && !databaseSaved) {
+        await getSupabaseBrowserClient().storage.from(BUCKET).remove([uploadedStoragePath]);
       }
       setError(databaseSaved
         ? `Your gallery item was saved, but the page could not refresh: ${e instanceof Error ? e.message : "Unknown error"}. Refresh the page to see the saved item.`
-        : (e instanceof Error ? e.message : "Could not save gallery item. Check your Cloudinary configuration and gallery migration."));
+        : (e instanceof Error ? e.message : "Could not save gallery item. Check your Supabase Storage bucket and gallery table policies."));
     } finally { setBusy(false); }
   }
 
