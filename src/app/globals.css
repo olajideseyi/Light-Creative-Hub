@@ -2439,7 +2439,7 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 
 
 /* Portfolio library is the primary view; the project form opens on demand */
-.cms-layout{display:flex!important;flex-direction:column;gap:28px}
+.cms-layout{display:flex;flex-direction:column;gap:28px}
 .cms-library-panel{order:0}
 .cms-editor-panel{order:1}
 .cms-library-header-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
