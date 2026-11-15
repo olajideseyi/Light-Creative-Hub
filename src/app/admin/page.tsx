@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type Project = {
@@ -28,7 +29,11 @@ function MediaPreview({ url, title, compact = false }: {url: string; title: stri
   </div>;
 }
 
-export default function AdminPage() {
+export function AdminPage() {
+  const pathname = usePathname();
+  const isDashboard = pathname === "/admin" || pathname === "/admin/";
+  const isContentPage = pathname.startsWith("/admin/content");
+  const isPortfolioPage = pathname.startsWith("/admin/portfolio");
   const [email,setEmail]=useState(""); const [password,setPassword]=useState("");
   const [signedIn,setSignedIn]=useState(false); const [projects,setProjects]=useState<Project[]>([]);
   const [busy,setBusy]=useState(false); const [notice,setNotice]=useState(""); const [error,setError]=useState("");
@@ -204,19 +209,19 @@ export default function AdminPage() {
   return <section className="admin-page cms-admin-page"><div className="admin-shell">
     <header className="admin-masthead"><div className="admin-brand"><span className="admin-brand-mark">L</span><div><strong>Light Creative Hub</strong><small>STUDIO CONTROL ROOM / CMS</small></div></div><div className="admin-masthead-right"><span>CONTENT MANAGEMENT</span>{signedIn&&<><button type="button" className="admin-mobile-menu-toggle" aria-label={mobileNavOpen?"Close workspace menu":"Open workspace menu"} aria-expanded={mobileNavOpen} aria-controls="admin-workspace-navigation" onClick={()=>setMobileNavOpen(v=>!v)}><span></span><span></span><span></span></button><span className="admin-status-pill">Secure session</span><button className="button button-outline-dark" onClick={signOut} disabled={busy}>Sign out</button></>}</div></header>
     {!signedIn?<div className="admin-login-layout"><div className="admin-welcome"><div><p className="eyebrow">STUDIO ACCESS / 01</p><h1>Make the work<br/><em>visible.</em></h1><p>Manage portfolio projects, media, descriptions and what appears on the public website.</p></div></div><form className="admin-login" onSubmit={signIn}><div className="admin-panel-head"><div><h2>Administrator sign in</h2><p>Use the Supabase Auth account approved for this studio.</p></div></div>{error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}<label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/></label><button className="button button-blue" disabled={busy}>{busy?"Checking access…":"Enter the studio CMS ↗"}</button><p className="admin-help">Only accounts listed in the Supabase admin allowlist can edit or publish content.</p></form></div>:<>
-      <div className="cms-welcome-row"><div className="admin-welcome"><div><p className="eyebrow">LIGHT CREATIVE HUB / ADMINISTRATION</p><h1>Studio<br/><em>workspace.</em></h1><p>One place to manage your website, publish selected work, maintain the gallery and control how your studio appears to clients.</p></div></div><div className="admin-hero-actions"><span className="admin-session-label"><i aria-hidden="true"/> Admin workspace</span><a className="button button-blue cms-view-site" href="/" target="_blank" rel="noreferrer">View live website <span aria-hidden="true">↗</span></a></div></div>
+      <div className="cms-welcome-row" style={{display:isDashboard?"":"none"}}><div className="admin-welcome"><div><p className="eyebrow">LIGHT CREATIVE HUB / ADMINISTRATION</p><h1>Studio<br/><em>workspace.</em></h1><p>One place to manage your website, publish selected work, maintain the gallery and control how your studio appears to clients.</p></div></div><div className="admin-hero-actions"><span className="admin-session-label"><i aria-hidden="true"/> Admin workspace</span><a className="button button-blue cms-view-site" href="/" target="_blank" rel="noreferrer">View live website <span aria-hidden="true">↗</span></a></div></div>
       {error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}
       <nav id="admin-workspace-navigation" className={`admin-section-nav${mobileNavOpen?" is-open":""}`} aria-label="Admin workspace navigation">
          <div className="admin-nav-heading"><span>WORKSPACE</span><small>Choose a section to manage</small></div>
-         <a onClick={()=>setMobileNavOpen(false)} href="#admin-overview" className="admin-nav-overview"><span className="admin-nav-icon">⌂</span><span><strong>Overview</strong><small>Content status and quick actions</small></span><b>↗</b></a>
-         <a onClick={()=>setMobileNavOpen(false)} href="#site-content-editor"><span className="admin-nav-icon">Aa</span><span><strong>Website content</strong><small>Homepage, About, services and contact</small></span><b>↗</b></a>
-         <a onClick={()=>setMobileNavOpen(false)} href="#cms-editor"><span className="admin-nav-icon">＋</span><span><strong>Portfolio editor</strong><small>Create and edit projects</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="/admin" className="admin-nav-overview"><span className="admin-nav-icon">⌂</span><span><strong>Overview</strong><small>Content status and quick actions</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="/admin/content"><span className="admin-nav-icon">Aa</span><span><strong>Website content</strong><small>Homepage, About, services and contact</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="/admin/portfolio"><span className="admin-nav-icon">＋</span><span><strong>Portfolio editor</strong><small>Create and edit projects</small></span><b>↗</b></a>
          <a onClick={()=>setMobileNavOpen(false)} href="/admin/gallery"><span className="admin-nav-icon">▧</span><span><strong>Gallery manager</strong><small>Photography, images and video</small></span><b>↗</b></a>
-         <a onClick={()=>setMobileNavOpen(false)} href="#portfolio-library"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="/admin/portfolio"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
        </nav>
       {mobileNavOpen&&<button type="button" className="admin-nav-backdrop" aria-label="Close workspace menu" onClick={()=>setMobileNavOpen(false)}/>}
-      <section className="admin-overview-section" id="admin-overview"><div className="admin-overview-heading"><div><span className="cms-eyebrow">WORKSPACE OVERVIEW</span><h2>Your website at a glance.</h2><p>Monitor what is live and jump straight into the area you want to update.</p></div><a className="button button-blue" href="/" target="_blank" rel="noreferrer">Open live website ↗</a></div><div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div></section>
-      <section className="admin-panel site-content-cms" id="site-content-editor">
+      <section className="admin-overview-section" id="admin-overview" style={{display:isDashboard?"":"none"}}><div className="admin-overview-heading"><div><span className="cms-eyebrow">WORKSPACE OVERVIEW</span><h2>Your website at a glance.</h2><p>Monitor what is live and jump straight into the area you want to update.</p></div><a className="button button-blue" href="/" target="_blank" rel="noreferrer">Open live website ↗</a></div><div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div></section>
+      <section className="admin-panel site-content-cms" id="site-content-editor" style={{display:isContentPage?"":"none"}}>
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
         <div className="cms-library-tabs site-content-tabs">
           {(["homepage","about","services","contact","effects"] as const).map(key=><button type="button" key={key} className={cmsSection===key?"active":""} onClick={()=>setCmsSection(key)}>{({homepage:"Homepage",about:"About",services:"Services",contact:"Contact",effects:"Motion & effects"} as const)[key]}</button>)}
@@ -250,7 +255,7 @@ export default function AdminPage() {
         </form>
       </section>
       
-      <div className="cms-layout">
+      <div className="cms-layout" style={{display:isPortfolioPage?"":"none"}}>
         <section className="admin-panel cms-editor-panel" id="cms-editor"><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"CREATE NEW PROJECT"}</span><h2>{editingId?"Refine the details.":"Add to the archive."}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
           <form className="admin-project-form" onSubmit={saveProject}><div className="form-grid">
             <label>Project title *<input value={title} onChange={e=>{setTitle(e.target.value);if(!editingId||!slug)setSlug(slugify(e.target.value));}} required minLength={2} maxLength={180} placeholder="e.g. Identity for a new brand"/></label>
@@ -282,3 +287,5 @@ export default function AdminPage() {
   {previewProject&&<div className="cms-modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setPreviewProject(null);}}><section className="cms-preview-modal" role="dialog" aria-modal="true" aria-label={`Preview ${previewProject.title}`}><header><div><span className="cms-eyebrow">PROJECT PREVIEW / {previewProject.published?"PUBLISHED":"DRAFT"}</span><h2>{previewProject.title}</h2></div><button type="button" className="cms-modal-close" onClick={()=>setPreviewProject(null)} aria-label="Close preview">×</button></header><p className="cms-modal-category">{previewProject.category} · /{previewProject.slug}</p><p>{previewProject.summary}</p><div className="cms-modal-media-grid">{Array.from(new Set([...(previewProject.cover_image_url?[previewProject.cover_image_url]:[]),...(previewProject.media_urls||[])])).map((url,i)=><MediaPreview key={url} url={url} title={`${previewProject.title} media ${i+1}`}/>)}</div>{previewProject.description&&previewProject.description!==previewProject.summary&&<div className="cms-modal-description"><h3>Full description</h3><p>{previewProject.description}</p></div>}<footer><button type="button" className="button button-blue" onClick={()=>startEdit(previewProject)}>Edit project ↗</button><button type="button" className="button button-outline-dark" onClick={()=>togglePublished(previewProject)} disabled={busy}>{previewProject.published?"Unpublish project":"Publish project"}</button><button type="button" className="button button-outline-dark" onClick={()=>setPreviewProject(null)}>Close preview</button></footer></section></div>}
   </section>;
 }
+
+export default AdminPage;
