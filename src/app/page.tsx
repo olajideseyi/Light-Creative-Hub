@@ -2,6 +2,7 @@ import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { WhatsAppLink } from "@/components/whatsapp-float";
 import { SafeImage } from "@/components/safe-image";
+import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { getSiteContact } from "@/lib/site-contact";
 import styles from "./home.module.css";
 
@@ -23,6 +24,8 @@ type HomeContent = {
   approachTitle?: string;
   approachDescription?: string;
   heroPrimaryImageUrl?: string;
+  heroSlides?: string[];
+  sections?: Array<{id:string;type:"cta"|"text";title:string;body:string;buttonLabel:string;buttonUrl:string}>;
   founderImageUrl?: string;
   founderTitle?: string;
   founderQuote?: string;
@@ -104,7 +107,7 @@ export default async function HomePage() {
   return (
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
-        <SafeImage className={styles.heroImage} src={content.heroPrimaryImageUrl || fallbackHeroImage} fallbackSrc={fallbackHeroImage} alt="Creative studio workspace with visual identity and design materials" priority />
+        <HomeHeroCarousel images={content.heroSlides?.length ? content.heroSlides : [content.heroPrimaryImageUrl || fallbackHeroImage]} fallbackImage={fallbackHeroImage} />
         <div className={styles.heroShade} />
         <div className={styles.heroInner}>
           <p className={styles.heroEyebrow}><span /> LIGHT CREATIVE HUB <span className={styles.eyebrowRule} /> BRAND · DESIGN · PRINT · FILM</p>
@@ -210,6 +213,7 @@ export default async function HomePage() {
           <small>LAGOS, NIGERIA · ONLINE & IN-PERSON BY ARRANGEMENT</small>
         </div>
       </section>
+      {(content.sections??[]).map((section,index)=><section className={section.type==="cta"?styles.cmsCtaSection:styles.cmsTextSection} key={section.id}><div><span>{section.type==="cta"?"LET'S WORK TOGETHER":"LIGHT CREATIVE HUB / "+String(index+1).padStart(2,"0")}</span><h2>{section.title}</h2><p>{section.body}</p>{section.buttonLabel&&<a href={section.buttonUrl||"/request-a-quote"}>{section.buttonLabel} <b>↗</b></a>}</div></section>)}
     </div>
   );
 }
