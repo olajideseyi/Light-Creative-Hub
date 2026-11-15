@@ -2449,3 +2449,79 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 .admin-page input,.admin-page textarea,.admin-page select{font-size:15px}
 .gallery-admin-loading{min-height:120px}
 @media(max-width:640px){.cms-library-header-actions{width:100%;justify-content:space-between}.cms-library-header-actions .button{flex:1}}
+
+
+/* Desktop navigation visibility: explicit layout for all Admin workspaces */
+@media(min-width:761px){
+  .cms-admin-page .admin-section-nav{display:flex!important;visibility:visible!important;opacity:1!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;position:fixed!important;left:18px!important;top:18px!important;bottom:18px!important;width:252px!important;z-index:300!important;background:#fff!important;color:#172044!important}
+  .cms-admin-page .admin-nav-brand,.cms-admin-page .admin-nav-links,.cms-admin-page .admin-nav-bottom{display:flex!important;visibility:visible!important;opacity:1!important}
+  .cms-admin-page .admin-nav-links{flex-direction:column!important;align-items:stretch!important;gap:6px!important;width:100%!important}
+  .cms-admin-page .admin-nav-links a{display:flex!important;visibility:visible!important;align-items:center!important;min-height:50px!important;padding:0 14px!important;color:#263452!important;font-size:14px!important;font-weight:700!important;background:#fff!important}
+  .cms-admin-page .admin-nav-links a.is-current{background:#edf2ff!important;color:#1738bd!important;border-color:#dce5ff!important}
+  .cms-admin-page .admin-nav-bottom{margin-top:auto!important;flex-direction:column!important}
+  .cms-admin-page .admin-nav-bottom button{display:block!important;color:#263452!important;font-size:14px!important}
+  .gallery-admin-page .gallery-admin-header{display:flex!important;visibility:visible!important;opacity:1!important}
+  .gallery-admin-page .gallery-admin-header nav{display:flex!important;visibility:visible!important;opacity:1!important;flex:1!important}
+  .gallery-admin-page .gallery-admin-nav-links{display:flex!important;flex-direction:column!important;gap:6px!important;width:100%!important}
+  .gallery-admin-page .gallery-admin-nav-links a{display:flex!important;visibility:visible!important;align-items:center!important;min-height:50px!important;color:#263452!important;font-size:14px!important;font-weight:700!important}
+  .gallery-admin-page .gallery-admin-nav-links a.active{color:#1738bd!important}
+  .enquiries-page{padding:0 30px 60px 300px!important}
+  .enquiries-page .admin-shell{width:auto!important;max-width:1500px!important;margin:0 auto!important}
+  .enquiries-sidebar{position:fixed;left:18px;top:18px;bottom:18px;width:252px;z-index:300;display:flex;flex-direction:column;padding:22px 16px 16px;background:#fff;border:1px solid #e1e6ef;border-radius:8px;box-shadow:0 8px 28px rgba(20,32,74,.06)}
+}
+.enquiries-page{min-height:100vh;background:#f5f7fb;color:#14204a;padding:18px 20px 50px}
+.enquiries-sidebar .enquiries-brand{display:flex;align-items:center;gap:11px;min-height:52px;padding:0 8px 20px;border-bottom:1px solid #e9edf4;color:#14204a}
+.enquiries-brand .admin-brand-mark{display:grid;place-items:center;width:38px;height:38px;background:#1738bd;color:white;font-size:20px;font-weight:800}
+.enquiries-brand strong{display:block;font-size:11px;letter-spacing:.07em}
+.enquiries-brand small{display:block;margin-top:4px;color:#8991a5;font-size:9px;letter-spacing:.12em}
+.enquiries-sidebar nav{display:flex;flex-direction:column;gap:5px;padding-top:22px}
+.enquiries-sidebar nav a{display:flex;align-items:center;min-height:49px;padding:0 13px;border:1px solid transparent;border-radius:5px;color:#3d4762;font-size:14px;font-weight:700}
+.enquiries-sidebar nav a:hover,.enquiries-sidebar nav a.active{background:#edf2ff;border-color:#dce5ff;color:#1738bd}
+.enquiries-sidebar>button{margin-top:auto;min-height:44px;padding:0 13px;border:1px solid #e3e7ef;border-radius:5px;background:white;color:#26314f;text-align:left;font-size:13px;font-weight:700;cursor:pointer}
+.enquiries-topbar{display:flex;justify-content:flex-end;min-height:44px;align-items:center}
+.enquiries-back{font-size:13px;font-weight:700;color:#1738bd}
+.enquiries-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;padding:30px 0 24px;border-bottom:1px solid #e0e6f0}
+.enquiries-heading h1{font-size:clamp(42px,5vw,64px);line-height:1;letter-spacing:-.07em;margin:10px 0}
+.enquiries-heading p{margin:0;color:#68718a;font-size:14px;line-height:1.7}
+.enquiries-total{font-size:12px;font-weight:800;color:#1738bd}
+.enquiries-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}
+.enquiries-metrics article{padding:17px 19px;background:white;border:1px solid #e1e6f1}
+.enquiries-metrics span{display:block;font:10px "DM Mono",monospace;color:#6b7590;letter-spacing:.1em}
+.enquiries-metrics strong{display:block;margin-top:8px;font-size:30px;color:#14204a}
+.enquiries-workspace{display:grid;grid-template-columns:minmax(300px,.82fr) minmax(380px,1.18fr);gap:16px;align-items:start}
+.enquiries-list-panel,.enquiry-detail-panel{min-width:0;background:white;border:1px solid #e1e6f1}
+.enquiries-list-head{padding:20px;border-bottom:1px solid #e8ecf4}
+.enquiries-list-head h2,.enquiry-detail-head h2{font-size:23px;margin:0 0 12px;letter-spacing:-.04em}
+.enquiries-list-head input{width:100%;height:42px;padding:0 12px;border:1px solid #dce2ef;font:13px Arial,sans-serif}
+.enquiries-filters{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid #e8ecf4}
+.enquiries-filters button{padding:8px 10px;border:1px solid #e2e7f0;background:white;color:#4d5872;font-size:11px;font-weight:700;cursor:pointer}
+.enquiries-filters button.active{background:#1738bd;border-color:#1738bd;color:white}
+.enquiries-row,.enquiry-row{display:flex;width:100%;flex-direction:column;gap:6px;padding:15px 18px;border:0;border-bottom:1px solid #edf0f5;background:white;text-align:left;cursor:pointer}
+.enquiry-row:hover,.enquiry-row.selected{background:#f4f7ff}
+.enquiry-row.selected{box-shadow:inset 3px 0 #1738bd}
+.enquiry-row-top{display:flex;justify-content:space-between;gap:10px}
+.enquiry-row-top strong{font-size:14px;color:#14204a}
+.enquiry-row-top small,.enquiry-row>small{font-size:11px;color:#7b8499}
+.enquiry-row>span:nth-child(2){font-size:12px;color:#59647d}
+.enquiry-status{align-self:flex-start;padding:4px 7px;border-radius:3px;background:#edf2ff;color:#1738bd;font-size:10px;font-weight:800}
+.status-new{background:#fff3e8;color:#9a4d0b}.status-completed{background:#eaf8ef;color:#267044}.status-closed{background:#f0f1f4;color:#596174}
+.enquiries-empty-list,.enquiries-loading{padding:32px;color:#7a849a;font-size:13px}
+.enquiry-detail-panel{padding:24px}
+.enquiry-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.enquiry-detail-head h2{font-size:30px;margin:8px 0}
+.enquiry-detail-head p{margin:0;color:#68718a;font-size:13px}
+.enquiry-detail-head select{max-width:150px;padding:10px;border:1px solid #dce2ef;background:white;font-size:12px}
+.enquiry-contact-actions{display:flex;gap:8px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid #e8ecf4}
+.enquiry-contact-actions a{padding:11px 13px;background:#1738bd;color:white;font-size:12px;font-weight:750}
+.enquiry-contact-actions a:nth-child(2){background:#158451}
+.enquiry-contact-actions a:nth-child(3){background:#f0f3fa;color:#24304f}
+.enquiry-facts{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin:20px 0}
+.enquiry-facts div{min-width:0}
+.enquiry-facts dt{font:10px "DM Mono",monospace;color:#7b8499;letter-spacing:.08em;text-transform:uppercase}
+.enquiry-facts dd{margin:6px 0 0;overflow-wrap:anywhere;font-size:13px;font-weight:650;color:#263452}
+.enquiry-brief{padding:20px;background:#f6f8fc;border:1px solid #e8ecf4}
+.enquiry-brief p{white-space:pre-wrap;font-size:14px;line-height:1.85;color:#37425d}
+.enquiries-empty{padding:45px;text-align:center;background:white;border:1px solid #e1e6f1}
+.enquiries-empty h2{font-size:24px}
+.enquiries-empty p{color:#68718a;font-size:13px;line-height:1.7}
+@media(max-width:760px){.enquiries-page{padding:12px 14px 35px}.enquiries-sidebar{display:none}.enquiries-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.enquiries-workspace{grid-template-columns:1fr}.enquiry-detail-head{flex-direction:column}.enquiry-facts{grid-template-columns:1fr 1fr}}
