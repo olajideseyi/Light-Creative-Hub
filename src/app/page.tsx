@@ -1,19 +1,73 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { LiquidWorld } from "@/components/liquid-world";
 import { WhatsAppLink } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
+import styles from "./home.module.css";
 
-const services = [
-  { n: "01", title: "Brand identity & rebranding", text: "Logos, colour systems, typography and brand guidelines that make a business recognisable.", label: "IDENTITY SYSTEMS", symbol: "LC" },
-  { n: "02", title: "Graphic design & campaigns", text: "Flyers, posters, social content, event graphics and marketing materials made to communicate clearly.", label: "CAMPAIGN DESIGN", symbol: "Aa" },
-  { n: "03", title: "Printing & finishing", text: "Business cards, brochures, banners and print-ready materials, considered from artwork to final finish.", label: "PRINT / FINISH", symbol: "PRINT" },
-  { n: "04", title: "Photography & videography", text: "People, products, events and brand stories captured with a clear point of view.", label: "PHOTO / FILM", symbol: "REC" },
-  { n: "05", title: "Content & communications", text: "Visual content, public relations and messaging that help your brand show up consistently.", label: "STORY / VOICE", symbol: "STORY" },
-  { n: "06", title: "Data analysis & presentation", text: "Information organised into clear reports and visual presentations that are easier to understand.", label: "INSIGHT / CLARITY", symbol: "DATA" },
+type HomeProject = {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  summary: string | null;
+  cover_image_url: string | null;
+  media_urls: string[] | null;
+  featured: boolean;
+};
+
+type HomeContent = {
+  [key: string]: string | undefined;
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  primaryCta?: string;
+  secondaryCta?: string;
+  approachTitle?: string;
+  approachDescription?: string;
+  heroPrimaryImageUrl?: string;
+  heroSecondaryImageUrl?: string;
+  heroTertiaryImageUrl?: string;
+  founderImageUrl?: string;
+  founderTitle?: string;
+  founderQuote?: string;
+  contactEyebrow?: string;
+  contactTitle?: string;
+  contactDescription?: string;
+};
+
+const referenceProjects: HomeProject[] = [
+  {
+    id: "reference-identity",
+    title: "Identity & brand direction",
+    slug: "identity-reference",
+    category: "Brand identity",
+    summary: "A visual reference for considered identity work.",
+    cover_image_url: "https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1400&q=85",
+    media_urls: [],
+    featured: true
+  },
+  {
+    id: "reference-print",
+    title: "Print, colour & composition",
+    slug: "print-reference",
+    category: "Design & print",
+    summary: "A visual reference for print and editorial design.",
+    cover_image_url: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1400&q=85",
+    media_urls: [],
+    featured: true
+  },
+  {
+    id: "reference-film",
+    title: "Photo & film production",
+    slug: "film-reference",
+    category: "Photo & film",
+    summary: "A visual reference for photography and moving image.",
+    cover_image_url: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=85",
+    media_urls: [],
+    featured: true
+  }
 ];
 
-type HomeProject = { id: string; title: string; slug: string; category: string; summary: string | null; cover_image_url: string | null; media_urls: string[] | null; featured: boolean; };
 async function getHomeProjects(): Promise<HomeProject[]> {
   try {
     const supabase = createSupabaseServerClient();
@@ -30,72 +84,252 @@ async function getHomeProjects(): Promise<HomeProject[]> {
     return [];
   }
 }
-const showcaseProjects:HomeProject[]=[
-{id:"reference-identity",title:"Identity & brand direction",slug:"identity-reference",category:"Brand Identity",summary:"A visual reference for thoughtful brand presentation.",cover_image_url:"https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true},
-{id:"reference-print",title:"Print, colour & composition",slug:"print-reference",category:"Print & Design",summary:"A temporary editorial image reference, ready to be replaced with approved studio work.",cover_image_url:"https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true},
-{id:"reference-photo",title:"Photo & film production",slug:"photo-reference",category:"Photo & Film",summary:"A temporary visual reference for photography and film services.",cover_image_url:"https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=85",media_urls:[],featured:true}
-];
-function mediaIsVideo(url: string) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url); }
 
-type HomeContent = { [key:string]:string|undefined; heroEyebrow?:string; heroTitle?:string; heroDescription?:string; primaryCta?:string; secondaryCta?:string; approachTitle?:string; approachDescription?:string; heroPrimaryImageUrl?:string; heroSecondaryImageUrl?:string; heroTertiaryImageUrl?:string; founderImageUrl?:string; founderTitle?:string; founderQuote?:string; contactEyebrow?:string; contactTitle?:string; contactDescription?:string };
-async function getHomeContent():Promise<HomeContent> {
-  const fallback:HomeContent={heroEyebrow:"INDEPENDENT CREATIVE STUDIO",heroTitle:"A sharper look. A stronger brand.",heroDescription:"Light Creative Hub helps businesses and individuals turn ideas into clear identities, compelling design, quality print and visual stories people remember.",primaryCta:"Tell us about your project",secondaryCta:"Explore selected work",approachTitle:"Good design looks good. Great design does a job.",approachDescription:"Every colour, frame, word and printed detail should have a reason to be there. We bring creative thinking and practical execution together so the result is not only beautiful — it works for the people you need to reach.",heroPrimaryImageUrl:"https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1400&q=85",heroSecondaryImageUrl:"https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85",heroTertiaryImageUrl:"https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=85",founderImageUrl:"https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg",founderTitle:"Give good ideas room to become.",founderQuote:"Remember that creativity requires time and space. Allow yourself to recharge, seek inspiration from diverse sources, and let ideas marinate.",contactEyebrow:"HAVE SOMETHING IN MIND?",contactTitle:"Let’s make it memorable.",contactDescription:"Tell us what you want to build, launch, print or communicate. We’ll take it from there — one thoughtful step at a time.",service1Title:"Brand identity & rebranding",service1Description:"Logos, colour systems, typography and brand guidelines that make a business recognisable.",service2Title:"Graphic design & campaigns",service2Description:"Flyers, posters, social content, event graphics and marketing materials made to communicate clearly.",service3Title:"Printing & finishing",service3Description:"Business cards, brochures, banners and print-ready materials, considered from artwork to final finish.",service4Title:"Photography & videography",service4Description:"People, products, events and brand stories captured with a clear point of view.",service5Title:"Content & communications",service5Description:"Visual content, public relations and messaging that help your brand show up consistently.",service6Title:"Data analysis & presentation",service6Description:"Information organised into clear reports and visual presentations that are easier to understand."};
-  try { const supabase=createSupabaseServerClient(); const {data,error}=await supabase.from("site_content").select("content_value").eq("content_key","homepage").maybeSingle(); if(error||!data?.content_value)return fallback; return {...fallback,...data.content_value} as HomeContent; } catch { return fallback; }
+async function getHomeContent(): Promise<HomeContent> {
+  const fallback: HomeContent = {
+    heroEyebrow: "INDEPENDENT CREATIVE STUDIO · LAGOS",
+    heroTitle: "Ideas with purpose. Work with impact.",
+    heroDescription: "We bring brand thinking, design and production together to help businesses communicate with clarity — from the first idea to the finished piece.",
+    primaryCta: "Start a conversation",
+    secondaryCta: "Explore selected work",
+    approachTitle: "Good work begins with understanding.",
+    approachDescription: "Before choosing a colour, frame or typeface, we get clear on what needs to be said and who needs to hear it. That thinking gives the creative work direction — and gives the final result a job to do.",
+    heroPrimaryImageUrl: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1600&q=88",
+    heroSecondaryImageUrl: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85",
+    heroTertiaryImageUrl: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=85",
+    founderImageUrl: "https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg",
+    founderTitle: "Creative thinking. Careful execution.",
+    founderQuote: "The best creative work gives an idea room to breathe — and gives the audience a clear reason to care.",
+    contactEyebrow: "HAVE A PROJECT IN MIND?",
+    contactTitle: "Let's make something that matters.",
+    contactDescription: "Whether you are building a brand, preparing a campaign or telling a story, we would like to hear what you have in mind.",
+    service1Title: "Strategy & identity",
+    service1Description: "Brand positioning, naming direction, logo design and identity systems that give your business a recognisable point of view.",
+    service2Title: "Design & print",
+    service2Description: "Campaign artwork, marketing materials, stationery and print production, prepared with care from screen to final finish.",
+    service3Title: "Photo & film",
+    service3Description: "Brand, product and event photography, promotional video and social content shaped around a clear story."
+  };
+
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase.from("site_content")
+      .select("content_value")
+      .eq("content_key", "homepage")
+      .maybeSingle();
+    if (error || !data?.content_value) return fallback;
+    return { ...fallback, ...data.content_value } as HomeContent;
+  } catch {
+    return fallback;
+  }
 }
+
+function isVideo(url: string) {
+  return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(url);
+}
+
 export default async function HomePage() {
-  const [projectCards,homeContent,contact] = await Promise.all([getHomeProjects(),getHomeContent(),getSiteContact()]);
-  const displayedProjects = projectCards.length ? projectCards : showcaseProjects;
-  const heroLines=(homeContent.heroTitle||"Make your brand matter.").split(" ");
-  return <>
-    <section className="studio-hero">
-      <div className="studio-hero-top"><span>{homeContent.heroEyebrow}</span><span>LAGOS, NIGERIA · AVAILABLE FOR PROJECTS</span></div>
-      <div className="studio-hero-main">
-        <div className="studio-hero-copy">
-          <p className="studio-kicker"><span className="kicker-line" /> BRAND STRATEGY / DESIGN / PRINT / VISUAL STORYTELLING</p>
-          <h1>{heroLines.slice(0,-1).join(" ")}<br/><em>{heroLines.slice(-1).join("")}</em></h1>
-          <p className="studio-hero-intro">{homeContent.heroDescription}</p>
-          <div className="studio-hero-actions">
-            <a className="studio-button studio-button-blue" href="/request-a-quote">{homeContent.primaryCta} <span>↗</span></a>
-            <a className="studio-button studio-button-outline" href="/portfolio">{homeContent.secondaryCta} <span>↓</span></a>
-          </div>
-          <div className="studio-hero-proof"><span><b>01</b><strong>Strategy & identity</strong><small>Positioning, logo and brand systems</small></span><span><b>02</b><strong>Design & print</strong><small>Campaigns, artwork and production</small></span><span><b>03</b><strong>Photo & film</strong><small>People, products and stories</small></span></div>
+  const [projects, content, contact] = await Promise.all([
+    getHomeProjects(),
+    getHomeContent(),
+    getSiteContact()
+  ]);
+  const selectedProjects = projects.length ? projects : referenceProjects;
+  const titleParts = (content.heroTitle || "Ideas with purpose. Work with impact.").split(". ");
+  const approachParts = (content.approachTitle || "Good work begins with understanding.").split(". ");
+  const contactParts = (content.contactTitle || "Let's make something that matters.").split(" ");
+  const isReferenceSet = projects.length === 0;
+
+  const serviceCards = [
+    {
+      number: "01",
+      title: content.service1Title || "Strategy & identity",
+      description: content.service1Description || "Brand positioning, naming direction, logo design and identity systems that give your business a recognisable point of view.",
+      image: "https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1000&q=85",
+      alt: "Brand identity and printed design materials",
+      href: "/services#strategy-identity"
+    },
+    {
+      number: "02",
+      title: content.service2Title || "Design & print",
+      description: content.service2Description || "Campaign artwork, marketing materials, stationery and print production, prepared with care from screen to final finish.",
+      image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=85",
+      alt: "Printed editorial and stationery materials",
+      href: "/services#print-design"
+    },
+    {
+      number: "03",
+      title: content.service3Title || "Photo & film",
+      description: content.service3Description || "Brand, product and event photography, promotional video and social content shaped around a clear story.",
+      image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1000&q=85",
+      alt: "Photographer working on a visual production",
+      href: "/services#photo-film"
+    }
+  ];
+
+  return (
+    <div className={styles.home}>
+      <section className={styles.hero} aria-labelledby="home-title">
+        <div className={styles.heroMeta}>
+          <span>{content.heroEyebrow}</span>
+          <span>BRAND / DESIGN / PRINT / IMAGE</span>
         </div>
-        <Reveal className="hero-artboard hero-photo-collage">
-          <div className="hero-collage-top"><span>LIGHT CREATIVE HUB</span><span>VISUAL STORIES / 001</span></div>
-          <div className="hero-collage-main">
-            <figure className="hero-collage-primary"><img src={homeContent.heroPrimaryImageUrl||""} alt="Colourful editorial graphic design and branding reference" loading="eager"/><figcaption><span>01 / BRAND DIRECTION</span><strong>Clarity in every detail.</strong></figcaption></figure>
-            <figure className="hero-collage-secondary"><img src={homeContent.heroSecondaryImageUrl||""} alt="Notebook and print design reference" loading="lazy"/><figcaption>02 / DESIGN & PRINT</figcaption></figure>
-            <figure className="hero-collage-tertiary"><img src={homeContent.heroTertiaryImageUrl||""} alt="Photographer creating a visual story" loading="lazy"/><figcaption>03 / PHOTO & FILM</figcaption></figure>
-            <div className="hero-collage-note"><span>THOUGHTFUL CREATIVE PARTNERSHIP</span><strong>IDEA <i>→</i> IMPACT</strong></div>
+        <div className={styles.heroGrid}>
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}><i /> CREATIVE IDEAS. PROFESSIONAL EXECUTION.</p>
+            <h1 id="home-title">
+              <span>{titleParts[0]}{titleParts.length > 1 ? "." : ""}</span>
+              {titleParts.length > 1 && <em>{titleParts.slice(1).join(". ")}</em>}
+            </h1>
+            <p className={styles.heroIntro}>{content.heroDescription}</p>
+            <div className={styles.heroActions}>
+              <a className={styles.buttonPrimary} href="/request-a-quote">{content.primaryCta}<span>↗</span></a>
+              <a className={styles.buttonText} href="/portfolio">{content.secondaryCta}<span>↓</span></a>
+            </div>
+            <div className={styles.heroFootnote}>
+              <span>01 — 03</span>
+              <p>One connected creative partner, from the first conversation to final delivery.</p>
+            </div>
           </div>
-          <div className="hero-collage-bottom"><span>BRAND / PRINT / DESIGN / VISUAL STORYTELLING</span><span>MADE WITH PURPOSE ↗</span></div>
-        </Reveal>
-      </div>
-      <div className="studio-hero-bottom"><span>GOOD WORK STARTS WITH A GOOD CONVERSATION.</span><a href="#services">DISCOVER WHAT WE DO <span>↓</span></a></div>
-    </section>
+          <div className={styles.heroVisual}>
+            <div className={styles.heroImageMain}>
+              <img src={content.heroPrimaryImageUrl || ""} alt="Colour, typography and visual identity work on a studio desk" fetchPriority="high" />
+              <span className={styles.imageLabel}>LIGHT CREATIVE HUB <b>—</b> LAGOS</span>
+            </div>
+            <div className={styles.heroImageDetail}>
+              <img src={content.heroSecondaryImageUrl || ""} alt="Printed editorial material and stationery" loading="lazy" />
+              <span>PRINT / DETAIL</span>
+            </div>
+            <div className={styles.heroImageFilm}>
+              <img src={content.heroTertiaryImageUrl || ""} alt="A camera operator creating a visual story" loading="lazy" />
+              <span>PHOTO / FILM</span>
+            </div>
+            <div className={styles.heroIndex}>LC—001<br /><b>IDEA → IMPACT</b></div>
+          </div>
+        </div>
+        <div className={styles.heroBottom}>
+          <span>INDEPENDENT CREATIVE PRACTICE</span>
+          <a href="#what-we-do">DISCOVER THE STUDIO <b>↓</b></a>
+        </div>
+      </section>
 
-    <section className="studio-intro-section">
-      <div className="studio-intro-label"><p className="studio-kicker">A CREATIVE PARTNER, NOT JUST A SUPPLIER</p><span>01 / THE APPROACH</span></div>
-      <div className="studio-intro-content"><h2>{(homeContent.approachTitle||"Good design looks good. Great design does a job.").split(". ")[0]}.<br/><em>{(homeContent.approachTitle||"Good design looks good. Great design does a job.").split(". ").slice(1).join(". ")}</em></h2><div><p>{homeContent.approachDescription}</p><a className="studio-inline-link" href="/about">Get to know the studio <span>↗</span></a></div></div>
-    </section>
+      <section className={styles.statement} aria-labelledby="statement-title">
+        <div className={styles.sectionMeta}>
+          <span>01 / THE APPROACH</span>
+          <span>THOUGHTFUL BY DESIGN</span>
+        </div>
+        <div className={styles.statementGrid}>
+          <h2 id="statement-title">
+            {approachParts[0]}{approachParts.length > 1 ? "." : ""}
+            {approachParts.length > 1 && <><br /><em>{approachParts.slice(1).join(". ")}</em></>}
+          </h2>
+          <div className={styles.statementCopy}>
+            <p>{content.approachDescription}</p>
+            <a className={styles.inlineLink} href="/about">More about the studio <span>↗</span></a>
+          </div>
+        </div>
+      </section>
 
-    <section className="studio-services" id="services">
-      <div className="studio-section-top"><div><p className="studio-kicker">FROM FIRST IDEA TO FINAL DELIVERY</p><h2>What we bring<br/><em>to the table.</em></h2></div><p>Choose a service or bring us a challenge. We will help shape the right creative direction for your goal, audience and budget.</p></div>
-      <div className="studio-service-grid">{services.map((service,i)=>{const serviceTitle=homeContent[`service${i+1}Title`]||service.title;const serviceDescription=homeContent[`service${i+1}Description`]||service.text;return <Reveal key={service.n} delay={i*.035}><article className="studio-service-card"><div className="studio-service-top"><span>{service.n} / 06</span><span>{service.label}</span></div><div className={`studio-service-art service-art-${i+1}`} aria-hidden="true"><strong>{service.symbol}</strong><span>LIGHT CREATIVE HUB</span></div><h3>{serviceTitle}</h3><p>{serviceDescription}</p><a href="/services">Explore this service <span>↗</span></a></article></Reveal>})}</div>
-      <div className="studio-services-foot"><span>BRANDING · GRAPHIC DESIGN · PRINT · PHOTO · FILM · COMMUNICATION</span><a href="/services">See all services ↗</a></div>
-    </section>
+      <section className={styles.services} id="what-we-do" aria-labelledby="services-title">
+        <div className={styles.sectionHeader}>
+          <div>
+            <p className={styles.eyebrow}><i /> WHAT WE DO</p>
+            <h2 id="services-title">Three disciplines.<br /><em>One clear direction.</em></h2>
+          </div>
+          <p>Choose the support you need today, or bring us a wider brief. We will help connect the right skills to the result you want to achieve.</p>
+        </div>
+        <div className={styles.serviceGrid}>
+          {serviceCards.map((service) => (
+            <Reveal key={service.number} className={styles.serviceCard}>
+              <a href={service.href} className={styles.serviceImage}>
+                <img src={service.image} alt={service.alt} loading="lazy" />
+                <span>{service.number} / DISCIPLINE</span>
+                <b>↗</b>
+              </a>
+              <div className={styles.serviceText}>
+                <span className={styles.cardKicker}>LIGHT CREATIVE HUB / {service.number}</span>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <a className={styles.inlineLink} href={service.href}>Explore the service <span>↗</span></a>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <div className={styles.sectionFooter}>
+          <span>STRATEGY / DESIGN / PRODUCTION / STORYTELLING</span>
+          <a href="/services">VIEW ALL SERVICES <span>↗</span></a>
+        </div>
+      </section>
 
-    <section className="studio-work-section">
-      <div className="studio-section-top"><div><p className="studio-kicker">THE PORTFOLIO</p><h2>Creative work,<br/><em>with a point of view.</em></h2></div><div className="studio-work-intro"><p>Explore selected identities, campaign visuals and print work—each chosen for its craft, clarity and ability to make a brand more memorable.</p><a className="studio-button studio-button-white" href="/portfolio">View the portfolio ↗</a></div></div>
-      <div className="studio-work-grid">{displayedProjects.map((project,i)=>{const media=project.cover_image_url||(project.media_urls||[])[0]||"";return <Reveal key={project.id} delay={i*.06}><a href={project.id.startsWith("reference-") ? "/portfolio" : `/portfolio/${project.slug}`} className={`studio-work-card ${["work-brand","work-poster","work-print"][i%3]}`}><div className="studio-work-meta"><span>{String(i+1).padStart(2,"0")} / {project.category.toUpperCase()}</span><span>↗</span></div><div className="studio-work-art studio-work-art-live">{media?(mediaIsVideo(media)?<video src={media} muted playsInline preload="metadata" aria-label={project.title}/>:<img src={media} alt={project.title} loading="lazy"/>):<strong>{project.category}</strong>}</div><div className="studio-work-caption"><span>{project.id.startsWith("reference-")?"IMAGE REFERENCE · REPLACE IN CMS":"SELECTED WORK · "+project.category.toUpperCase()}</span><h3>{project.title}</h3></div></a></Reveal>})}</div>
-      <p className="studio-work-disclaimer">{projectCards.length===0?"Temporary open-licence image references are shown until your own projects are published. Replace them anytime in the studio CMS.":"This selection updates from the studio CMS. Publish a project and mark it as featured to bring it into the spotlight."}</p>
-    </section>
+      <section className={styles.work} aria-labelledby="work-title">
+        <div className={styles.workHeader}>
+          <div>
+            <p className={styles.eyebrow}><i /> SELECTED WORK</p>
+            <h2 id="work-title">Ideas, made<br /><em>visible.</em></h2>
+          </div>
+          <div className={styles.workIntro}>
+            <p>Explore a selection of published projects and visual references across identity, design, print and image-making.</p>
+            <a className={styles.buttonLight} href="/portfolio">Explore the portfolio <span>↗</span></a>
+          </div>
+        </div>
+        <div className={styles.projectGrid}>
+          {selectedProjects.map((project, index) => {
+            const media = project.cover_image_url || (project.media_urls || [])[0] || "";
+            return (
+              <Reveal key={project.id} className={styles.projectCard}>
+                <a href={project.id.startsWith("reference-") ? "/portfolio" : "/portfolio/" + project.slug}>
+                  <div className={styles.projectImage}>
+                    {media && (isVideo(media)
+                      ? <video src={media} muted playsInline preload="metadata" aria-label={project.title} />
+                      : <img src={media} alt={project.title} loading="lazy" />)}
+                    <span>{String(index + 1).padStart(2, "0")} / {project.category.toUpperCase()}</span>
+                    <b>↗</b>
+                  </div>
+                  <div className={styles.projectCaption}>
+                    <div><span>{isReferenceSet ? "VISUAL REFERENCE" : "PUBLISHED PROJECT"}</span><h3>{project.title}</h3></div>
+                    <p>{project.summary || "A considered creative response to a clear communication brief."}</p>
+                  </div>
+                </a>
+              </Reveal>
+            );
+          })}
+        </div>
+        {isReferenceSet && <p className={styles.referenceNote}>These are temporary visual references, not commissioned Light Creative Hub projects. Published studio work will replace them as projects are approved in the CMS.</p>}
+        <div className={styles.workBottom}><span>FORM / FUNCTION / FEELING</span><a href="/portfolio">OPEN THE PROJECT ARCHIVE ↗</a></div>
+      </section>
 
-    <section className="studio-founder-section">
-      <div className="founder-editorial founder-editorial-photo"><img src={homeContent.founderImageUrl||""} alt="Founder portrait and service introduction for Light Creative Hub" loading="lazy"/><span>MEET THE CREATIVE / 001</span></div>
-      <div className="founder-editorial-copy"><p className="studio-kicker">THE THINKING BEHIND THE WORK</p><h2>{(homeContent.founderTitle||"Give good ideas room to become.").split(" ").slice(0,-1).join(" ")}<br/><em>{(homeContent.founderTitle||"Give good ideas room to become.").split(" ").slice(-1).join("")}</em></h2><blockquote>“{homeContent.founderQuote}”</blockquote><a className="studio-inline-link" href="/about">Meet the founder and studio <span>↗</span></a></div>
-    </section>
+      <section className={styles.about} aria-labelledby="about-title">
+        <div className={styles.aboutImage}>
+          <img src={content.founderImageUrl || ""} alt="Founder and creative lead at Light Creative Hub" loading="lazy" />
+          <span>THE PEOPLE BEHIND THE WORK</span>
+        </div>
+        <div className={styles.aboutCopy}>
+          <p className={styles.eyebrow}><i /> A CREATIVE PARTNER, NOT JUST A SUPPLIER</p>
+          <h2 id="about-title">{content.founderTitle || "Creative thinking. Careful execution."}</h2>
+          <blockquote>“{content.founderQuote}”</blockquote>
+          <p>We work closely with people building businesses, organisations and ideas — bringing the thinking and making together so every detail supports the bigger picture.</p>
+          <a className={styles.inlineLink} href="/about">Meet the studio <span>↗</span></a>
+        </div>
+      </section>
 
-    <section className="studio-contact-section"><div className="contact-section-copy"><p className="studio-kicker">{homeContent.contactEyebrow}</p><h2>{(homeContent.contactTitle||"Let’s make it memorable.").split(" ").slice(0,-1).join(" ")}<br/><em>{(homeContent.contactTitle||"Let’s make it memorable.").split(" ").slice(-1).join("")}</em></h2><p>{homeContent.contactDescription}</p><div className="studio-contact-actions"><a className="studio-button studio-button-blue" href="/request-a-quote">Start a project <span>↗</span></a><WhatsAppLink className="studio-button studio-button-whatsapp"><span aria-hidden="true">↗</span> Chat on WhatsApp</WhatsAppLink></div></div><div className="contact-info-panel"><span>LET’S TALK</span><a href={"tel:"+contact.primaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a><small>BRAND · PRINT · DESIGN · VISUAL STORYTELLING</small></div></section>
-  </>;
+      <section className={styles.contact} aria-labelledby="contact-title">
+        <div className={styles.contactCopy}>
+          <p className={styles.eyebrow}><i /> {content.contactEyebrow}</p>
+          <h2 id="contact-title">{contactParts.slice(0, -2).join(" ")} <em>{contactParts.slice(-2).join(" ")}</em></h2>
+          <p>{content.contactDescription}</p>
+          <div className={styles.contactActions}>
+            <a className={styles.buttonLight} href="/request-a-quote">Tell us about your project <span>↗</span></a>
+            <WhatsAppLink className={styles.whatsapp}>WhatsApp enquiry <span>↗</span></WhatsAppLink>
+          </div>
+        </div>
+        <div className={styles.contactDetails}>
+          <span>CONTACT THE STUDIO</span>
+          <a href={"tel:" + contact.primaryPhone.replaceAll(" ", "").replaceAll("-", "")}>{contact.primaryPhone}</a>
+          <a href={"tel:" + contact.secondaryPhone.replaceAll(" ", "").replaceAll("-", "")}>{contact.secondaryPhone}</a>
+          <a href={"mailto:" + contact.email}>{contact.email}</a>
+          <small>LAGOS, NIGERIA · ONLINE & IN-PERSON BY ARRANGEMENT</small>
+        </div>
+      </section>
+    </div>
+  );
 }
