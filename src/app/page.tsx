@@ -133,7 +133,6 @@ export default async function HomePage() {
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
         <HomeHeroCarousel images={content.heroSlides?.length ? content.heroSlides : [content.heroPrimaryImageUrl || fallbackHeroImage]} fallbackImage={fallbackHeroImage} settings={heroSettings} />
-        <div className={styles.heroShade} />
         <div className={styles.heroInner}>
           <p className={styles.heroEyebrow}><span /> LIGHT CREATIVE HUB <span className={styles.eyebrowRule} /> BRAND · DESIGN · PRINT · FILM</p>
           <h1 id="home-title">{content.heroTitle || "Creative work that moves brands forward."}</h1>
