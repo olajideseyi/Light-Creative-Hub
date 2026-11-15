@@ -11,6 +11,8 @@ type CarouselSettings = {
   motionEnabled?: boolean;
   showArrows?: boolean;
   showDots?: boolean;
+  overlayColor?: string;
+  overlayStrength?: number;
 };
 
 export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { images: string[]; fallbackImage: string; settings?: CarouselSettings }) {
@@ -46,13 +48,17 @@ export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { ima
   const effectClass = imageEffect === "float" ? styles.heroSlideFloat : imageEffect === "parallax" ? styles.heroSlideParallax : imageEffect === "static" ? styles.heroSlideStatic : styles.heroSlideZoom;
   const showArrows = settings.showArrows !== false;
   const showDots = settings.showDots !== false;
+  const overlayColor = /^#[0-9a-fA-F]{6}$/.test(settings.overlayColor || "") ? settings.overlayColor! : "#102f5b";
+  const overlayStrength = Math.min(100, Math.max(0, Number(settings.overlayStrength ?? 82))) / 100;
+  const overlayRgb = [1, 3, 5].map(offset => parseInt(overlayColor.slice(offset, offset + 2), 16)).join(",");
+  const heroOverlayStyle = { background: `linear-gradient(90deg, rgba(${overlayRgb}, ${0.95 * overlayStrength}), rgba(${overlayRgb}, ${0.68 * overlayStrength}) 52%, rgba(${overlayRgb}, ${0.83 * overlayStrength})), linear-gradient(0deg, rgba(${overlayRgb}, ${0.42 * overlayStrength}), transparent 58%)` };
 
   return (
     <div className={styles.heroCarousel} aria-roledescription="carousel" aria-label="Light Creative Hub featured images">
       <div className={styles.heroSlideStage} aria-live="off">
         {slides.map((src, index) => <img key={src} className={[styles.heroSlide, transitionClass, effectClass, index === active ? styles.heroSlideActive : ""].filter(Boolean).join(" ")} src={src} alt="" aria-hidden="true" draggable={false} fetchPriority={index === 0 ? "high" : "auto"} />)}
       </div>
-      <div className={styles.heroShade} />
+      <div className={styles.heroShade} style={heroOverlayStyle} />
       {slides.length > 1 && <div className={styles.heroSlideControls}>
         {showArrows && <button type="button" className={styles.heroSlideArrow} onClick={() => goTo(active - 1)} aria-label="Previous hero image">←</button>}
         {showDots && <div className={styles.heroSlideDots} aria-label="Choose hero image">{slides.map((src, index) => <button key={src} type="button" className={styles.heroSlideDot + " " + (index === active ? styles.heroSlideDotActive : "")} aria-label={"Show hero image " + (index + 1)} aria-pressed={index === active} onClick={() => goTo(index)} />)}</div>}
