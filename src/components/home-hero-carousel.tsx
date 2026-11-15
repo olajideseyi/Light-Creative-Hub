@@ -19,17 +19,15 @@ export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { ima
     return unique.length ? unique : [fallbackImage];
   }, [images, fallbackImage]);
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [manualPause, setManualPause] = useState(false);
   const slideKey = slides.join("|");
   const intervalSeconds = Math.min(15, Math.max(2, Number(settings.intervalSeconds) || 3));
-  const autoplay = settings.autoplay !== false && slides.length > 1 && !paused && !manualPause;
+  const autoplay = settings.autoplay !== false && slides.length > 1 && !manualPause;
   const transition = settings.transition || "crossfade";
   const imageEffect = settings.motionEnabled === false ? "static" : (settings.imageEffect || "zoom");
 
   useEffect(() => {
     setActive(0);
-    setPaused(false);
     setManualPause(false);
   }, [slideKey]);
 
@@ -50,7 +48,7 @@ export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { ima
   const showDots = settings.showDots !== false;
 
   return (
-    <div className={styles.heroCarousel} aria-roledescription="carousel" aria-label="Light Creative Hub featured images" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}>
+    <div className={styles.heroCarousel} aria-roledescription="carousel" aria-label="Light Creative Hub featured images">
       <div className={styles.heroSlideStage} aria-live="off">
         {slides.map((src, index) => <img key={src} className={[styles.heroSlide, transitionClass, effectClass, index === active ? styles.heroSlideActive : ""].filter(Boolean).join(" ")} src={src} alt="" aria-hidden="true" draggable={false} fetchPriority={index === 0 ? "high" : "auto"} />)}
       </div>
