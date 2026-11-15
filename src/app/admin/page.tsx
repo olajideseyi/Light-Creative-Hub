@@ -86,6 +86,13 @@ export default function AdminPage() {
     setProjects((data??[]) as Project[]);
   }
   useEffect(()=>{
+    if(!mobileNavOpen) return;
+    const closeOnPageScroll=()=>setMobileNavOpen(false);
+    window.addEventListener("scroll",closeOnPageScroll,{passive:true});
+    return()=>window.removeEventListener("scroll",closeOnPageScroll);
+  },[mobileNavOpen]);
+
+  useEffect(()=>{
     let active=true;
     try {
       const supabase=getSupabaseBrowserClient();
@@ -205,6 +212,7 @@ export default function AdminPage() {
          <a onClick={()=>setMobileNavOpen(false)} href="/admin/gallery"><span className="admin-nav-icon">▧</span><span><strong>Gallery manager</strong><small>Photography, images and video</small></span><b>↗</b></a>
          <a onClick={()=>setMobileNavOpen(false)} href="#portfolio-library"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
        </nav>
+      <section className="admin-overview-section" id="admin-overview"><div className="admin-overview-heading"><div><span className="cms-eyebrow">WORKSPACE OVERVIEW</span><h2>Your website at a glance.</h2><p>Monitor what is live and jump straight into the area you want to update.</p></div><a className="button button-blue" href="/" target="_blank" rel="noreferrer">Open live website ↗</a></div><div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div></section>
       <section className="admin-panel site-content-cms" id="site-content-editor">
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
         <div className="cms-library-tabs site-content-tabs">
@@ -238,7 +246,7 @@ export default function AdminPage() {
           <div className="cms-form-actions"><button className="button button-blue" disabled={cmsLoading}>{cmsLoading?"Saving…":"Save "+({homepage:"homepage content",about:"About content",services:"services content",contact:"contact content",effects:"creative settings"} as const)[cmsSection]+" ↗"}</button><span className="admin-help">Saved settings are used by the public contact controls and site pages.</span></div>
         </form>
       </section>
-      <div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div>
+      
       <div className="cms-layout">
         <section className="admin-panel cms-editor-panel" id="cms-editor"><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"CREATE NEW PROJECT"}</span><h2>{editingId?"Refine the details.":"Add to the archive."}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
           <form className="admin-project-form" onSubmit={saveProject}><div className="form-grid">
