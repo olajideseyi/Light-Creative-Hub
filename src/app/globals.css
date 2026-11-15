@@ -2346,3 +2346,61 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 .gallery-page .gallery-tile img,.gallery-page .gallery-tile video{transition:transform .8s cubic-bezier(.22,1,.36,1)}
 .gallery-page .gallery-tile:hover img,.gallery-page .gallery-tile:hover video{transform:scale(1.035)}
 @media(max-width:760px){.gallery-page{width:90vw;padding:40px 0 60px}.gallery-page-heading{grid-template-columns:1fr;gap:20px}.gallery-page-heading h1{font-size:clamp(54px,14vw,82px)}}
+
+/* Admin navigation refinement — consistent workspace sidebar */
+@media (min-width:761px){
+.cms-admin-page .admin-masthead{min-height:66px;margin:0 0 28px;padding:12px 0;border-bottom:1px solid #e4e8f0}
+.cms-admin-page .admin-masthead-right{display:flex;align-items:center;gap:12px}
+.cms-admin-page .admin-masthead-right .admin-status-pill,.cms-admin-page .admin-masthead-right>span{display:none!important}
+.cms-admin-page .admin-section-nav{top:18px;left:18px;bottom:18px;width:252px;padding:22px 16px 16px;gap:0;border:1px solid #e1e6ef;border-radius:8px;box-shadow:0 8px 28px rgba(20,32,74,.06)}
+.cms-admin-page .admin-nav-brand{display:flex;align-items:center;gap:11px;min-height:52px;padding:0 8px 20px;border-bottom:1px solid #e9edf4}
+.cms-admin-page .admin-nav-brand .admin-brand-mark{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;background:#1738bd;color:#fff;font-size:20px;font-weight:800}
+.cms-admin-page .admin-nav-brand strong{display:block;color:#14204a;font-size:11px;letter-spacing:.07em}
+.cms-admin-page .admin-nav-brand small{display:block;margin-top:4px;color:#8991a5;font-size:9px;letter-spacing:.12em}
+.cms-admin-page .admin-nav-links{display:flex;flex-direction:column;gap:5px;padding-top:22px}
+.cms-admin-page .admin-nav-links a{display:flex;align-items:center;min-height:48px;padding:0 13px;border:1px solid transparent;border-radius:5px;color:#3d4762;font-size:13px;font-weight:650;text-decoration:none}
+.cms-admin-page .admin-nav-links a:hover{background:#f4f6fb;color:#1738bd}
+.cms-admin-page .admin-nav-links a.is-current{background:#edf2ff;border-color:#dce5ff;color:#1738bd;font-weight:750}
+.cms-admin-page .admin-nav-bottom{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding:16px 8px 4px;border-top:1px solid #e9edf4}
+.cms-admin-page .admin-nav-bottom span{color:#8a92a5;font-size:10px}
+.cms-admin-page .admin-nav-bottom button{width:100%;min-height:43px;padding:0 13px;border:1px solid #e3e7ef;border-radius:5px;background:#fff;color:#26314f;text-align:left;font-size:12px;font-weight:700;cursor:pointer}
+.cms-admin-page .admin-nav-bottom button:hover{border-color:#d7a4a0;background:#fff8f7;color:#a13b36}
+.cms-admin-page .admin-shell{margin-left:302px;margin-right:36px}
+.cms-admin-page .cms-welcome-row{padding:24px 0 30px}
+.cms-admin-page .admin-overview-heading{border-bottom:1px solid #e4e8f0;padding-bottom:18px}
+}
+@media(max-width:760px){
+.cms-admin-page .admin-masthead{min-height:60px;margin:0 0 18px}
+.cms-admin-page .admin-section-nav{display:none;position:fixed;top:0;left:0;bottom:0;width:min(84vw,320px);height:100dvh;padding:22px 16px 16px;border:0;border-radius:0;background:#fff;box-shadow:12px 0 38px rgba(10,20,48,.16);z-index:110}
+.cms-admin-page .admin-section-nav.is-open{display:flex}
+.cms-admin-page .admin-nav-brand{display:flex;align-items:center;gap:10px;padding:8px 8px 20px;border-bottom:1px solid #e9edf4}
+.cms-admin-page .admin-nav-brand .admin-brand-mark{display:grid;place-items:center;width:36px;height:36px;background:#1738bd;color:#fff;font-size:19px;font-weight:800}
+.cms-admin-page .admin-nav-brand strong{display:block;font-size:10px;letter-spacing:.06em;color:#14204a}
+.cms-admin-page .admin-nav-brand small{display:block;margin-top:4px;color:#8991a5;font-size:9px}
+.cms-admin-page .admin-nav-links{display:flex;flex-direction:column;gap:5px;padding-top:20px}
+.cms-admin-page .admin-nav-links a{display:flex;align-items:center;min-height:48px;padding:0 12px;border-radius:5px;color:#3d4762;font-size:13px;font-weight:650}
+.cms-admin-page .admin-nav-links a.is-current{background:#edf2ff;color:#1738bd}
+.cms-admin-page .admin-nav-bottom{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding:16px 8px 4px;border-top:1px solid #e9edf4}
+.cms-admin-page .admin-nav-bottom span{color:#8a92a5;font-size:10px}
+.cms-admin-page .admin-nav-bottom button{min-height:43px;border:1px solid #e3e7ef;border-radius:5px;background:#fff;text-align:left;padding:0 12px;color:#26314f;font-weight:700}
+.cms-admin-page .admin-nav-backdrop{position:fixed;inset:0;z-index:105;border:0;background:rgba(8,16,43,.55)}
+}
+.cms-admin-page .admin-auth-loading{min-height:55vh;display:grid;place-items:center;color:#66708a;font-size:13px}
+@media(min-width:761px){
+.gallery-admin-page{padding-left:286px}
+.gallery-admin-page .gallery-admin-header{width:252px}
+.gallery-admin-page .gallery-admin-header nav{flex:1}
+.gallery-admin-page .gallery-admin-nav-links{display:flex;flex-direction:column;gap:5px}
+.gallery-admin-page .gallery-admin-nav-bottom{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding:16px 8px 4px;border-top:1px solid #e9edf4}
+.gallery-admin-page .gallery-admin-nav-bottom span{color:#8a92a5;font-size:10px}
+.gallery-admin-page .gallery-admin-nav-bottom button{min-height:43px;border:1px solid #e3e7ef;border-radius:5px;background:#fff;text-align:left;padding:0 12px;color:#26314f;font-weight:700}
+}
+@media(max-width:760px){
+.gallery-admin-page .gallery-admin-header nav{display:none;position:fixed;top:0;left:0;bottom:0;width:min(84vw,320px);height:100dvh;padding:22px 16px 16px;background:#fff;z-index:110;flex-direction:column;align-items:stretch}
+.gallery-admin-page .gallery-admin-header nav.is-open{display:flex}
+.gallery-admin-page .gallery-admin-nav-links{display:flex;flex-direction:column;gap:5px}
+.gallery-admin-page .gallery-admin-nav-bottom{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding:16px 8px 4px;border-top:1px solid #e9edf4}
+.gallery-admin-page .gallery-admin-nav-bottom span{color:#8a92a5;font-size:10px}
+.gallery-admin-page .gallery-admin-nav-bottom button{min-height:43px;border:1px solid #e3e7ef;border-radius:5px;background:#fff;text-align:left;padding:0 12px;color:#26314f;font-weight:700}
+.gallery-admin-page .gallery-admin-header nav a{min-height:48px;padding:0 12px}
+}
