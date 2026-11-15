@@ -50,6 +50,7 @@ export function MobileNav() {
       {open && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation menu" onClick={() => setOpen(false)} />}
 
       <nav id="primary-navigation" className={open ? "primary-navigation is-open" : "primary-navigation"} aria-label="Main navigation">
+        <div className="desktop-primary-links">{links.map((link) => <a key={`desktop-${link.href}`} href={link.href} aria-current={pathname === link.href ? "page" : undefined}>{link.label}</a>)}</div>
         <div className="mobile-nav-heading">
           <span>LIGHT CREATIVE HUB</span>
           <span>MENU / 0{links.length}</span>
