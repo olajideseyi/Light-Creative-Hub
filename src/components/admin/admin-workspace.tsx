@@ -36,6 +36,10 @@ export function AdminPage() {
   const isPortfolioPage = pathname.startsWith("/admin/portfolio");
   const [email,setEmail]=useState(""); const [password,setPassword]=useState("");
   const [signedIn,setSignedIn]=useState(false); const [authReady,setAuthReady]=useState(false); const [projects,setProjects]=useState<Project[]>([]);
+  type DashboardEnquiry = {id:string;created_at:string;name:string;email:string;service:string;status:string};
+  type DashboardGalleryItem = {id:string;title:string;category:string;media_url:string;media_type:"image"|"video";published:boolean;created_at:string};
+  const [dashboardEnquiries,setDashboardEnquiries]=useState<DashboardEnquiry[]>([]);
+  const [dashboardGallery,setDashboardGallery]=useState<DashboardGalleryItem[]>([]);
   const [busy,setBusy]=useState(false); const [notice,setNotice]=useState(""); const [error,setError]=useState("");
   const [coverFile,setCoverFile]=useState<File|null>(null); const [galleryFiles,setGalleryFiles]=useState<File[]>([]);
   const [title,setTitle]=useState(""); const [slug,setSlug]=useState(""); const [category,setCategory]=useState(CATEGORIES[0]);
@@ -121,6 +125,17 @@ export function AdminPage() {
     if(queryError) throw queryError;
     setProjects((data??[]) as Project[]);
   }
+  async function loadDashboardData() {
+    const client=getSupabaseBrowserClient();
+    const [enquiriesResult,galleryResult]=await Promise.all([
+      client.from("enquiries").select("id,created_at,name,email,service,status").order("created_at",{ascending:false}).limit(5),
+      client.from("gallery_items").select("id,title,category,media_url,media_type,published,created_at").order("created_at",{ascending:false}).limit(6)
+    ]);
+    if(enquiriesResult.error) throw enquiriesResult.error;
+    if(galleryResult.error) throw galleryResult.error;
+    setDashboardEnquiries((enquiriesResult.data??[]) as DashboardEnquiry[]);
+    setDashboardGallery((galleryResult.data??[]) as DashboardGalleryItem[]);
+  }
   useEffect(()=>{
     if(!mobileNavOpen) return;
     const closeOnPageScroll=()=>setMobileNavOpen(false);
@@ -137,7 +152,7 @@ export function AdminPage() {
       supabase.auth.getSession().then(async ({data,error:sessionError})=>{
         if(!active)return;
         if(sessionError){setError(sessionError.message);if(active)setAuthReady(true);return;}
-        if(data.session)try{await verifyAdminAccess();await loadProjects();await loadSiteContent();if(active)setSignedIn(true);}
+        if(data.session)try{await verifyAdminAccess();await loadProjects();await loadSiteContent();if(isDashboard)await loadDashboardData();if(active)setSignedIn(true);}
         catch(e){if(active){setSignedIn(false);setError(e instanceof Error?e.message:"This account cannot access the admin workspace.");}}
         if(active)setAuthReady(true);
       }).catch((e:unknown)=>{if(active){setError(e instanceof Error?e.message:"Could not check your session.");setAuthReady(true);}});
@@ -257,7 +272,22 @@ export function AdminPage() {
          <div className="admin-nav-bottom"><span></span><button type="button" onClick={signOut} disabled={busy}>Sign out</button></div>
        </nav>
       {mobileNavOpen&&<button type="button" className="admin-nav-backdrop" aria-label="Close workspace menu" onClick={()=>setMobileNavOpen(false)}/>}
-      <section className="admin-overview-section" id="admin-overview" style={{display:isDashboard?"":"none"}}><div className="admin-overview-heading"><div><span className="cms-eyebrow">DASHBOARD</span><h2>Website overview</h2><p>Current portfolio publishing status.</p></div></div><div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All saved projects</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div></section>
+      <section className="admin-overview-section" id="admin-overview" style={{display:isDashboard?"":"none"}}>
+        <div className="admin-overview-heading"><div><span className="cms-eyebrow">DASHBOARD</span><h2>Studio at a glance</h2><p>Recent client requests, published work and the latest media added to your gallery.</p></div></div>
+        <div className="admin-dashboard-stats">
+          <div className="admin-stat"><span>Portfolio projects</span><strong>{projects.length}</strong><small>{publishedCount} published on the website</small></div>
+          <div className="admin-stat"><span>Client enquiries</span><strong>{dashboardEnquiries.length}</strong><small>Latest five requests shown below</small></div>
+          <div className="admin-stat"><span>Gallery media</span><strong>{dashboardGallery.length}</strong><small>Latest six image and video items</small></div>
+        </div>
+        <div className="admin-dashboard-panels">
+          <section className="admin-dashboard-panel"><div className="admin-dashboard-panel-head"><div><span className="cms-eyebrow">CLIENT REQUESTS</span><h3>Recent enquiries</h3></div><a href="/admin/enquiries">View all enquiries ↗</a></div>
+            {dashboardEnquiries.length ? <div className="admin-dashboard-enquiries">{dashboardEnquiries.map(item=><a href="/admin/enquiries" className="admin-dashboard-enquiry" key={item.id}><span><strong>{item.name}</strong><small>{item.email}</small></span><span><b>{item.service}</b><small>{item.status.replaceAll("_"," ")}</small></span><time>{new Date(item.created_at).toLocaleDateString()}</time></a>)}</div> : <div className="admin-dashboard-empty"><strong>No enquiries received yet</strong><p>Website quote and contact requests will appear here when a client submits them.</p></div>}
+          </section>
+          <section className="admin-dashboard-panel"><div className="admin-dashboard-panel-head"><div><span className="cms-eyebrow">VISUAL ARCHIVE</span><h3>Recent gallery media</h3></div><a href="/admin/gallery">Open gallery manager ↗</a></div>
+            {dashboardGallery.length ? <div className="admin-dashboard-gallery">{dashboardGallery.map(item=><a href="/admin/gallery" className="admin-dashboard-gallery-item" key={item.id}><div>{item.media_type==="video"?<video src={item.media_url} muted playsInline preload="metadata"/>:<img src={item.media_url} alt={item.title} loading="lazy"/>}</div><span><strong>{item.title}</strong><small>{item.category} · {item.published?"Published":"Draft"}</small></span></a>)}</div> : <div className="admin-dashboard-empty"><strong>No gallery images or videos yet</strong><p>Media added in Gallery Manager will be previewed here.</p><a href="/admin/gallery">Add gallery media ↗</a></div>}
+          </section>
+        </div>
+      </section>
       <section className="admin-panel site-content-cms" id="site-content-editor" style={{display:isContentPage?"":"none"}}>
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
         <div className="cms-library-tabs site-content-tabs">
