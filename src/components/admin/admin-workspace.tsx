@@ -329,6 +329,17 @@ export function AdminPage() {
                 <label className="field-full cms-toggle-row"><input type="checkbox" checked={siteDocs.effects?.carouselDots!==false} onChange={e=>changeDoc("carouselDots",e.target.checked)}/> Show slide position indicators</label>
               </div>
             </section>
+            <section className="cms-effects-group"><div><span className="cms-eyebrow">HERO IMAGE TREATMENT</span><h3>Cinematic colour overlay</h3><p>Control the subtle colour wash over your homepage photographs. The image remains visible; the tint gives the hero its signature atmosphere.</p></div>
+              <div className="form-grid">
+                <label>Hero overlay colour<input type="color" value={String(siteDocs.effects?.heroOverlayColor??"#102f5b")} onChange={e=>changeDoc("heroOverlayColor",e.target.value)}/><small>Choose the blue tone that sits over the hero images.</small></label>
+                <label>Overlay strength · {String(siteDocs.effects?.heroOverlayStrength??"82")}%<input type="range" min="0" max="100" step="1" value={String(siteDocs.effects?.heroOverlayStrength??"82")} onChange={e=>changeDoc("heroOverlayStrength",e.target.value)}/><small>Lower values show more of the original photograph; higher values create a stronger cinematic tint.</small></label>
+                <div className="field-full" style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+                  <span style={{display:"inline-block",width:46,height:30,borderRadius:5,background:String(siteDocs.effects?.heroOverlayColor??"#102f5b"),border:"1px solid #cbd5e1"}}/>
+                  <span className="admin-help">Current tint · {String(siteDocs.effects?.heroOverlayColor??"#102f5b").toUpperCase()}</span>
+                  <button type="button" className="button button-outline-dark" onClick={()=>{changeDoc("heroOverlayColor","#102f5b");changeDoc("heroOverlayStrength","82");}}>Restore cinematic blue</button>
+                </div>
+              </div>
+            </section>
             <section className="cms-effects-group"><div><span className="cms-eyebrow">IMAGE & PAGE MOTION</span><h3>Visual movement</h3><p>Choose the image treatment and how supporting content enters the page.</p></div>
               <div className="form-grid">
                 <label>Image motion<select value={String(siteDocs.effects?.imageEffect??"zoom")} onChange={e=>changeDoc("imageEffect",e.target.value)}><option value="float">Floating / gentle drift</option><option value="parallax">Parallax depth</option><option value="zoom">Slow cinematic zoom</option><option value="static">No image motion</option></select></label>
