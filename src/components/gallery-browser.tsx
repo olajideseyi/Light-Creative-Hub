@@ -91,8 +91,7 @@ export function GalleryBrowser({ items }: { items: GalleryItem[] }) {
         <div className="gallery-empty">
           <span className="gallery-empty-mark">LC / 001</span>
           <h2>The next story starts here.</h2>
-          <p>There are no published photos or videos in this collection yet. Upload new work in the Gallery Manager and publish it when you are ready.</p>
-          <a className="studio-button studio-button-blue" href="/admin/gallery">Open Gallery Manager ↗</a>
+          <p>We are preparing the next collection of photographs and moving images. Please check back soon.</p>
         </div>
       )}
       {selected && (
