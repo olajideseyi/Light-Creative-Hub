@@ -2262,3 +2262,24 @@ html{scroll-padding-top:96px}
  .gallery-admin-page .gallery-admin-header nav{z-index:95}
 }
 :root{--lime:#ffb184}
+
+
+/* Dedicated Light Creative Hub admin app shell */
+@media(min-width:761px){
+ .cms-admin-page .admin-shell{width:auto;max-width:none;margin:0 34px 0 300px}
+ .cms-admin-page .admin-masthead{margin-left:0}
+ .cms-admin-page .admin-section-nav{position:fixed;top:82px;left:18px;bottom:18px;width:254px;z-index:90;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:7px;margin:0;padding:16px 12px;overflow-y:auto;background:#fff;border:1px solid #e2e6ef;border-radius:8px;box-shadow:0 12px 38px #101b4510}
+ .cms-admin-page .admin-section-nav .admin-nav-heading{display:block;padding:7px 9px 13px;border-bottom:1px solid #edf0f5;margin-bottom:5px}
+ .cms-admin-page .admin-section-nav .admin-nav-heading span{display:block;font:800 9px "DM Mono",monospace;letter-spacing:.14em;color:#68718b}
+ .cms-admin-page .admin-section-nav .admin-nav-heading small{display:block;margin-top:6px;font-size:11px;color:#8b92a4}
+ .cms-admin-page .admin-section-nav>a{display:flex;align-items:center;min-height:56px;padding:9px 10px;background:transparent;border:1px solid transparent;border-radius:5px}
+ .cms-admin-page .admin-section-nav>a.is-current{background:#edf2ff;border-color:#dbe4ff;color:#1738bd}
+ .cms-admin-page .admin-section-nav>a.is-current .admin-nav-icon{background:#1738bd;color:#fff}
+ .cms-admin-page .admin-section-nav strong{font-size:12px}
+ .cms-admin-page .admin-section-nav small{font-size:9px}
+ .cms-admin-page .admin-section-nav .admin-nav-icon{width:34px;height:34px;flex-basis:34px}
+}
+@media(max-width:760px){
+ .cms-admin-page .admin-shell{width:auto;margin:0 16px}
+ .cms-admin-page .admin-section-nav{top:72px;left:12px;right:12px;width:auto}
+}
