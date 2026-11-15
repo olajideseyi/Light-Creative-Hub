@@ -44,6 +44,7 @@ export function AdminPage() {
   const [editingId,setEditingId]=useState<string|null>(null); const [existingMedia,setExistingMedia]=useState<string[]>([]);
   const [activeTab,setActiveTab]=useState<"all"|"published"|"drafts">("all");
   const [previewProject,setPreviewProject]=useState<Project|null>(null);
+  const [showProjectEditor,setShowProjectEditor]=useState(false);
   type SiteDoc = Record<string,string|boolean>;
   const [siteDocs,setSiteDocs]=useState<Record<string,SiteDoc>>({});
   const [cmsSection,setCmsSection]=useState<"homepage"|"about"|"services"|"contact"|"effects">("homepage");
@@ -143,12 +144,14 @@ export function AdminPage() {
   },[]);
 
   function resetForm() {
+    setShowProjectEditor(false);
     setEditingId(null);setTitle("");setSlug("");setCategory(CATEGORIES[0]);setSummary("");setDescription("");
     setPublished(false);setFeatured(false);setCoverFile(null);setGalleryFiles([]);setExistingMedia([]);
     const cover=document.getElementById("cms-cover") as HTMLInputElement|null; if(cover)cover.value="";
     const gallery=document.getElementById("cms-gallery") as HTMLInputElement|null; if(gallery)gallery.value="";
   }
   function startEdit(project:Project) {
+    setShowProjectEditor(true);
     setEditingId(project.id);setTitle(project.title);setSlug(project.slug);setCategory(project.category||CATEGORIES[0]);
     setSummary(project.summary||"");setDescription(project.description||project.summary||"");
     setPublished(project.published);setFeatured(project.featured);
@@ -299,7 +302,7 @@ export function AdminPage() {
       </section>
       
       <div className="cms-layout" style={{display:isPortfolioPage?"":"none"}}>
-        <section className="admin-panel cms-editor-panel" id="cms-editor"><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"PORTFOLIO LIBRARY"}</span><h2>{editingId?"Refine the details.":"Portfolio library"}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
+        <section className="admin-panel cms-editor-panel" id="cms-editor" style={{display:showProjectEditor?"":"none"}}><div className="admin-panel-head"><div><span className="cms-eyebrow">{editingId?"EDIT EXISTING PROJECT":"PORTFOLIO LIBRARY"}</span><h2>{editingId?"Refine the details.":"Portfolio library"}</h2><p>Media uploads are stored in your Supabase Storage bucket.</p></div>{editingId&&<button type="button" className="button button-outline-dark" onClick={resetForm}>Cancel edit</button>}</div>
           <form className="admin-project-form" onSubmit={saveProject}><div className="form-grid">
             <label>Project title *<input value={title} onChange={e=>{setTitle(e.target.value);if(!editingId||!slug)setSlug(slugify(e.target.value));}} required minLength={2} maxLength={180} placeholder="e.g. Identity for a new brand"/></label>
             <label>URL slug *<input value={slug} onChange={e=>setSlug(slugify(e.target.value))} required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="identity-for-a-new-brand"/></label>
@@ -318,9 +321,9 @@ export function AdminPage() {
           <div className="cms-form-actions"><button className="button button-blue" disabled={busy}>{busy?(editingId?"Saving changes…":"Creating project…"):(editingId?"Save project changes ↗":"Create portfolio project ↗")}</button><button type="button" className="button button-outline-dark" onClick={resetForm} disabled={busy}>Clear form</button></div>
         </form>
       </section>
-      <section className="admin-panel cms-library-panel" id="portfolio-library"><div className="admin-panel-head"><div><span className="cms-eyebrow">YOUR CONTENT</span><h2>Portfolio library</h2><p>Open any project to preview, edit or manage its publication.</p></div><span className="cms-count-pill">{projects.length} ITEMS</span></div>
+      <section className="admin-panel cms-library-panel" id="portfolio-library"><div className="admin-panel-head"><div><span className="cms-eyebrow">YOUR PROJECTS</span><h2>Portfolio library</h2><p>Browse your projects, preview the media and manage what appears on the website.</p></div><div className="cms-library-header-actions"><span className="cms-count-pill">{projects.length} ITEMS</span><button type="button" className="button button-blue" onClick={()=>{resetForm();setShowProjectEditor(true);window.setTimeout(()=>document.getElementById("cms-editor")?.scrollIntoView({behavior:"smooth",block:"start"}),50);}}>+ Add project</button></div></div>
         <div className="cms-library-tabs"><button className={activeTab==="all"?"active":""} onClick={()=>setActiveTab("all")}>All <b>{projects.length}</b></button><button className={activeTab==="published"?"active":""} onClick={()=>setActiveTab("published")}>Published <b>{publishedCount}</b></button><button className={activeTab==="drafts"?"active":""} onClick={()=>setActiveTab("drafts")}>Drafts <b>{projects.length-publishedCount}</b></button></div>
-        {filteredProjects.length===0?<div className="admin-empty"><strong>{projects.length?"Nothing in this filter yet.":"Your portfolio library is ready."}</strong><br/>{projects.length?"Choose another tab to see your projects.":"Create your first entry using the editor. You can keep it as a draft until it is ready."}</div>:<div className="cms-project-grid">{filteredProjects.map(project=>{const cover=project.cover_image_url||(project.media_urls||[])[0];return <article className="cms-project-card" key={project.id}>
+        {filteredProjects.length===0?<div className="admin-empty"><strong>{projects.length?"Nothing in this filter yet.":"Your portfolio library is ready."}</strong><br/>{projects.length?"Choose another tab to see your projects.":"Use + Add project to create your first portfolio entry."}</div>:<div className="cms-project-grid">{filteredProjects.map(project=>{const cover=project.cover_image_url||(project.media_urls||[])[0];return <article className="cms-project-card" key={project.id}>
           <button type="button" className="cms-card-preview" onClick={()=>setPreviewProject(project)} aria-label={`Preview ${project.title}`}>{cover?<MediaPreview url={cover} title={project.title} compact/>:<div className="cms-no-media"><span>LCH / PROJECT</span><strong>{project.category}</strong></div>}<span className="cms-open-overlay">Open preview ↗</span></button>
           <div className="cms-card-copy"><div className="cms-card-badges"><span className={project.published?"status-live":"status-draft"}>{project.published?"Published":"Draft"}</span>{project.featured&&<span className="cms-featured-badge">Featured</span>}</div><h3>{project.title}</h3><p>{project.category}</p><div className="cms-card-actions"><button type="button" className="button button-outline-dark" onClick={()=>startEdit(project)}>Edit details</button><button type="button" className="button button-outline-dark" onClick={()=>togglePublished(project)} disabled={busy}>{project.published?"Unpublish":"Publish"}</button><button type="button" className="cms-delete-button" onClick={()=>deleteProject(project)} disabled={busy}>Delete</button></div></div>
         </article>;})}</div>}
