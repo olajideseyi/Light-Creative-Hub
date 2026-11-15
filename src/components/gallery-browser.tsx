@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { SafeImage } from "@/components/safe-image";
 
 export type GalleryItem = {
   id: string;
@@ -36,7 +37,7 @@ export function GalleryBrowser({ items }: { items: GalleryItem[] }) {
           {visible.map((item, index) => (
             <article className={index % 5 === 0 ? "gallery-tile gallery-tile-tall" : "gallery-tile"} key={item.id}>
               <button className="gallery-media-button" type="button" onClick={() => setSelected(item)} aria-label={`View ${item.title}`}>
-                {item.kind === "video" ? <video src={item.url} muted playsInline preload="metadata" aria-label={item.title} /> : <img src={item.url} alt={item.title} loading="lazy" />}
+                {item.kind === "video" ? <video src={item.url} muted playsInline preload="metadata" aria-label={item.title} /> : <SafeImage src={item.url} alt={item.title} />}
                 <span className="gallery-media-open">{item.kind === "video" ? "▶ PLAY VIDEO" : "↗ VIEW IMAGE"}</span>
               </button>
               <div className="gallery-tile-caption"><div><span>{item.category}</span><h2>{item.title}</h2></div><a href={item.projectUrl} aria-label={`View project: ${item.title}`}>↗</a></div>
@@ -54,7 +55,7 @@ export function GalleryBrowser({ items }: { items: GalleryItem[] }) {
       {selected && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={selected.title} onClick={() => setSelected(null)}>
         <button className="gallery-lightbox-close" type="button" onClick={() => setSelected(null)} aria-label="Close media viewer">×</button>
         <div className="gallery-lightbox-content" onClick={(event) => event.stopPropagation()}>
-          {selected.kind === "video" ? <video src={selected.url} controls autoPlay playsInline /> : <img src={selected.url} alt={selected.title} />}
+          {selected.kind === "video" ? <video src={selected.url} controls autoPlay playsInline /> : <SafeImage src={selected.url} alt={selected.title} />}
           <div className="gallery-lightbox-caption"><span>{selected.category}</span><h2>{selected.title}</h2><a href={selected.projectUrl}>View project ↗</a></div>
         </div>
       </div>}
