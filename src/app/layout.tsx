@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/creative-effects";
 import { LiquidLogo } from "@/components/liquid-logo";
-import { WhatsAppFloat, WhatsAppLink } from "@/components/whatsapp-float";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { getSiteContact } from "@/lib/site-contact";
 import { MobileNav } from "@/components/mobile-nav";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -13,9 +13,7 @@ async function getSiteEffects(): Promise<Record<string, unknown>> {
     const { data, error } = await supabase.from("site_content").select("content_value").eq("content_key", "effects").maybeSingle();
     if (error || !data?.content_value || typeof data.content_value !== "object") return {};
     return data.content_value as Record<string, unknown>;
-  } catch {
-    return {};
-  }
+  } catch { return {}; }
 }
 
 export const metadata: Metadata = {
@@ -41,12 +39,27 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         </header>
         <main id="main">{children}</main>
         <WhatsAppFloat />
-        <footer className="footer">
-          <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
-          <p>Creative ideas. Professional execution.</p>
-          <div className="footer-contacts"><a href={"tel:"+contact.primaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.primaryPhone}</a><a href={"tel:"+contact.secondaryPhone.replaceAll(" ","").replaceAll("-","")}>{contact.secondaryPhone}</a><a href={"mailto:"+contact.email}>{contact.email}</a></div>
-          <div className="footer-nav"><a href="/privacy">Privacy</a><a href="/services">Services</a><a href="/portfolio">Portfolio</a><a href="/gallery">Gallery</a></div>
-          <small>© {new Date().getFullYear()} Light Creative Hub. All rights reserved.</small>
+        <footer className="site-footer">
+          <div className="footer-main">
+            <div className="footer-brand">
+              <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
+              <p>Creative thinking, carefully made.<br />Brand identity, design, print and visual content.</p>
+              <span className="footer-location">LAGOS, NIGERIA</span>
+            </div>
+            <div className="footer-column">
+              <span className="footer-label">EXPLORE</span>
+              <a href="/services">Services</a><a href="/portfolio">Portfolio</a><a href="/gallery">Gallery</a><a href="/about">About the studio</a>
+            </div>
+            <div className="footer-column">
+              <span className="footer-label">GET IN TOUCH</span>
+              <a href={"tel:" + contact.primaryPhone.replaceAll(" ", "").replaceAll("-", "")}>{contact.primaryPhone}</a>
+              <a href={"tel:" + contact.secondaryPhone.replaceAll(" ", "").replaceAll("-", "")}>{contact.secondaryPhone}</a>
+              <a href={"mailto:" + contact.email}>{contact.email}</a>
+              <span className="footer-address">Lagos, Nigeria<br />Online and in-person projects by arrangement</span>
+            </div>
+            <div className="footer-action"><span>HAVE SOMETHING IN MIND?</span><a href="/request-a-quote">Let's talk about it <b>↗</b></a></div>
+          </div>
+          <div className="footer-bottom"><span>© {new Date().getFullYear()} Light Creative Hub. All rights reserved.</span><div><a href="/privacy">Privacy</a><a href="/request-a-quote">Project enquiries</a></div><span>IDEA → DESIGN → IMPACT</span></div>
         </footer>
       </body>
     </html>
