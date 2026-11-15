@@ -49,7 +49,7 @@ export function MobileNav() {
 
       {open && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation menu" onClick={() => setOpen(false)} />}
 
-      <nav id="primary-navigation" className={open ? "primary-navigation is-open" : "primary-navigation"} aria-label="Main navigation" aria-hidden={!open && typeof window !== "undefined" && window.innerWidth <= 760}>
+      <nav id="primary-navigation" className={open ? "primary-navigation is-open" : "primary-navigation"} aria-label="Main navigation">
         <div className="mobile-nav-heading">
           <span>LIGHT CREATIVE HUB</span>
           <span>MENU / 0{links.length}</span>
