@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { WhatsAppLink } from "@/components/whatsapp-float";
+import { SafeImage } from "@/components/safe-image";
 import { getSiteContact } from "@/lib/site-contact";
 import styles from "./home.module.css";
 
@@ -103,7 +104,7 @@ export default async function HomePage() {
   return (
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
-        <img className={styles.heroImage} src={content.heroPrimaryImageUrl || fallbackHeroImage} alt="Creative studio workspace with visual identity and design materials" fetchPriority="high" />
+        <SafeImage className={styles.heroImage} src={content.heroPrimaryImageUrl || fallbackHeroImage} fallbackSrc={fallbackHeroImage} alt="Creative studio workspace with visual identity and design materials" priority />
         <div className={styles.heroShade} />
         <div className={styles.heroInner}>
           <p className={styles.heroEyebrow}><span /> LIGHT CREATIVE HUB <span className={styles.eyebrowRule} /> BRAND · DESIGN · PRINT · FILM</p>
@@ -140,7 +141,7 @@ export default async function HomePage() {
           {services.map(service => (
             <Reveal key={service.number} className={styles.serviceCard}>
               <a className={styles.serviceImage} href="/services">
-                <img src={service.image} alt={service.alt} loading="lazy" />
+                <SafeImage src={service.image} fallbackSrc={fallbackHeroImage} alt={service.alt} />
                 <span>{service.number} / DISCIPLINE</span><b>↗</b>
               </a>
               <div className={styles.serviceBody}>
@@ -165,7 +166,7 @@ export default async function HomePage() {
             return <Reveal key={project.id} className={styles.projectCard}>
               <a href={project.id.startsWith("reference-") ? "/portfolio" : "/portfolio/" + project.slug}>
                 <div className={styles.projectImage}>
-                  {media && (isVideo(media) ? <video src={media} muted playsInline preload="metadata" aria-label={project.title} /> : <img src={media} alt={project.title} loading="lazy" />)}
+                  {media && (isVideo(media) ? <video src={media} muted playsInline preload="metadata" aria-label={project.title} /> : <SafeImage src={media} fallbackSrc={fallbackHeroImage} alt={project.title} />)}
                   <span>{String(index + 1).padStart(2, "0")} / {(project.category || "CREATIVE").toUpperCase()}</span><b>↗</b>
                 </div>
                 <div className={styles.projectCaption}><div><small>{isReferenceSet ? "VISUAL REFERENCE" : "PUBLISHED PROJECT"}</small><h3>{project.title}</h3></div><p>{project.summary || "Creative direction and considered execution."}</p></div>
@@ -179,7 +180,7 @@ export default async function HomePage() {
 
       <section className={styles.about}>
         <div className={styles.aboutImage}>
-          <img src={content.founderImageUrl || ""} alt="Founder and creative lead at Light Creative Hub" loading="lazy" />
+          <SafeImage src={content.founderImageUrl} fallbackSrc="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="Founder and creative lead at Light Creative Hub" />
           <span>THE PEOPLE BEHIND THE WORK</span>
         </div>
         <div className={styles.aboutCopy}>
