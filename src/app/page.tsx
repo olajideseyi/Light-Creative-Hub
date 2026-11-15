@@ -170,47 +170,13 @@ export default async function HomePage() {
   return (
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
-        <div className={styles.heroMeta}>
-          <span>{content.heroEyebrow}</span>
-          <span>BRAND / DESIGN / PRINT / IMAGE</span>
-        </div>
-        <div className={styles.heroGrid}>
-          <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}><i /> CREATIVE IDEAS. PROFESSIONAL EXECUTION.</p>
-            <h1 id="home-title">
-              <span>{titleParts[0]}{titleParts.length > 1 ? "." : ""}</span>
-              {titleParts.length > 1 && <em>{titleParts.slice(1).join(". ")}</em>}
-            </h1>
-            <p className={styles.heroIntro}>{content.heroDescription}</p>
-            <div className={styles.heroActions}>
-              <a className={styles.buttonPrimary} href="/request-a-quote">{content.primaryCta}<span>↗</span></a>
-              <a className={styles.buttonText} href="/portfolio">{content.secondaryCta}<span>↓</span></a>
-            </div>
-            <div className={styles.heroFootnote}>
-              <span>01 — 03</span>
-              <p>One connected creative partner, from the first conversation to final delivery.</p>
-            </div>
-          </div>
-          <div className={styles.heroVisual}>
-            <div className={styles.heroImageMain}>
-              <img src={content.heroPrimaryImageUrl || ""} alt="Colour, typography and visual identity work on a studio desk" fetchPriority="high" />
-              <span className={styles.imageLabel}>LIGHT CREATIVE HUB <b>—</b> LAGOS</span>
-            </div>
-            <div className={styles.heroImageDetail}>
-              <img src={content.heroSecondaryImageUrl || ""} alt="Printed editorial material and stationery" loading="lazy" />
-              <span>PRINT / DETAIL</span>
-            </div>
-            <div className={styles.heroImageFilm}>
-              <img src={content.heroTertiaryImageUrl || ""} alt="A camera operator creating a visual story" loading="lazy" />
-              <span>PHOTO / FILM</span>
-            </div>
-            <div className={styles.heroIndex}>LC—001<br /><b>IDEA → IMPACT</b></div>
-          </div>
-        </div>
-        <div className={styles.heroBottom}>
-          <span>INDEPENDENT CREATIVE PRACTICE</span>
-          <a href="#what-we-do">DISCOVER THE STUDIO <b>↓</b></a>
-        </div>
+        <div className={styles.heroGrid}><div className={styles.heroCopy}>
+          <p className={styles.eyebrow}><i /> BRANDING · DESIGN · PRINT · VISUAL CONTENT</p>
+          <h1 id="home-title">Make your brand <em>impossible to overlook.</em></h1>
+          <p className={styles.heroIntro}>We build distinctive identities and create thoughtful visual work that helps businesses communicate clearly, look their best and stay memorable.</p>
+          <div className={styles.heroActions}><a className={styles.buttonPrimary} href="/request-a-quote">Start a project <span>↗</span></a><a className={styles.buttonText} href="/portfolio">View selected work <span>↗</span></a></div>
+        </div></div>
+        <div className={styles.heroBottom}><span>CREATIVE THINKING. PRECISE EXECUTION.</span><a href="#what-we-do">EXPLORE OUR SERVICES <b>↓</b></a></div>
       </section>
 
       <section className={styles.statement} aria-labelledby="statement-title">
