@@ -147,7 +147,7 @@ export default async function HomePage() {
       description: content.service1Description || "Brand positioning, naming direction, logo design and identity systems that give your business a recognisable point of view.",
       image: "https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1000&q=85",
       alt: "Brand identity and printed design materials",
-      href: "/services#strategy-identity"
+      href: "/services#service-list"
     },
     {
       number: "02",
@@ -155,7 +155,7 @@ export default async function HomePage() {
       description: content.service2Description || "Campaign artwork, marketing materials, stationery and print production, prepared with care from screen to final finish.",
       image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=85",
       alt: "Printed editorial and stationery materials",
-      href: "/services#print-design"
+      href: "/services#service-list"
     },
     {
       number: "03",
@@ -163,7 +163,7 @@ export default async function HomePage() {
       description: content.service3Description || "Brand, product and event photography, promotional video and social content shaped around a clear story.",
       image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1000&q=85",
       alt: "Photographer working on a visual production",
-      href: "/services#photo-film"
+      href: "/services#service-list"
     }
   ];
 
