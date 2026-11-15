@@ -17,3 +17,21 @@
 .home .workButton{color:#101b45!important;background:#fff}
 .home .workButton:hover{background:#f1f4ff;color:#1738b8!important}
 .home .workButton span{color:#ed7b42}
+
+
+/* CMS-managed hero carousel and add-on homepage sections */
+.heroSlide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:0;transition:opacity 1.1s ease,transform 7s ease;transform:scale(1.035)}
+.heroSlideActive{opacity:1;transform:scale(1)}
+.heroSlideControls{position:absolute;z-index:3;right:clamp(22px,7vw,110px);bottom:76px;display:flex;gap:8px}
+.heroSlideDot{width:9px;height:9px;padding:0;border:1px solid #fff;background:#ffffff55;border-radius:50%;cursor:pointer}
+.heroSlideDotActive{background:#fff;transform:scale(1.2)}
+.cmsTextSection,.cmsCtaSection{padding:clamp(64px,8vw,110px) clamp(22px,8vw,124px)}
+.cmsTextSection{background:#f2f5fb;color:var(--ink)}
+.cmsCtaSection{background:#ed7b42;color:#111827}
+.cmsTextSection>div,.cmsCtaSection>div{max-width:900px;margin:0 auto}
+.cmsTextSection span,.cmsCtaSection span{font:600 10px "DM Mono",monospace;letter-spacing:.14em}
+.cmsTextSection h2,.cmsCtaSection h2{font:750 clamp(36px,5vw,66px)/1.06 Montserrat,Arial,sans-serif;letter-spacing:-.06em;margin:18px 0}
+.cmsTextSection p,.cmsCtaSection p{max-width:680px;font:15px/1.85 Arial,sans-serif}
+.cmsTextSection a,.cmsCtaSection a{display:inline-flex;gap:25px;margin-top:15px;padding:15px 19px;background:#1738b8;color:#fff;font:700 12px Arial,sans-serif}
+.cmsCtaSection a{background:#111827;color:#fff}
+@media(max-width:600px){.heroSlideControls{right:20px;bottom:72px}.cmsTextSection,.cmsCtaSection{padding:62px 20px}}
