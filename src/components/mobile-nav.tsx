@@ -20,12 +20,12 @@ export function MobileNav() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
+    const closeOnPageScroll = () => setOpen(false);
+    window.addEventListener("scroll", closeOnPageScroll, { passive: true });
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", closeOnPageScroll);
     };
   }, [open]);
 
