@@ -180,7 +180,7 @@ export default async function HomePage() {
 
       <section className={styles.about}>
         <div className={styles.aboutImage}>
-          <SafeImage src={content.founderImageUrl} fallbackSrc="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="Founder and creative lead at Light Creative Hub" />
+          <SafeImage src={content.founderImageUrl} alt="Founder and creative lead at Light Creative Hub" />
           <span>THE PEOPLE BEHIND THE WORK</span>
         </div>
         <div className={styles.aboutCopy}>
