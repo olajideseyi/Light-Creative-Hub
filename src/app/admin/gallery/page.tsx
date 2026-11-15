@@ -63,9 +63,10 @@ export default function AdminGalleryPage() {
 
   const verify = useCallback(async () => {
     const client = getSupabaseBrowserClient();
-    const { data: userData, error: userError } = await client.auth.getUser();
-    if (userError || !userData.user) throw new Error("Please sign in with your approved studio administrator account.");
-    const { data, error: accessError } = await client.from("admin_users").select("user_id").eq("user_id", userData.user.id).maybeSingle();
+    const { data: sessionData, error: userError } = await client.auth.getSession();
+    const user = sessionData.session?.user;
+    if (userError || !user) throw new Error("Please sign in with your approved studio administrator account.");
+    const { data, error: accessError } = await client.from("admin_users").select("user_id").eq("user_id", user.id).maybeSingle();
     if (accessError || !data) throw new Error("This account is not approved to manage the gallery.");
   }, []);
 
