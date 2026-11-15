@@ -2283,3 +2283,17 @@ html{scroll-padding-top:96px}
  .cms-admin-page .admin-shell{width:auto;margin:0 16px}
  .cms-admin-page .admin-section-nav{top:72px;left:12px;right:12px;width:auto}
 }
+
+@media(min-width:761px){
+ .gallery-admin-page{padding-left:290px}
+ .gallery-admin-page .gallery-admin-header{position:fixed;left:18px;top:18px;bottom:18px;width:254px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:24px;padding:20px 14px;background:#fff;border:1px solid #e2e6ef;border-radius:8px;box-shadow:0 12px 38px #101b4510;z-index:90}
+ .gallery-admin-page .gallery-admin-brand{margin-bottom:8px}
+ .gallery-admin-page .gallery-admin-header nav{display:flex;flex-direction:column;align-items:stretch;gap:6px;width:100%}
+ .gallery-admin-page .gallery-admin-header nav a,.gallery-admin-page .gallery-admin-header nav button{display:flex;align-items:center;min-height:48px;padding:12px;border:1px solid transparent;border-radius:5px;background:transparent;text-align:left;color:#303a59;font-size:12px;font-weight:700}
+ .gallery-admin-page .gallery-admin-header nav a:hover,.gallery-admin-page .gallery-admin-header nav a.active{background:#edf2ff;border-color:#dbe4ff;color:#1738bd}
+ .gallery-admin-page .gallery-admin-header nav button{margin-top:auto}
+ .gallery-admin-page .gallery-admin-intro,.gallery-admin-page .gallery-admin-stats,.gallery-admin-page .gallery-admin-layout{max-width:1280px;margin-left:auto;margin-right:auto}
+}
+@media(max-width:760px){
+ .gallery-admin-page{padding-left:0}
+}
