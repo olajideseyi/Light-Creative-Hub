@@ -2404,3 +2404,5 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 .gallery-admin-page .gallery-admin-nav-bottom button{min-height:43px;border:1px solid #e3e7ef;border-radius:5px;background:#fff;text-align:left;padding:0 12px;color:#26314f;font-weight:700}
 .gallery-admin-page .gallery-admin-header nav a{min-height:48px;padding:0 12px}
 }
+
+@media(min-width:761px){.cms-admin-page .admin-masthead .admin-brand{display:none!important}.cms-admin-page .admin-masthead{justify-content:flex-end}.cms-admin-page .admin-masthead-right{min-height:42px}}
