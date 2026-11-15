@@ -6,6 +6,8 @@ import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { getSiteContact } from "@/lib/site-contact";
 import styles from "./home.module.css";
 
+export const dynamic = "force-dynamic";
+
 type HomeProject = {
   id: string;
   title: string;
@@ -41,6 +43,29 @@ type HomeContent = {
 };
 
 const fallbackHeroImage = "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=2200&q=90";
+
+type HeroSettings = { autoplay: boolean; intervalSeconds: number; transition: "crossfade" | "slide" | "wipe" | "none"; imageEffect: "float" | "parallax" | "zoom" | "static"; motionEnabled: boolean; showArrows: boolean; showDots: boolean };
+const defaultHeroSettings: HeroSettings = { autoplay: true, intervalSeconds: 3, transition: "crossfade", imageEffect: "zoom", motionEnabled: true, showArrows: true, showDots: true };
+
+async function getHeroSettings(): Promise<HeroSettings> {
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase.from("site_content").select("content_value").eq("content_key", "effects").maybeSingle();
+    if (error || !data?.content_value) return defaultHeroSettings;
+    const value = data.content_value as Record<string, unknown>;
+    const transitions = ["crossfade", "slide", "wipe", "none"];
+    const imageEffects = ["float", "parallax", "zoom", "static"];
+    return {
+      autoplay: value.carouselAutoplay !== false,
+      intervalSeconds: Math.min(15, Math.max(2, Number(value.carouselIntervalSeconds) || 3)),
+      transition: transitions.includes(String(value.transition)) ? value.transition as HeroSettings["transition"] : defaultHeroSettings.transition,
+      imageEffect: imageEffects.includes(String(value.imageEffect)) ? value.imageEffect as HeroSettings["imageEffect"] : defaultHeroSettings.imageEffect,
+      motionEnabled: value.motionEnabled !== false,
+      showArrows: value.carouselArrows !== false,
+      showDots: value.carouselDots !== false
+    };
+  } catch { return defaultHeroSettings; }
+}
 
 const referenceProjects: HomeProject[] = [
   { id: "reference-identity", title: "Identity & brand direction", slug: "identity-reference", category: "Brand identity", summary: "A visual reference for considered identity work.", cover_image_url: "https://images.unsplash.com/photo-1634942536790-2534dbf1366d?auto=format&fit=crop&w=1400&q=85", media_urls: [], featured: true },
@@ -93,7 +118,7 @@ function isVideo(url: string) {
 }
 
 export default async function HomePage() {
-  const [projects, content, contact] = await Promise.all([getHomeProjects(), getHomeContent(), getSiteContact()]);
+  const [projects, content, contact, heroSettings] = await Promise.all([getHomeProjects(), getHomeContent(), getSiteContact(), getHeroSettings()]);
   const selectedProjects = projects.length ? projects : referenceProjects;
   const isReferenceSet = projects.length === 0;
   const services = [
@@ -107,7 +132,7 @@ export default async function HomePage() {
   return (
     <div className={styles.home}>
       <section className={styles.hero} aria-labelledby="home-title">
-        <HomeHeroCarousel images={content.heroSlides?.length ? content.heroSlides : [content.heroPrimaryImageUrl || fallbackHeroImage]} fallbackImage={fallbackHeroImage} />
+        <HomeHeroCarousel images={content.heroSlides?.length ? content.heroSlides : [content.heroPrimaryImageUrl || fallbackHeroImage]} fallbackImage={fallbackHeroImage} settings={heroSettings} />
         <div className={styles.heroShade} />
         <div className={styles.heroInner}>
           <p className={styles.heroEyebrow}><span /> LIGHT CREATIVE HUB <span className={styles.eyebrowRule} /> BRAND · DESIGN · PRINT · FILM</p>
