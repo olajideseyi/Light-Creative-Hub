@@ -37,7 +37,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <header className="site-header">
           <a className="brand-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
           <MobileNav />
-a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
+          <a className="nav-cta" href="/request-a-quote">Start a project ↗</a>
         </header>
         <main id="main">{children}</main>
         <WhatsAppFloat />
