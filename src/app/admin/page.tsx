@@ -88,8 +88,10 @@ export default function AdminPage() {
   useEffect(()=>{
     if(!mobileNavOpen) return;
     const closeOnPageScroll=()=>setMobileNavOpen(false);
+    const closeOnEscape=(event:KeyboardEvent)=>{if(event.key==="Escape")setMobileNavOpen(false);};
     window.addEventListener("scroll",closeOnPageScroll,{passive:true});
-    return()=>window.removeEventListener("scroll",closeOnPageScroll);
+    window.addEventListener("keydown",closeOnEscape);
+    return()=>{window.removeEventListener("scroll",closeOnPageScroll);window.removeEventListener("keydown",closeOnEscape);};
   },[mobileNavOpen]);
 
   useEffect(()=>{
@@ -212,6 +214,7 @@ export default function AdminPage() {
          <a onClick={()=>setMobileNavOpen(false)} href="/admin/gallery"><span className="admin-nav-icon">▧</span><span><strong>Gallery manager</strong><small>Photography, images and video</small></span><b>↗</b></a>
          <a onClick={()=>setMobileNavOpen(false)} href="#portfolio-library"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
        </nav>
+      {mobileNavOpen&&<button type="button" className="admin-nav-backdrop" aria-label="Close workspace menu" onClick={()=>setMobileNavOpen(false)}/>}
       <section className="admin-overview-section" id="admin-overview"><div className="admin-overview-heading"><div><span className="cms-eyebrow">WORKSPACE OVERVIEW</span><h2>Your website at a glance.</h2><p>Monitor what is live and jump straight into the area you want to update.</p></div><a className="button button-blue" href="/" target="_blank" rel="noreferrer">Open live website ↗</a></div><div className="admin-dashboard-stats" id="admin-overview"><div className="admin-stat"><span>Total projects</span><strong>{projects.length}</strong><small>All portfolio entries</small></div><div className="admin-stat"><span>Published</span><strong>{publishedCount}</strong><small>Visible on the public site</small></div><div className="admin-stat"><span>Drafts</span><strong>{projects.length-publishedCount}</strong><small>Only visible in this CMS</small></div></div></section>
       <section className="admin-panel site-content-cms" id="site-content-editor">
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
