@@ -2,6 +2,7 @@ import { Reveal } from "@/components/creative-effects";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import { WhatsAppLink } from "@/components/whatsapp-float";
+import { SafeImage } from "@/components/safe-image";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -61,7 +62,7 @@ function ProjectMedia({ project, priority = false }: { project: PortfolioProject
     return <video className="portfolio-cover-media" src={media} controls playsInline preload="metadata" aria-label={project.title} />;
   }
   if (isAudio(media)) { return <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={media} controls preload="metadata" aria-label={project.title} /></div>; }
-  return <img className="portfolio-cover-media" src={media} alt={project.title} loading={priority ? "eager" : "lazy"} />;
+  return <SafeImage className="portfolio-cover-media" src={media} alt={project.title} priority={priority} />;
 }
 
 export default async function PortfolioPage() {
@@ -98,7 +99,7 @@ export default async function PortfolioPage() {
       </div>
       {(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length > 0 && <div className="portfolio-project-gallery">
         <div className="portfolio-gallery-heading"><span>PROJECT GALLERY</span><span>{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).length.toString().padStart(2, "0")} MEDIA ITEMS</span></div>
-        <div className="portfolio-gallery-grid portfolio-layout-gallery">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : isAudio(url) ? <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={url} controls preload="metadata" aria-label={featured.title + " audio " + (index + 1)} /></div> : <img src={url} alt={featured.title + " gallery item " + (index + 1)} loading="lazy" />}</div>)}</div>
+        <div className="portfolio-gallery-grid portfolio-layout-gallery">{(featured.media_urls || []).filter(url => url !== featured.cover_image_url).map((url, index) => <div className="portfolio-gallery-item" key={url}>{isVideo(url) ? <video src={url} controls playsInline preload="metadata" aria-label={featured.title + " gallery item " + (index + 1)} /> : isAudio(url) ? <div className="portfolio-audio-card"><span className="portfolio-audio-symbol" aria-hidden="true">♫</span><p>Audio feature</p><audio src={url} controls preload="metadata" aria-label={featured.title + " audio " + (index + 1)} /></div> : <SafeImage src={url} alt={featured.title + " gallery item " + (index + 1)} />}</div>)}</div>
       </div>}
     </section>}
 
