@@ -1916,3 +1916,24 @@ body{background:#f4f1eb;color:var(--lch-ink)}
 }
 
 .portfolio-coming-soon{display:grid!important;grid-template-columns:minmax(150px,.55fr) minmax(0,1.45fr)!important;gap:clamp(28px,7vw,100px)!important;align-items:start!important;padding:clamp(42px,7vw,96px)!important;margin-top:32px!important;background:#f3f6ff!important;border-top:4px solid #1738b8!important}.portfolio-coming-index{color:#1738b8!important;font:800 clamp(54px,9vw,116px)/.9 Montserrat,Arial,sans-serif!important;letter-spacing:-.09em!important}.portfolio-coming-soon>div:last-child>span{color:#1738b8!important;font:600 10px "DM Mono",monospace!important;letter-spacing:.14em!important}.portfolio-coming-soon>div:last-child>h3{max-width:760px!important;margin:20px 0!important;color:#111827!important;font:800 clamp(38px,6vw,76px)/1 Montserrat,Arial,sans-serif!important;letter-spacing:-.07em!important}.portfolio-coming-soon>div:last-child>p{max-width:650px!important;font-size:16px!important;line-height:1.8!important;color:#4b5563!important}@media(max-width:700px){.portfolio-coming-soon{grid-template-columns:1fr!important;padding:30px 22px!important}.portfolio-coming-index{font-size:58px!important}}
+
+
+/* Structured studio footer */
+.site-footer{background:#0d1738;color:#fff;padding:0 clamp(22px,7vw,110px)}
+.footer-main{display:grid;grid-template-columns:minmax(220px,1.2fr) minmax(130px,.55fr) minmax(220px,.8fr) minmax(180px,.65fr);gap:42px;padding:66px 0 58px;align-items:start}
+.footer-brand .brand-logo{display:inline-flex;max-width:205px;background:#fff;padding:6px 9px}
+.footer-brand p{margin:22px 0;color:#d1d9ec;font:13px/1.8 Arial,sans-serif}
+.footer-location,.footer-label,.footer-action>span{display:block;color:#ffb184;font:600 9px "DM Mono",monospace;letter-spacing:.14em}
+.footer-column{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.footer-label{margin:4px 0 9px;color:#9eadd0}
+.footer-column>a{color:#fff;font:12px/1.6 Arial,sans-serif;transition:color .2s ease}
+.footer-column>a:hover,.footer-bottom a:hover{color:#ffb184}
+.footer-address{margin-top:7px;color:#aebbd7;font:11px/1.8 Arial,sans-serif}
+.footer-action{padding:20px;border:1px solid #ffffff38;background:#14244e}
+.footer-action>span{color:#b8c6e5}
+.footer-action>a{display:flex;justify-content:space-between;gap:18px;margin-top:19px;color:#fff;font:600 19px/1.3 Montserrat,Arial,sans-serif;letter-spacing:-.04em}
+.footer-action b{color:#ffb184}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:64px;border-top:1px solid #ffffff30;color:#aebbd7;font:9px "DM Mono",monospace;letter-spacing:.04em}
+.footer-bottom>div{display:flex;gap:22px}.footer-bottom a{color:#d8e0f1}
+@media(max-width:900px){.footer-main{grid-template-columns:1fr 1fr;gap:38px 28px}.footer-brand{grid-column:1/-1}.footer-action{align-self:start}}
+@media(max-width:560px){.site-footer{padding:0 20px}.footer-main{grid-template-columns:1fr 1fr;gap:32px 18px;padding:46px 0 40px}.footer-brand,.footer-action{grid-column:1/-1}.footer-column{gap:12px}.footer-action{padding:18px}.footer-bottom{align-items:flex-start;flex-direction:column;justify-content:center;gap:12px;padding:17px 0;font-size:8px}.footer-bottom>div{gap:18px}}
