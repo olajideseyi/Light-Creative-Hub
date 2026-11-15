@@ -252,6 +252,7 @@ export function AdminPage() {
            <a onClick={()=>setMobileNavOpen(false)} href="/admin/content" className={isContentPage?"is-current":""} aria-current={isContentPage?"page":undefined}>Website Content</a>
            <a onClick={()=>setMobileNavOpen(false)} href="/admin/portfolio" className={isPortfolioPage?"is-current":""} aria-current={isPortfolioPage?"page":undefined}>Portfolio</a>
            <a onClick={()=>setMobileNavOpen(false)} href="/admin/gallery" className={pathname.startsWith("/admin/gallery")?"is-current":""} aria-current={pathname.startsWith("/admin/gallery")?"page":undefined}>Gallery Manager</a>
+           <a onClick={()=>setMobileNavOpen(false)} href="/admin/enquiries" className={pathname.startsWith("/admin/enquiries")?"is-current":""} aria-current={pathname.startsWith("/admin/enquiries")?"page":undefined}>Enquiries</a>
          </div>
          <div className="admin-nav-bottom"><span></span><button type="button" onClick={signOut} disabled={busy}>Sign out</button></div>
        </nav>
