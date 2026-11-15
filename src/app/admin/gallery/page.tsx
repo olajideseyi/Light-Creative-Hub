@@ -72,8 +72,10 @@ export default function AdminGalleryPage() {
   useEffect(() => {
     if (!mobileNavOpen) return;
     const closeOnPageScroll = () => setMobileNavOpen(false);
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setMobileNavOpen(false); };
     window.addEventListener("scroll", closeOnPageScroll, { passive: true });
-    return () => window.removeEventListener("scroll", closeOnPageScroll);
+    window.addEventListener("keydown", closeOnEscape);
+    return () => { window.removeEventListener("scroll", closeOnPageScroll); window.removeEventListener("keydown", closeOnEscape); };
   }, [mobileNavOpen]);
 
   useEffect(() => {
@@ -247,6 +249,7 @@ export default function AdminGalleryPage() {
       <a className="gallery-admin-brand" href="/admin"><span className="gallery-admin-logo">L</span><span><strong>LIGHT CREATIVE HUB</strong><small>STUDIO CMS / MEDIA LIBRARY</small></span></a>
       {signedIn && <button type="button" className="gallery-mobile-menu-toggle" aria-label={mobileNavOpen ? "Close admin menu" : "Open admin menu"} aria-expanded={mobileNavOpen} aria-controls="gallery-admin-navigation" onClick={() => setMobileNavOpen(v => !v)}><span></span><span></span><span></span></button>}
       <nav id="gallery-admin-navigation" className={mobileNavOpen ? "is-open" : ""} aria-label="Admin navigation"><a onClick={() => setMobileNavOpen(false)} href="/admin">Dashboard</a><a onClick={() => setMobileNavOpen(false)} className="active" aria-current="page" href="/admin/gallery">Gallery manager</a><a onClick={() => setMobileNavOpen(false)} href="/gallery" target="_blank" rel="noreferrer">View gallery ↗</a>{signedIn && <button type="button" onClick={async () => { await getSupabaseBrowserClient().auth.signOut(); setSignedIn(false); setItems([]); setMobileNavOpen(false); }}>Sign out</button>}</nav>
+      {mobileNavOpen && <button type="button" className="gallery-admin-nav-backdrop" aria-label="Close admin menu" onClick={() => setMobileNavOpen(false)} />}
     </header>
     {!signedIn ? <div className="gallery-admin-login"><div><span className="cms-eyebrow">MEDIA WORKSPACE / ACCESS</span><h1>Your visual archive,<br/><em>under control.</em></h1><p>Sign in with the same approved administrator account used for the main Studio CMS.</p></div><form className="gallery-admin-form" onSubmit={signIn}><h2>Administrator sign in</h2>{error && <p role="alert" className="form-error">{error}</p>}<label>Email address<input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="username"/></label><label>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password"/></label><button className="button button-blue" disabled={busy}>{busy ? "Checking access…" : "Open gallery manager ↗"}</button></form></div> : <>
       <section className="gallery-admin-intro"><div><span className="cms-eyebrow">ADMIN WORKSPACE / MEDIA LIBRARY</span><h1>Manage the <em>visual archive.</em></h1><p>Upload photoshoots and video content directly. These items are independent of portfolio projects and can be published individually.</p></div><a className="button button-blue" href="/gallery" target="_blank" rel="noreferrer">Preview public gallery ↗</a></section>
