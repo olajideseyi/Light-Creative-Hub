@@ -52,6 +52,7 @@ export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { ima
       <div className={styles.heroSlideStage} aria-live="off">
         {slides.map((src, index) => <img key={src} className={[styles.heroSlide, transitionClass, effectClass, index === active ? styles.heroSlideActive : ""].filter(Boolean).join(" ")} src={src} alt="" aria-hidden="true" draggable={false} fetchPriority={index === 0 ? "high" : "auto"} />)}
       </div>
+      <div className={styles.heroShade} />
       {slides.length > 1 && <div className={styles.heroSlideControls}>
         {showArrows && <button type="button" className={styles.heroSlideArrow} onClick={() => goTo(active - 1)} aria-label="Previous hero image">←</button>}
         {showDots && <div className={styles.heroSlideDots} aria-label="Choose hero image">{slides.map((src, index) => <button key={src} type="button" className={styles.heroSlideDot + " " + (index === active ? styles.heroSlideDotActive : "")} aria-label={"Show hero image " + (index + 1)} aria-pressed={index === active} onClick={() => goTo(index)} />)}</div>}
