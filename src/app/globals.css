@@ -2573,3 +2573,13 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 .admin-dashboard-gallery-item small{font-size:9px;color:#7b8499}
 @media(max-width:900px){.admin-dashboard-panels{grid-template-columns:1fr}}
 @media(max-width:600px){.admin-dashboard-panel{padding:16px}.admin-dashboard-panel-head{align-items:flex-start;flex-direction:column}.admin-dashboard-enquiry{grid-template-columns:1fr auto}.admin-dashboard-enquiry>span:nth-child(2){grid-column:1}.admin-dashboard-enquiry time{grid-column:2;grid-row:1}.admin-dashboard-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Light Creative Hub brand palette: clean white, soft blue and navy */
+:root{--blue:#397fc9;--ink:#172b45;--paper:#ffffff;--lime:#dcecff;--muted:#64748b}
+::selection{background:#cfe5ff;color:#173b70}
+.site-header{background:#fff;color:#173b70;border-bottom:1px solid #e2edf8}
+.site-header nav a:hover,.contact-links a:hover{color:#397fc9}
+.nav-cta{background:#397fc9;border-color:#397fc9;color:#fff}
+.site-footer{background:#f3f8fe;color:#173b70}
+.site-footer a:hover{color:#397fc9}
