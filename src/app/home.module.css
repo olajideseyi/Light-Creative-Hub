@@ -67,3 +67,42 @@
 .heroSlideArrow:focus-visible,.heroSlideDot:focus-visible,.heroSlidePause:focus-visible{outline:2px solid #ed7b42;outline-offset:3px}
 @media(max-width:600px){.heroSlideControls{left:20px;right:20px;bottom:70px;justify-content:flex-end;gap:7px}.heroSlideArrow{width:34px;height:34px}.heroSlideDots{gap:6px}.heroSlidePause{min-height:30px}}
 @media(prefers-reduced-motion:reduce){.heroSlide,.heroSlide *{animation:none!important;transition:none!important;transform:none!important}}
+
+
+/* Light-blue and white homepage finish */
+.home{--blue:#397fc9;--orange:#e97945;--ink:#183452;--muted:#647b96;--line:#dce9f7;background:#fff;color:#183452}
+.home .hero{background:#173b70}
+.home .heroShade{background:linear-gradient(90deg,rgba(16,47,91,.78),rgba(28,75,129,.56) 52%,rgba(16,47,91,.68)),linear-gradient(0deg,rgba(16,47,91,.32),transparent 58%)}
+.home .heroEyebrow>span:first-child{background:#e97945;box-shadow:0 0 0 5px #e9794530}
+.home .statement{background:#fff}
+.home .services{background:#edf5ff}
+.home .serviceCard{background:#fff;border-color:#dce9f7;box-shadow:0 8px 24px #204b7910}
+.home .serviceImage{background:#e2efff}
+.home .serviceImage>span,.home .projectImage>span{background:#173b70e8}
+.home .work{background:#e8f2ff;color:#183452}
+.home .workHeading .kicker{color:#397fc9}
+.home .workHeading h2 em{color:#397fc9}
+.home .workHeading>div:last-child>p{color:#5c718c}
+.home .projectCard{background:#fff;border:1px solid #d5e4f5;box-shadow:0 12px 30px #1d477410}
+.home .projectCaption h3{color:#183452}
+.home .projectCaption p{color:#657b96}
+.home .projectCaption small{color:#397fc9}
+.home .referenceNote{color:#657b96}
+.home .workButton{background:#397fc9;color:#fff!important}
+.home .workButton:hover{background:#2868ad;color:#fff!important}
+.home .about{background:#fff}
+.home .aboutImage{background:#e4f0ff}
+.home .aboutImage>span{background:#edf5ff;color:#365879}
+.home .contact{background:#dcecff;color:#173b70}
+.home .contactCopy .kicker{color:#397fc9}
+.home .contactCopy>p:not(.kicker){color:#4f6682}
+.home .contactActions .buttonPrimary{background:#397fc9;color:#fff!important}
+.home .whatsapp{border-color:#7ea7d6;color:#173b70!important}
+.home .whatsapp:hover{background:#c9e0fb}
+.home .contactDetails{background:#fff;border-color:#c8ddf4}
+.home .contactDetails>span,.home .contactDetails small{color:#657f9d}
+.home .contactDetails a{color:#173b70}
+.home .cmsTextSection{background:#edf5ff}
+.home .cmsCtaSection{background:#dcecff;color:#173b70}
+.home .cmsCtaSection a{background:#397fc9;color:#fff}
+@media(max-width:900px){.home .work{background:#e8f2ff}}
