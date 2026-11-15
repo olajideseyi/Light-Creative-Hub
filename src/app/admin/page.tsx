@@ -43,6 +43,7 @@ export default function AdminPage() {
   const [siteDocs,setSiteDocs]=useState<Record<string,SiteDoc>>({});
   const [cmsSection,setCmsSection]=useState<"homepage"|"about"|"services"|"contact"|"effects">("homepage");
   const [cmsLoading,setCmsLoading]=useState(false);
+  const [mobileNavOpen,setMobileNavOpen]=useState(false);
 
   async function verifyAdminAccess() {
     const supabase=getSupabaseBrowserClient();
@@ -192,17 +193,17 @@ export default function AdminPage() {
   const filteredProjects=useMemo(()=>projects.filter(p=>activeTab==="all"||(activeTab==="published"?p.published:!p.published)),[projects,activeTab]);
 
   return <section className="admin-page cms-admin-page"><div className="admin-shell">
-    <header className="admin-masthead"><div className="admin-brand"><span className="admin-brand-mark">L</span><div><strong>Light Creative Hub</strong><small>STUDIO CONTROL ROOM / CMS</small></div></div><div className="admin-masthead-right"><span>CONTENT MANAGEMENT</span>{signedIn&&<><span className="admin-status-pill">Secure session</span><button className="button button-outline-dark" onClick={signOut} disabled={busy}>Sign out</button></>}</div></header>
+    <header className="admin-masthead"><div className="admin-brand"><span className="admin-brand-mark">L</span><div><strong>Light Creative Hub</strong><small>STUDIO CONTROL ROOM / CMS</small></div></div><div className="admin-masthead-right"><span>CONTENT MANAGEMENT</span>{signedIn&&<><button type="button" className="admin-mobile-menu-toggle" aria-label={mobileNavOpen?"Close workspace menu":"Open workspace menu"} aria-expanded={mobileNavOpen} aria-controls="admin-workspace-navigation" onClick={()=>setMobileNavOpen(v=>!v)}><span></span><span></span><span></span></button><span className="admin-status-pill">Secure session</span><button className="button button-outline-dark" onClick={signOut} disabled={busy}>Sign out</button></>}</div></header>
     {!signedIn?<div className="admin-login-layout"><div className="admin-welcome"><div><p className="eyebrow">STUDIO ACCESS / 01</p><h1>Make the work<br/><em>visible.</em></h1><p>Manage portfolio projects, media, descriptions and what appears on the public website.</p></div></div><form className="admin-login" onSubmit={signIn}><div className="admin-panel-head"><div><h2>Administrator sign in</h2><p>Use the Supabase Auth account approved for this studio.</p></div></div>{error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}<label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/></label><button className="button button-blue" disabled={busy}>{busy?"Checking access…":"Enter the studio CMS ↗"}</button><p className="admin-help">Only accounts listed in the Supabase admin allowlist can edit or publish content.</p></form></div>:<>
       <div className="cms-welcome-row"><div className="admin-welcome"><div><p className="eyebrow">LIGHT CREATIVE HUB / ADMINISTRATION</p><h1>Studio<br/><em>workspace.</em></h1><p>One place to manage your website, publish selected work, maintain the gallery and control how your studio appears to clients.</p></div></div><div className="admin-hero-actions"><span className="admin-session-label"><i aria-hidden="true"/> Admin workspace</span><a className="button button-blue cms-view-site" href="/" target="_blank" rel="noreferrer">View live website <span aria-hidden="true">↗</span></a></div></div>
       {error&&<p role="alert" className="form-error">{error}</p>}{notice&&<p role="status" className="form-message">{notice}</p>}
-      <nav className="admin-section-nav" aria-label="Admin workspace navigation">
+      <nav id="admin-workspace-navigation" className={`admin-section-nav${mobileNavOpen?" is-open":""}`} aria-label="Admin workspace navigation">
          <div className="admin-nav-heading"><span>WORKSPACE</span><small>Choose a section to manage</small></div>
-         <a href="#admin-overview" className="admin-nav-overview"><span className="admin-nav-icon">⌂</span><span><strong>Overview</strong><small>Content status and quick actions</small></span><b>↗</b></a>
-         <a href="#site-content-editor"><span className="admin-nav-icon">Aa</span><span><strong>Website content</strong><small>Homepage, About, services and contact</small></span><b>↗</b></a>
-         <a href="#cms-editor"><span className="admin-nav-icon">＋</span><span><strong>Portfolio editor</strong><small>Create and edit projects</small></span><b>↗</b></a>
-         <a href="/admin/gallery"><span className="admin-nav-icon">▧</span><span><strong>Gallery manager</strong><small>Photography, images and video</small></span><b>↗</b></a>
-         <a href="#portfolio-library"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="#admin-overview" className="admin-nav-overview"><span className="admin-nav-icon">⌂</span><span><strong>Overview</strong><small>Content status and quick actions</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="#site-content-editor"><span className="admin-nav-icon">Aa</span><span><strong>Website content</strong><small>Homepage, About, services and contact</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="#cms-editor"><span className="admin-nav-icon">＋</span><span><strong>Portfolio editor</strong><small>Create and edit projects</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="/admin/gallery"><span className="admin-nav-icon">▧</span><span><strong>Gallery manager</strong><small>Photography, images and video</small></span><b>↗</b></a>
+         <a onClick={()=>setMobileNavOpen(false)} href="#portfolio-library"><span className="admin-nav-icon">▦</span><span><strong>Portfolio library</strong><small>Publish, draft and organise work</small></span><b>↗</b></a>
        </nav>
       <section className="admin-panel site-content-cms" id="site-content-editor">
         <div className="admin-panel-head"><div><span className="cms-eyebrow">SITE-WIDE CONTENT</span><h2>Edit the website, not just the projects.</h2><p>Update copy and creative behaviour settings in Supabase. Fields save as structured content for the public pages to consume.</p></div></div>
