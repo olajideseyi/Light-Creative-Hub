@@ -71,10 +71,6 @@ export default async function GalleryPage() {
         <p>A growing collection of photoshoots, moving images and visual stories from our creative work. Every published image or video in the studio portfolio can appear here.</p>
       </div>
       <GalleryBrowser items={items} />
-      <div className="gallery-upload-note">
-        <div><span className="gallery-overline">FOR THE STUDIO TEAM</span><h2>Have new work to share?</h2><p>Photoshoots and videos can be uploaded directly in the dedicated Gallery Manager, without creating a portfolio project.</p></div>
-        <a href="/admin/gallery">Open Gallery Manager <span aria-hidden="true">↗</span></a>
-      </div>
     </section>
   );
 }
