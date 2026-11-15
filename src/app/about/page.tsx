@@ -1,4 +1,5 @@
 import { PageIntro, Reveal } from "@/components/creative-effects";
+import { SafeImage } from "@/components/safe-image";
 import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 export const metadata: Metadata = { title:"About the Studio",description:"Meet Light Creative Hub, an independent creative studio connecting brand strategy, design, print and visual storytelling.",openGraph:{title:"About Light Creative Hub",description:"A creative studio for purposeful identity, design and visual communication.",type:"website"} };
@@ -19,7 +20,7 @@ export default async function AboutPage() {
         <Reveal delay={.1}><p>We partner with founders, growing businesses and organisations to make their value easier to see and understand. Each project starts with the audience, the message and the outcome—not a template or a passing trend.</p><p>We bring strategy, design and production into one connected process. Typography, colour, imagery, materials and finishing are treated as parts of the same story, so the final result feels coherent at every touchpoint.</p><p>Our work spans brand identity and rebranding, graphic design, print production, photography and videography, data presentation, and communication support. We shape each engagement around what you need to say, who needs to hear it and where the work needs to live.</p></Reveal>
       </div>
       <Reveal className="about-founder-panel">
-        <div className="about-founder-portrait"><img src={content.founderImageUrl||"https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg"} alt={`${content.founderName||"Studio founder"}, founder of Light Creative Hub`} loading="lazy" /><span>FOUNDER / CREATIVE</span></div>
+        <div className="about-founder-portrait"><SafeImage src={content.founderImageUrl||"https://kjgqztbxlbqpwzbbgkib.supabase.co/storage/v1/object/public/portfolio-media/1792947221622-whatsapp-image-2026-10-25-at-4.41.49-pm.jpeg"} alt={`${content.founderName||"Studio founder"}, founder of Light Creative Hub`} /><span>FOUNDER / CREATIVE</span></div>
         <div><p className="eyebrow">MEET THE CREATIVE</p><h2>{content.founderName||"Adeniyi Boluwatife"}</h2><p>{content.founderRole||"Founder · Light Creative Hub"}</p><blockquote>“{content.founderQuote||"The best creative work gives an idea room to breathe—and gives the audience a clear reason to care."}”</blockquote></div>
       </Reveal>
       <Reveal className="about-pullquote">“Make it clear. Make it considered. Make it matter.”</Reveal>
