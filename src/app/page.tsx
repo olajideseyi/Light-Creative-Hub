@@ -44,8 +44,8 @@ type HomeContent = {
 
 const fallbackHeroImage = "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=2200&q=90";
 
-type HeroSettings = { autoplay: boolean; intervalSeconds: number; transition: "crossfade" | "slide" | "wipe" | "none"; imageEffect: "float" | "parallax" | "zoom" | "static"; motionEnabled: boolean; showArrows: boolean; showDots: boolean };
-const defaultHeroSettings: HeroSettings = { autoplay: true, intervalSeconds: 3, transition: "crossfade", imageEffect: "zoom", motionEnabled: true, showArrows: true, showDots: true };
+type HeroSettings = { autoplay: boolean; intervalSeconds: number; transition: "crossfade" | "slide" | "wipe" | "none"; imageEffect: "float" | "parallax" | "zoom" | "static"; motionEnabled: boolean; showArrows: boolean; showDots: boolean; overlayColor: string; overlayStrength: number };
+const defaultHeroSettings: HeroSettings = { autoplay: true, intervalSeconds: 3, transition: "crossfade", imageEffect: "zoom", motionEnabled: true, showArrows: true, showDots: true, overlayColor: "#102f5b", overlayStrength: 82 };
 
 async function getHeroSettings(): Promise<HeroSettings> {
   try {
@@ -62,7 +62,9 @@ async function getHeroSettings(): Promise<HeroSettings> {
       imageEffect: imageEffects.includes(String(value.imageEffect)) ? value.imageEffect as HeroSettings["imageEffect"] : defaultHeroSettings.imageEffect,
       motionEnabled: value.motionEnabled !== false,
       showArrows: value.carouselArrows !== false,
-      showDots: value.carouselDots !== false
+      showDots: value.carouselDots !== false,
+      overlayColor: /^#[0-9a-fA-F]{6}$/.test(String(value.heroOverlayColor ?? "")) ? String(value.heroOverlayColor) : defaultHeroSettings.overlayColor,
+      overlayStrength: Math.min(100, Math.max(0, Number(value.heroOverlayStrength ?? defaultHeroSettings.overlayStrength)))
     };
   } catch { return defaultHeroSettings; }
 }
