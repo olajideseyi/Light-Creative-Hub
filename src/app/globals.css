@@ -2297,3 +2297,52 @@ html{scroll-padding-top:96px}
 @media(max-width:760px){
  .gallery-admin-page{padding-left:0}
 }
+
+
+/* Public navigation: desktop links remain visible; mobile uses the drawer */
+.mobile-nav{display:flex;align-items:center;position:relative}
+.mobile-menu-toggle{display:none}
+.desktop-primary-links{display:flex;align-items:center;gap:clamp(14px,2.1vw,30px)}
+.desktop-primary-links a{font-size:12px;font-weight:750;white-space:nowrap;padding:12px 0;color:#172044}
+.desktop-primary-links a[aria-current="page"]{color:#1738bd}
+.mobile-nav-heading,.mobile-nav-foot,.primary-navigation>.mobile-nav-cta{display:none}
+@media(min-width:761px){
+ .mobile-nav{display:flex;flex:1;justify-content:center}
+ .primary-navigation{display:block!important;position:static!important;inset:auto!important;width:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;transform:none!important}
+ .primary-navigation>.desktop-primary-links{display:flex!important}
+ .primary-navigation>a:not(.mobile-nav-cta),.primary-navigation>.mobile-nav-heading,.primary-navigation>.mobile-nav-foot{display:none!important}
+}
+@media(max-width:760px){
+ .mobile-nav{display:flex;justify-content:flex-end;margin-left:auto}
+ .mobile-menu-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 12px;border:1px solid #dce2ef;background:#fff;color:#172044;font-size:11px;font-weight:800;cursor:pointer;position:relative;z-index:97}
+ .primary-navigation>.desktop-primary-links{display:none!important}
+ .primary-navigation .mobile-nav-heading,.primary-navigation .mobile-nav-foot{display:flex}
+ .primary-navigation>.mobile-nav-cta{display:flex}
+ .site-header{display:flex;gap:12px}
+ .site-header>.nav-cta{display:none}
+}
+
+/* Admin routes use a separate authenticated workspace shell, never public chrome */
+body:has(.admin-page)>.site-header,
+body:has(.admin-page)>.site-footer,
+body:has(.admin-page)>#main~.site-footer,
+body:has(.admin-page)>.whatsapp-float,
+body:has(.gallery-admin-page)>.site-header,
+body:has(.gallery-admin-page)>.site-footer,
+body:has(.gallery-admin-page)>#main~.site-footer,
+body:has(.gallery-admin-page)>.whatsapp-float{display:none!important}
+body:has(.admin-page),body:has(.gallery-admin-page){background:#f5f7fb}
+body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh}
+
+/* Public gallery: keep the visual archive editorial and client-facing */
+.gallery-page{width:min(1440px,92vw);margin:0 auto;padding:clamp(54px,7vw,100px) 0}
+.gallery-page-heading{display:grid;grid-template-columns:1.1fr .65fr;align-items:end;gap:clamp(30px,7vw,110px);padding:0 0 clamp(38px,6vw,72px);border-bottom:1px solid #e2e6ef}
+.gallery-page-heading h1{font-size:clamp(58px,10vw,132px);line-height:.84;letter-spacing:-.09em;color:#14204a}
+.gallery-page-heading h1 em{font-style:normal;color:#1738bd}
+.gallery-page-heading>p{max-width:430px;margin:0 0 6px;color:#68718a;font-size:14px;line-height:1.9}
+.gallery-page .gallery-toolbar{padding:24px 0 28px}
+.gallery-page .gallery-grid{gap:16px}
+.gallery-page .gallery-tile{border-radius:2px;background:#edf1fa}
+.gallery-page .gallery-tile img,.gallery-page .gallery-tile video{transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.gallery-page .gallery-tile:hover img,.gallery-page .gallery-tile:hover video{transform:scale(1.035)}
+@media(max-width:760px){.gallery-page{width:90vw;padding:40px 0 60px}.gallery-page-heading{grid-template-columns:1fr;gap:20px}.gallery-page-heading h1{font-size:clamp(54px,14vw,82px)}}
