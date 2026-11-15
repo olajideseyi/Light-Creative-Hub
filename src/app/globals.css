@@ -2436,3 +2436,16 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 .cms-section-card label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700}
 .cms-section-card input,.cms-section-card textarea{width:100%;padding:12px;border:1px solid #cbd5e1;font:inherit}
 @media(max-width:720px){.cms-builder-heading{flex-direction:column}.cms-hero-slide-list{grid-template-columns:1fr}.cms-section-card .form-grid{grid-template-columns:1fr}.cms-section-card-top{align-items:flex-start;flex-direction:column}.cms-hero-slide>img{width:90px;height:82px}}
+
+
+/* Portfolio library is the primary view; the project form opens on demand */
+.cms-layout{display:flex!important;flex-direction:column;gap:28px}
+.cms-library-panel{order:0}
+.cms-editor-panel{order:1}
+.cms-library-header-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.cms-library-header-actions .button{white-space:nowrap}
+.cms-library-panel .admin-panel-head h2{font-size:clamp(26px,3vw,38px)}
+.admin-title,.admin-welcome h1{font-size:clamp(42px,6vw,76px)}
+.admin-page input,.admin-page textarea,.admin-page select{font-size:15px}
+.gallery-admin-loading{min-height:120px}
+@media(max-width:640px){.cms-library-header-actions{width:100%;justify-content:space-between}.cms-library-header-actions .button{flex:1}}
