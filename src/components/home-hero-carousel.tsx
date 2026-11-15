@@ -1,19 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "@/app/home.module.css";
 
-export function HomeHeroCarousel({images,fallbackImage}:{images:string[];fallbackImage:string}) {
-  const slides=images.length?images:[fallbackImage];
-  const [active,setActive]=useState(0);
-  useEffect(()=>{setActive(0);},[slides.length]);
-  useEffect(()=>{
-    if(slides.length<2)return;
-    const timer=window.setInterval(()=>setActive(current=>(current+1)%slides.length),5500);
-    return()=>window.clearInterval(timer);
-  },[slides.length]);
-  return <>
-    {slides.map((src,index)=><img key={src} className={styles.heroSlide+" "+(index===active?styles.heroSlideActive:"")} src={src} alt="" aria-hidden="true" />)}
-    {slides.length>1&&<div className={styles.heroSlideControls} aria-label="Hero slides">{slides.map((src,index)=><button key={src} type="button" className={styles.heroSlideDot+" "+(index===active?styles.heroSlideDotActive:"")} aria-label={"Show hero slide "+(index+1)} aria-pressed={index===active} onClick={()=>setActive(index)}/>)}</div>}
-  </>;
+type CarouselSettings = {
+  autoplay?: boolean;
+  intervalSeconds?: number;
+  transition?: "crossfade" | "slide" | "wipe" | "none";
+  imageEffect?: "float" | "parallax" | "zoom" | "static";
+  motionEnabled?: boolean;
+  showArrows?: boolean;
+  showDots?: boolean;
+};
+
+export function HomeHeroCarousel({ images, fallbackImage, settings = {} }: { images: string[]; fallbackImage: string; settings?: CarouselSettings }) {
+  const slides = useMemo(() => {
+    const unique = Array.from(new Set(images.filter(Boolean)));
+    return unique.length ? unique : [fallbackImage];
+  }, [images, fallbackImage]);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [manualPause, setManualPause] = useState(false);
+  const slideKey = slides.join("|");
+  const intervalSeconds = Math.min(15, Math.max(2, Number(settings.intervalSeconds) || 3));
+  const autoplay = settings.autoplay !== false && slides.length > 1 && !paused && !manualPause;
+  const transition = settings.transition || "crossfade";
+  const imageEffect = settings.motionEnabled === false ? "static" : (settings.imageEffect || "zoom");
+
+  useEffect(() => {
+    setActive(0);
+    setPaused(false);
+    setManualPause(false);
+  }, [slideKey]);
+
+  useEffect(() => {
+    if (!autoplay) return;
+    const timer = window.setInterval(() => setActive(current => (current + 1) % slides.length), intervalSeconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [autoplay, intervalSeconds, slides.length]);
+
+  function goTo(index: number) {
+    setActive((index + slides.length) % slides.length);
+    setManualPause(false);
+  }
+
+  const transitionClass = transition === "slide" ? styles.heroSlideSlide : transition === "wipe" ? styles.heroSlideWipe : transition === "none" ? styles.heroSlideNone : styles.heroSlideFade;
+  const effectClass = imageEffect === "float" ? styles.heroSlideFloat : imageEffect === "parallax" ? styles.heroSlideParallax : imageEffect === "static" ? styles.heroSlideStatic : styles.heroSlideZoom;
+  const showArrows = settings.showArrows !== false;
+  const showDots = settings.showDots !== false;
+
+  return (
+    <div className={styles.heroCarousel} aria-roledescription="carousel" aria-label="Light Creative Hub featured images" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}>
+      <div className={styles.heroSlideStage} aria-live="off">
+        {slides.map((src, index) => <img key={src} className={[styles.heroSlide, transitionClass, effectClass, index === active ? styles.heroSlideActive : ""].filter(Boolean).join(" ")} src={src} alt="" aria-hidden="true" draggable={false} fetchPriority={index === 0 ? "high" : "auto"} />)}
+      </div>
+      {slides.length > 1 && <div className={styles.heroSlideControls}>
+        {showArrows && <button type="button" className={styles.heroSlideArrow} onClick={() => goTo(active - 1)} aria-label="Previous hero image">←</button>}
+        {showDots && <div className={styles.heroSlideDots} aria-label="Choose hero image">{slides.map((src, index) => <button key={src} type="button" className={styles.heroSlideDot + " " + (index === active ? styles.heroSlideDotActive : "")} aria-label={"Show hero image " + (index + 1)} aria-pressed={index === active} onClick={() => goTo(index)} />)}</div>}
+        {showArrows && <button type="button" className={styles.heroSlideArrow} onClick={() => goTo(active + 1)} aria-label="Next hero image">→</button>}
+        <button type="button" className={styles.heroSlidePause} onClick={() => setManualPause(value => !value)} aria-label={manualPause ? "Resume automatic image rotation" : "Pause automatic image rotation"} aria-pressed={manualPause}>{manualPause ? "PLAY" : "PAUSE"}</button>
+        <span className={styles.heroSlideCount}>{String(active + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</span>
+      </div>}
+    </div>
+  );
 }
