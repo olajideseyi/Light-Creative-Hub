@@ -55,11 +55,12 @@ export function AdminPage() {
 
   async function verifyAdminAccess() {
     const supabase=getSupabaseBrowserClient();
-    const {data:userResult,error:userError}=await supabase.auth.getUser();
-    if(userError||!userResult.user) throw new Error("Your session has expired. Please sign in again.");
-    const {data,error:accessError}=await supabase.from("admin_users").select("user_id,role").eq("user_id",userResult.user.id).maybeSingle();
+    const {data:sessionResult,error:userError}=await supabase.auth.getSession();
+    const user=sessionResult.session?.user;
+    if(userError||!user) throw new Error("Your session has expired. Please sign in again.");
+    const {data,error:accessError}=await supabase.from("admin_users").select("user_id,role").eq("user_id",user.id).maybeSingle();
     if(accessError||!data) throw new Error("This account is not approved for the admin workspace. Ask the site owner to approve your Supabase user ID.");
-    return userResult.user;
+    return user;
   }
   async function loadSiteContent() {
     const {data,error:queryError}=await getSupabaseBrowserClient().from("site_content").select("content_key,content_value");
@@ -100,10 +101,11 @@ export function AdminPage() {
   async function saveSiteContent(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();setCmsLoading(true);setError("");setNotice("");
     try {
-      const {data:userResult,error:userError}=await getSupabaseBrowserClient().auth.getUser();
-      if(userError||!userResult.user) throw new Error("Please sign in again to save site content.");
+      const {data:sessionResult,error:userError}=await getSupabaseBrowserClient().auth.getSession();
+      const user=sessionResult.session?.user;
+      if(userError||!user) throw new Error("Please sign in again to save site content.");
       const value=cmsSection==="homepage" ? {...(siteDocs.homepage??{}),heroSlides,sections:homepageSections} : (siteDocs[cmsSection]??{});
-      const {error:saveError}=await getSupabaseBrowserClient().from("site_content").upsert({content_key:cmsSection,content_value:value,updated_at:new Date().toISOString(),updated_by:userResult.user.id},{onConflict:"content_key"});
+      const {error:saveError}=await getSupabaseBrowserClient().from("site_content").upsert({content_key:cmsSection,content_value:value,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:"content_key"});
       if(saveError) throw saveError;
       setNotice("Saved "+cmsSection+" settings. Public pages will read these settings.");
     } catch(e) {setError(e instanceof Error?e.message:"Could not save site content.");}
