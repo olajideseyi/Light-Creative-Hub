@@ -18,7 +18,7 @@ type HomeProject = {
 };
 
 type HomeContent = {
-  [key: string]: string | undefined;
+  [key: string]: unknown;
   heroTitle?: string;
   heroDescription?: string;
   approachTitle?: string;
