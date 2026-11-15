@@ -2233,3 +2233,9 @@ html{scroll-padding-top:96px}
 }
 @media(max-width:430px){.cms-admin-page .admin-dashboard-stats{grid-template-columns:1fr}.cms-admin-page .admin-overview-heading h2{font-size:24px}}
 @media(prefers-reduced-motion:reduce){.cms-admin-page .admin-section-nav,.cms-admin-page .admin-section-nav *{scroll-behavior:auto!important;transition:none!important}}
+
+@media(max-width:760px){
+ .site-header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;transform:none}
+ .mobile-nav{position:static}
+ .primary-navigation{position:fixed;inset:0 0 0 auto;width:min(440px,90vw);height:100dvh}
+}
