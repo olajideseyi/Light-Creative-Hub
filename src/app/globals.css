@@ -2691,15 +2691,18 @@ body:has(.admin-page)>#main,body:has(.gallery-admin-page)>#main{min-height:100vh
 }
 
 
-/* Brand-colour footer: confident blue, soft sky accents, high-contrast type */
-.site-footer{background:linear-gradient(135deg,#173b70 0%,#245b96 58%,#397fc9 100%)!important;color:#fff!important;border-top:0!important}
+/* Exact logo-blue footer with a white inverse logo */
+.site-footer{background:linear-gradient(135deg,#0018a1 0%,#00158f 58%,#001274 100%)!important;color:#fff!important;border-top:0!important}
 .site-footer::before{height:4px;background:linear-gradient(90deg,#a9d6ff 0%,#e5f3ff 48%,#78b8f0 100%)!important}
-.site-footer .footer-brand p,.site-footer .footer-address{color:rgba(241,247,255,.78)!important}
-.site-footer .footer-location,.site-footer .footer-label{color:#b9dcff!important}
+.site-footer .footer-brand p,.site-footer .footer-address{color:rgba(255,255,255,.82)!important}
+.site-footer .footer-brand .footer-logo{background:transparent!important;padding:0!important}
+.site-footer .footer-brand .footer-logo .liquid-logo{color:#fff!important}
+.site-footer .footer-brand .footer-logo .liquid-logo-inverse{color:#fff!important}
+.site-footer .footer-location,.site-footer .footer-label{color:#c9d7ff!important}
 .site-footer .footer-column>a,.site-footer .footer-bottom a{color:rgba(255,255,255,.9)!important}
 .site-footer .footer-column>a:hover,.site-footer .footer-bottom a:hover{color:#c8e5ff!important}
 .site-footer .footer-action{background:linear-gradient(145deg,#eaf5ff 0%,#d7eaff 100%)!important;border:1px solid rgba(255,255,255,.48)!important;border-top:3px solid #a9d6ff!important;box-shadow:0 16px 38px rgba(8,35,72,.16)}
-.site-footer .footer-action>span{color:#397fc9!important}
+.site-footer .footer-action>span{color:#0018a1!important}
 .site-footer .footer-action>a{color:#173b70!important}
-.site-footer .footer-action b{color:#397fc9!important}
+.site-footer .footer-action b{color:#0018a1!important}
 .site-footer .footer-bottom{border-top:1px solid rgba(225,241,255,.24)!important;color:rgba(241,247,255,.7)!important}
