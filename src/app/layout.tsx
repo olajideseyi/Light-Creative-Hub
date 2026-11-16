@@ -42,7 +42,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <footer className="site-footer">
           <div className="footer-main">
             <div className="footer-brand">
-              <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo /></a>
+              <a className="brand-logo footer-logo" href="/" aria-label="Light Creative Hub home"><LiquidLogo inverse /></a>
               <p>Creative thinking, carefully made.<br />Brand identity, design, print and visual content.</p>
               <span className="footer-location">LAGOS, NIGERIA</span>
             </div>
